@@ -43,6 +43,7 @@ params = {
     "user_os": "win",
 }
 
+
 def dgp5_session():
     process = subprocess.Popen(
         args="", executable=arg.dmmgameplayer_path, shell=True, stdout=subprocess.PIPE
@@ -51,8 +52,10 @@ def dgp5_session():
         text = line.decode("utf8").strip()
         if arg.debug:
             print(text)
-        if 'Parsing json string is ' in text:
-            install_data = json.loads(text.lstrip("Parsing json string is ").rstrip("."))
+        if "Parsing json string is " in text:
+            install_data = json.loads(
+                text.lstrip("Parsing json string is ").rstrip(".")
+            )
         if 'Header key: "cookie"' in text:
             cookie = re.findall(r'"(.*?)"', text)[1]
             if arg.kill:
@@ -60,12 +63,15 @@ def dgp5_session():
             return install_data, cookie
     raise Exception("DMMGamePlayerが起動できませんでした")
 
+
 install_data, headers["cookie"] = dgp5_session()
 
 if not arg.game_path:
     for contents in install_data["contents"]:
         if contents["productId"] == arg.product_id:
-            game_path = glob.glob('{path}\*.exe._'.format(path=contents['detail']['path']))[0][:-2]
+            game_path = glob.glob(
+                "{path}\*.exe._".format(path=contents["detail"]["path"])
+            )[0][:-2]
 
 response = requests.session().post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
