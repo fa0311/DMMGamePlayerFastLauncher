@@ -1,7 +1,6 @@
 import subprocess
 import requests
 import argparse
-import tempfile
 import re
 
 requests.packages.urllib3.disable_warnings()
