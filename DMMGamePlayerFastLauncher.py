@@ -2,6 +2,8 @@ import subprocess
 import requests
 import argparse
 import re
+import json
+import glob
 
 requests.packages.urllib3.disable_warnings()
 
@@ -12,13 +14,14 @@ argpar = argparse.ArgumentParser(
 )
 
 argpar.add_argument("product_id")
-argpar.add_argument("game_path")
+argpar.add_argument("--game-path", default=False)
 argpar.add_argument(
     "-dgp-path",
     "--dmmgameplayer-path",
     default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe",
 )
 argpar.add_argument("--kill", default=True)
+argpar.add_argument("--debug", default=False)
 arg = argpar.parse_args()
 
 headers = {
@@ -40,24 +43,30 @@ params = {
     "user_os": "win",
 }
 
-
-def get_dmm_cookie():
+def dgp5_session():
     process = subprocess.Popen(
         args="", executable=arg.dmmgameplayer_path, shell=True, stdout=subprocess.PIPE
     )
     for line in process.stdout:
         text = line.decode("utf8").strip()
+        if arg.debug:
+            print(text)
+        if 'Parsing json string is ' in text:
+            install_data = json.loads(text.lstrip("Parsing json string is ").rstrip("."))
         if 'Header key: "cookie"' in text:
+            cookie = re.findall(r'"(.*?)"', text)[1]
             if arg.kill:
                 process.terminate()
-            return re.findall(r'"(.*?)"', text)[1]
+            return install_data, cookie
+    raise Exception("DMMGamePlayerが起動できませんでした")
 
+install_data, headers["cookie"] = dgp5_session()
 
-dmm_cookie = get_dmm_cookie()
-if dmm_cookie == None:
-    raise Exception("DMMGamePlayerが起動できませんでした\nDMMGamePlayerがすでに起動されている可能性があります")
+if not arg.game_path:
+    for contents in install_data["contents"]:
+        if contents["productId"] == arg.product_id:
+            game_path = glob.glob('{path}\*.exe._'.format(path=contents['detail']['path']))[0][:-2]
 
-headers["cookie"] = dmm_cookie
 response = requests.session().post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
     headers=headers,
@@ -66,4 +75,4 @@ response = requests.session().post(
 )
 dmm_args = response.json()["data"]["execute_args"].split(" ")
 
-subprocess.Popen([arg.game_path, dmm_args[0], dmm_args[1]])
+subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
