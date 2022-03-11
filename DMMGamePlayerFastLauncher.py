@@ -46,20 +46,12 @@ def get_dmm_session():
     for line in process.stdout:
         text = (line.decode("utf8").strip())
         if 'Header key: "cookie"' in text:
-            dmm_session =  re.findall(r'"(.*?)"', text)[1]
-            login_session_id = re.search(r'[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}', dmm_session)[0]
-            login_secure_id = re.search(r'[a-f0-9]{32}', dmm_session)[0]
             if arg.kill:
                 process.terminate()
-            return login_session_id, login_secure_id
+            return re.findall(r'"(.*?)"', text)[1]
 
-login_session_id, login_secure_id = get_dmm_session()
-cookies = {
-    "login_session_id": login_session_id,
-    "login_secure_id": login_secure_id
-}
-
-response = requests.session().post("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", headers=headers, cookies=cookies, json=params,verify=False)
+headers["cookie"] = get_dmm_session()
+response = requests.session().post("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", headers=headers, json=params,verify=False)
 dmm_args = response.json()["data"]["execute_args"].split(" ")
 
 subprocess.Popen([arg.game_path, dmm_args[0], dmm_args[1]], shell=True)
