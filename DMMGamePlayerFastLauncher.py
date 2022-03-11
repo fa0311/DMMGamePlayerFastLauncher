@@ -37,7 +37,7 @@ params = {
     "user_os": "win"
 }
 
-def get_dmm_session():
+def get_dmm_cookie():
     process = subprocess.Popen(args="", executable=arg.dmmgameplayer_path, shell=True, stdout=subprocess.PIPE)
     for line in process.stdout:
         text = (line.decode("utf8").strip())
@@ -46,8 +46,12 @@ def get_dmm_session():
                 process.terminate()
             return re.findall(r'"(.*?)"', text)[1]
 
-headers["cookie"] = get_dmm_session()
+dmm_cookie = get_dmm_cookie()
+if dmm_cookie == None:
+    raise Exception('DMMGamePlayerが起動できませんでした\nDMMGamePlayerがすでに起動されている可能性があります')
+
+headers["cookie"] = dmm_cookie
 response = requests.session().post("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", headers=headers, json=params,verify=False)
 dmm_args = response.json()["data"]["execute_args"].split(" ")
 
-subprocess.Popen([arg.game_path, dmm_args[0], dmm_args[1]], shell=True)
+subprocess.Popen([arg.game_path, dmm_args[0], dmm_args[1]])
