@@ -16,6 +16,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 例: `C:\Program Files (x86)\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
 
 product_idは存在しないproduct_idが指定された際のエラーにダウンロードされているソフトのproduct_idが表示されるのでそれを参考にして下さい<br>
+*C:\Program Files (x86)\DMMGamePlayerFastLauncher\sample* にサンプル用のショートカットを置いています<br>
 
 ## 引数
 `DMMGamePlayerFastLauncher.exe <product_id>`
