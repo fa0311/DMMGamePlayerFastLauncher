@@ -1,12 +1,10 @@
 import subprocess
-import time
 import requests
-import DMMLogAnalysis
 import argparse
 import tempfile
+import re
 
 requests.packages.urllib3.disable_warnings()
-
 
 argpar = argparse.ArgumentParser(
     prog="DMMGamePlayerFastLauncher",
@@ -16,30 +14,9 @@ argpar = argparse.ArgumentParser(
 
 argpar.add_argument("product_id")
 argpar.add_argument("game_path")
-arg = argpar.parse_args()
-
-argpar.add_argument("-dgp-path", "--dmmgameplayer-path", default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe".format(product_id=arg.product_id))
-argpar.add_argument("--game-uri", default="dmmgameplayer://{product_id}/cl/general/{product_id}".format(product_id=arg.product_id))
-argpar.add_argument("--temp-path", default="{tempdir}/dmm.log".format(product_id=arg.product_id, tempdir=tempfile.gettempdir().replace("\\","/")))
+argpar.add_argument("-dgp-path", "--dmmgameplayer-path", default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe")
 argpar.add_argument("--kill", default=True)
 arg = argpar.parse_args()
-
-
-
-process = subprocess.Popen([arg.dmmgameplayer_path, arg.game_uri, ">", arg.temp_path], shell=True)
-
-log = DMMLogAnalysis.DMMLogAnalysis()
-while not log.check(arg.temp_path):
-    time.sleep(0.2)
-
-if arg.kill:
-    process.kill()
-
-session = requests.session()
-for cookie in log.session:
-    session.cookies.set_cookie(
-        requests.cookies.create_cookie(name=cookie["name"],value=cookie["value"],domain=cookie["domain"],path=cookie["path"],secure=cookie["secure"])
-    )
 
 headers = {
     "Host": "apidgp-gameplayer.games.dmm.com",
@@ -60,7 +37,17 @@ params = {
     "user_os": "win"
 }
 
-response = session.post("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", headers=headers, json=params,verify=False)
+def get_dmm_session():
+    process = subprocess.Popen(args="", executable=arg.dmmgameplayer_path, shell=True, stdout=subprocess.PIPE)
+    for line in process.stdout:
+        text = (line.decode("utf8").strip())
+        if 'Header key: "cookie"' in text:
+            if arg.kill:
+                process.terminate()
+            return re.findall(r'"(.*?)"', text)[1]
+
+headers["cookie"] = get_dmm_session()
+response = requests.session().post("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", headers=headers, json=params,verify=False)
 dmm_args = response.json()["data"]["execute_args"].split(" ")
 
 subprocess.Popen([arg.game_path, dmm_args[0], dmm_args[1]], shell=True)
