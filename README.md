@@ -10,7 +10,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 実行してセットアップする
 
 ## 使い方
-ダウンロードした *C:\Program Files (x86)\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
+*C:\Program Files (x86)\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
 作成したショートカットのプロパティのリンク先に *product_id* を追記<br>
 
 例: `C:\Program Files (x86)\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
