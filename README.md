@@ -29,6 +29,21 @@ product_idは存在しないproduct_idが指定された際のエラーにダウ
 | --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる | bool   |
 | --debug              |            | False                                            | デバッグモード                    | bool   |
 
+## ヘルプ
+
+> **セットアップする際、WindowsによってPCが保護されましたと表示される**<br>
+> 詳細情報をクリックして実行をクリック
+
+> **毎回ログインを求められる**<br>
+> 新しいDMMGamePlayerのバグです
+
+> **ゲームのアイコンに寄せたい**<br>
+> ショートカットを右クリック→プロパティ→アイコンの変更→参照
+
+> **アンインストールしたい**<br>
+> `C:\Program Files (x86)\DMMGamePlayerFastLauncher` の `unins000.exe` を実行
+
+
 ## 典拠
 [Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)
 
