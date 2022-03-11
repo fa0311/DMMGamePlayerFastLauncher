@@ -13,15 +13,15 @@ argpar = argparse.ArgumentParser(
     description="DMM Game Player Fast Launcher",
 )
 
-argpar.add_argument("product_id")
+argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument(
     "-dgp-path",
     "--dmmgameplayer-path",
     default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe",
 )
-argpar.add_argument("--non-kill", action='store_true')
-argpar.add_argument("--debug", action='store_true')
+argpar.add_argument("--non-kill", action="store_true")
+argpar.add_argument("--debug", action="store_true")
 arg = argpar.parse_args()
 
 headers = {
@@ -72,6 +72,13 @@ if not arg.game_path:
             game_path = glob.glob(
                 "{path}\*.exe._".format(path=contents["detail"]["path"])
             )[0][:-2]
+            break
+    else:
+        raise Exception(
+            "product_id が無効です\n"
+            + " ".join([contents["productId"] for contents in install_data["contents"]])
+            + "から選択して下さい"
+        )
 
 response = requests.session().post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
