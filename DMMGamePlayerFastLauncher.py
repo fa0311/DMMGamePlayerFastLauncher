@@ -20,8 +20,8 @@ argpar.add_argument(
     "--dmmgameplayer-path",
     default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe",
 )
-argpar.add_argument("--kill", default=True)
-argpar.add_argument("--debug", default=False)
+argpar.add_argument("--non-kill", action='store_true')
+argpar.add_argument("--debug", action='store_true')
 arg = argpar.parse_args()
 
 headers = {
@@ -58,10 +58,10 @@ def dgp5_session():
             )
         if 'Header key: "cookie"' in text:
             cookie = re.findall(r'"(.*?)"', text)[1]
-            if arg.kill:
+            if not arg.non_kill:
                 process.terminate()
             return install_data, cookie
-    raise Exception("DMMGamePlayerが起動できませんでした")
+    raise Exception("DMMGamePlayerの実行中にエラーが発生しました\n既に実行されているか実行中に終了した可能性があります")
 
 
 install_data, headers["cookie"] = dgp5_session()
