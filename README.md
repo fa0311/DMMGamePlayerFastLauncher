@@ -6,22 +6,27 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 - **管理者権限不要**
 
 ## インストール
-[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から DMMGamePlayerFastLauncher.exe をダウンロード<br>
-ダウンロードしたファイルをどこかに設置 ( `C:\Program Files\DMMGamePlayerFastLauncher` とかが良いかも )
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から DMMGamePlayerFastLauncher-Setup.exe をダウンロード<br>
+実行してセットアップする
 
 ## 使い方
-ダウンロードした *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
-ショートカットのプロパティのリンク先に *product_id* と起動したいゲームのexeのパスを追記<br>
+ダウンロードした *C:\Program Files (x86)\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
+作成したショートカットのプロパティのリンク先に *product_id* を追記<br>
 
-例: `<DMMGamePlayerFastLauncher.exeのパス> <product_id> <ゲームのexeのパス>`<br>
-ウマ娘の例: `"C:\Program Files\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe" umamusume "%UserProfile%\Umamusume\umamusume.exe"`<br>
-プリコネの例: `"C:\Program Files\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe" priconner "%UserProfile%\priconner\PrincessConnectReDive.exe"`<br>
+例: `C:\Program Files (x86)\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
 
-## product_id について
-
-## product_id まとめ
+product_idは存在しないproduct_idが指定された際のエラーにダウンロードされているソフトのproduct_idが表示されるのでそれを参考にして下さい<br>
 
 ## 引数
+`DMMGamePlayerFastLauncher.exe <product_id>`
+
+| オプション           | エイリアス | デフォルト                                       | 備考                              | タイプ |
+|----------------------|------------|--------------------------------------------------|-----------------------------------|--------|
+| --help               | -h         | False                                            |                                   | bool   |
+| --game-path          |            | False                                            | Falseにすると自動                 |        |
+| --dmmgameplayer-path | -dgp-path  | C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe |                                   |        |
+| --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる | bool   |
+| --debug              |            | False                                            | デバッグモード                    | bool   |
 
 ## 典拠
 [Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)
