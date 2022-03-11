@@ -14,11 +14,7 @@ argpar = argparse.ArgumentParser(
 
 argpar.add_argument("product_id")
 argpar.add_argument("game_path")
-arg = argpar.parse_args()
-
-argpar.add_argument("-dgp-path", "--dmmgameplayer-path", default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe".format(product_id=arg.product_id))
-argpar.add_argument("--game-uri", default="dmmgameplayer://{product_id}/cl/general/{product_id}".format(product_id=arg.product_id))
-argpar.add_argument("--temp-path", default="{tempdir}/dmm.log".format(product_id=arg.product_id, tempdir=tempfile.gettempdir().replace("\\","/")))
+argpar.add_argument("-dgp-path", "--dmmgameplayer-path", default="C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe")
 argpar.add_argument("--kill", default=True)
 arg = argpar.parse_args()
 
