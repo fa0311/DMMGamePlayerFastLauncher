@@ -128,9 +128,7 @@ if not arg.game_path:
                     break
             else:
                 process.kill()
-                raise Exception(
-                    "ゲームのパスの検出に失敗しました\n--game-path でゲームのパスを指定してみてください"
-                )
+                raise Exception("ゲームのパスの検出に失敗しました\n--game-path でゲームのパスを指定してみてください")
             break
     else:
         process.kill()
