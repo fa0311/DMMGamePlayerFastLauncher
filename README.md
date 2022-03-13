@@ -10,12 +10,15 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 実行してセットアップする
 
 ## 使い方
-*%AppData%\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
-作成したショートカットのプロパティのリンク先に *product_id* を追記<br>
+エクスプローラーやデスクトップで右クリックし**新規作成**、**ショートカットの作成**を選択<br>
+**項目の場所を入力して下さい**にダウンロードした**DMMGamePlayerFastLauncherのパス**と**product_id**を入力<br>
+ショートカットの名前は何でも良いです<br>
 
-例: `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
+例<br>
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume`<br>
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner`<br>
 
-product_idは存在しないproduct_idが指定された際のエラーにダウンロードされているソフトのproduct_idが表示されるのでそれを参考にして下さい<br>
+目的のゲームの**product_id**が分からない場合、**product_id**を適当なものにするとインストールしているゲームの**product_id**が一覧で表示されます<br>
 *%AppData%\DMMGamePlayerFastLauncher\sample* にサンプル用のショートカットを置いています<br>
 
 ## 引数
