@@ -28,14 +28,12 @@ product_idは存在しないproduct_idが指定された際のエラーにダウ
 | --dmmgameplayer-path | -dgp-path  | C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe |                                   |        |
 | --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる | bool   |
 | --debug              |            | False                                            | デバッグモード                    | bool   |
+| --login-force        |            | False                                            | ログインを強制する                | bool   |
 
 ## ヘルプ
 
 > **セットアップする際、WindowsによってPCが保護されましたと表示される**<br>
 > 詳細情報をクリックして実行をクリック
-
-> **毎回ログインを求められる**<br>
-> 新しいDMMGamePlayerのバグです
 
 > **ゲームのアイコンに寄せたい**<br>
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
