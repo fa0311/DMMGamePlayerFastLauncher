@@ -117,6 +117,7 @@ if not arg.game_path:
             )[0][:-2]
             break
     else:
+        process.kill()
         raise Exception(
             "product_id が無効です\n"
             + " ".join([contents["productId"] for contents in install_data["contents"]])
