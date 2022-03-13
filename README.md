@@ -10,13 +10,13 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 実行してセットアップする
 
 ## 使い方
-*C:\Program Files (x86)\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
+*%AppData%\DMMGamePlayerFastLauncher* にある *DMMGamePlayerFastLauncher.exe* を右クリックしショートカットを作成<br>
 作成したショートカットのプロパティのリンク先に *product_id* を追記<br>
 
-例: `C:\Program Files (x86)\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
+例: `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe <product_id>`<br>
 
 product_idは存在しないproduct_idが指定された際のエラーにダウンロードされているソフトのproduct_idが表示されるのでそれを参考にして下さい<br>
-*C:\Program Files (x86)\DMMGamePlayerFastLauncher\sample* にサンプル用のショートカットを置いています<br>
+*%AppData%\DMMGamePlayerFastLauncher\sample* にサンプル用のショートカットを置いています<br>
 
 ## 引数
 `DMMGamePlayerFastLauncher.exe <product_id>`
@@ -41,7 +41,7 @@ product_idは存在しないproduct_idが指定された際のエラーにダウ
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
 
 > **アンインストールしたい**<br>
-> `C:\Program Files (x86)\DMMGamePlayerFastLauncher` の `unins000.exe` を実行
+> `%AppData%\DMMGamePlayerFastLauncher` の `unins000.exe` を実行
 
 
 ## 典拠
