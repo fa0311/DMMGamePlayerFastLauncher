@@ -112,9 +112,23 @@ headers["cookie"] = cookie
 if not arg.game_path:
     for contents in install_data["contents"]:
         if contents["productId"] == arg.product_id:
-            game_path = glob.glob(
+            game_path_list = glob.glob(
                 "{path}\*.exe._".format(path=contents["detail"]["path"])
-            )[0][:-2]
+            )
+            if len(game_path_list) > 0:
+                game_path = game_path_list[0][:-2]
+                break
+            game_path_list = glob.glob(
+                "{path}\*.exe".format(path=contents["detail"]["path"])
+            )
+            for path in game_path_list:
+                lower_path = path.lower()
+                if not ("unity" in lower_path or "install" in lower_path):
+                    game_path = path
+                    break
+            else:
+                process.kill()
+                raise Exception("ゲームのパスの検出に失敗しました\n--game-path でゲームのパスを指定してみてください")
             break
     else:
         process.kill()
@@ -123,7 +137,6 @@ if not arg.game_path:
             + " ".join([contents["productId"] for contents in install_data["contents"]])
             + "から選択して下さい"
         )
-
 response = requests.post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
     headers=headers,

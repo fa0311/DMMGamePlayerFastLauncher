@@ -41,6 +41,11 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > **ゲームのアイコンに寄せたい**<br>
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
 
+> **ゲームのパスの検出に失敗しましたというエラーが出るまたは起動しない**<br>
+> --game-path <ゲームのパス> を指定する<br>
+例<br>
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-path %UserProfile%/umamusume/umamusume.exe`<br>
+
 ## 典拠
 [Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)
 
