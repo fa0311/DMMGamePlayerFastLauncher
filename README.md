@@ -38,10 +38,6 @@ product_idは存在しないproduct_idが指定された際のエラーにダウ
 > **ゲームのアイコンに寄せたい**<br>
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
 
-> **アンインストールしたい**<br>
-> `%AppData%\DMMGamePlayerFastLauncher` の `unins000.exe` を実行
-
-
 ## 典拠
 [Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)
 
