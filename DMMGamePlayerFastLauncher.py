@@ -128,7 +128,7 @@ if not arg.game_path:
                     break
             else:
                 process.kill()
-                raise Exception("ゲームのパスの検出に失敗しました\n--game-path でゲームのパスを指定してみてください")
+                raise Exception("ゲームのパスの検出に失敗しました")
             break
     else:
         process.kill()
@@ -147,14 +147,13 @@ response = requests.post(
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
-
-if not arg.non_kill:
-    process.kill()
-
-if response["result_code"] != 100:
+else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
-    raise Exception("起動にエラーが発生したため修復プログラムを実行しました")
+    process.kill()
+    raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
 
 if arg.non_kill:
     process.wait()
+else:
+    process.kill()
