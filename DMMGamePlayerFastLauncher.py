@@ -107,6 +107,7 @@ if blob == b"" or arg.login_force:
 else:
     _, cookie = win32crypt.CryptUnprotectData(blob)
 
+headers["cookie"] = cookie
 
 if not arg.game_path:
     for contents in install_data["contents"]:
