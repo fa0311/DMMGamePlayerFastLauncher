@@ -24,15 +24,15 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 ## 引数
 `DMMGamePlayerFastLauncher.exe <product_id>`
 
-| オプション           | エイリアス | デフォルト                                       | 備考                              | タイプ |
-|----------------------|------------|--------------------------------------------------|-----------------------------------|--------|
-| --help               | -h         | False                                            |                                   | bool   |
-| --game-path          |            | False                                            | Falseにすると自動                 |        |
-| --dmmgameplayer-path | -dgp-path  | C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe |                                   |        |
-| --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる | bool   |
-| --debug              |            | False                                            | デバッグモード                    | bool   |
-| --login-force        |            | False                                            | ログインを強制する                | bool   |
-| --anonymous          |            | False                                            | 匿名でログインする                | bool   |
+| オプション           | エイリアス | デフォルト                                       | 備考                                    | タイプ |
+|----------------------|------------|--------------------------------------------------|-----------------------------------------|--------|
+| --help               | -h         | False                                            |                                         | bool   |
+| --game-path          |            | False                                            | Falseにすると自動                       |        |
+| --dmmgameplayer-path | -dgp-path  | C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe |                                         |        |
+| --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる       | bool   |
+| --debug              |            | False                                            | デバッグモード                          | bool   |
+| --login-force        |            | False                                            | ログインを強制する                      | bool   |
+| --anonymous          |            | False                                            | ハードウェアの情報をDMMに送信しなくなる | bool   |
 
 ## ヘルプ
 
