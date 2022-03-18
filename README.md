@@ -32,6 +32,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 | --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる | bool   |
 | --debug              |            | False                                            | デバッグモード                    | bool   |
 | --login-force        |            | False                                            | ログインを強制する                | bool   |
+| --anonymous          |            | False                                            | 匿名でログインする                | bool   |
 
 ## ヘルプ
 
