@@ -29,8 +29,10 @@ argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--anonymous", action="store_true")
 arg = argpar.parse_args()
 
+
 def gen_rand_hex():
     return hashlib.sha256(str(random.random()).encode()).hexdigest()
+
 
 def gen_rand_address():
     hex = gen_rand_hex()
@@ -40,6 +42,7 @@ def gen_rand_address():
         if x % 2 == 1:
             address += ":"
     return address[:-1]
+
 
 class dgp5_process:
     def __init__(self):
@@ -121,7 +124,6 @@ if arg.anonymous:
         "motherboard": gen_rand_hex(),
         "user_os": "win",
     }
-
 
 
 open("cookie.bytes", "a+")
