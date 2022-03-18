@@ -176,7 +176,6 @@ if not arg.game_path:
 
 headers["cookie"] = cookie
 params.update(client_data)
-print(params)
 
 response = requests.post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
