@@ -46,6 +46,13 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > **ゲームのアイコンに寄せたい**<br>
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
 
+> **このツールを使用するとDMMGamePlayerを起動する際に毎回ログインを求められるようになった**<br>
+> DMMGamePlayerのバグです<br>
+> `--non-kill` を指定すると毎回ログインを求められなくなりますがこのツールからゲームを起動する際にDMMGamePlayerを立ち上げたままになります<br>
+> 要するに旧DMMGamePlayerのショートカットと似た感じになります<br>
+例<br>
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --non-kill`<br>
+
 > **「ゲームのパスの検出に失敗しました」というエラーが出る**<br>
 > **アンインストーラーなどの別のソフトが起動する**<br>
 > 自動でゲームのパスを探す機能のバグです<br>
