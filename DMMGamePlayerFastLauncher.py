@@ -145,6 +145,11 @@ response = requests.post(
     json=DGP5_LAUNCH_PARAMS,
     verify=False,
 ).json()
-dmm_args = response["data"]["execute_args"].split(" ")
 
-subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
+if response["result_code"] == 100:
+    dmm_args = response["data"]["execute_args"].split(" ")
+    subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
+else:
+    with open("cookie.bytes", "wb") as f:
+        f.write(b"")
+    raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
