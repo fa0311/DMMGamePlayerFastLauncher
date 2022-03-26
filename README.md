@@ -1,3 +1,6 @@
+# 重要なお知らせ
+## 2022年3月25日に配信されたDMMGamePlayer5.0.119以降のバージョンで動作しません
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 # DMMGamePlayerFastLauncher
 DMM Game Player のゲームを高速かつセキュアに起動できるランチャー
 
