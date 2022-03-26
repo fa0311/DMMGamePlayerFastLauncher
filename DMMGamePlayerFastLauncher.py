@@ -110,7 +110,7 @@ else:
     _, contents = win32crypt.CryptUnprotectData(blob)
 cookie = json.loads(contents)
 
-dpg5_config = get_dpg5_config(dgp5_path)
+dpg5_config = get_dpg5_config(DGP5_PATH)
 if not arg.game_path:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
