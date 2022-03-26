@@ -58,7 +58,7 @@ DGP5_HEADERS = {
     "Client-version": "17.1.2",
 }
 DGP5_LAUNCH_PARAMS = {
-    "product_id": "umamusume",
+    "product_id": arg.product_id,
     "game_type": "GCL",
     "game_os": "win",
     "launch_type": "LIB",
@@ -148,6 +148,7 @@ response = requests.post(
 
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
+    print(dmm_args)
     subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
 else:
     with open("cookie.bytes", "wb") as f:
