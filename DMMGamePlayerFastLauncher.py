@@ -45,6 +45,18 @@ def get_dpg5_config(dgp5_path):
     return json.loads(config)
 
 
+requests.packages.urllib3.disable_warnings()
+
+argpar = argparse.ArgumentParser(
+    prog="DMMGamePlayerFastLauncher",
+    usage="https://github.com/fa0311/DMMGamePlayerFastLauncher",
+    description="DMM Game Player Fast Launcher",
+)
+argpar.add_argument("product_id", default=None)
+argpar.add_argument("--game-path", default=False)
+argpar.add_argument("--login-force", action="store_true")
+arg = argpar.parse_args()
+
 HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Upgrade-Insecure-Requests": "1",
@@ -67,26 +79,14 @@ DGP5_LAUNCH_PARAMS = {
     "motherboard": gen_rand_hex(),
     "user_os": "win",
 }
-
-dgp5_path = os.environ["APPDATA"] + "/dmmgameplayer5/"
-requests.packages.urllib3.disable_warnings()
-
-argpar = argparse.ArgumentParser(
-    prog="DMMGamePlayerFastLauncher",
-    usage="https://github.com/fa0311/DMMGamePlayerFastLauncher",
-    description="DMM Game Player Fast Launcher",
-)
-argpar.add_argument("product_id", default=None)
-argpar.add_argument("--game-path", default=False)
-argpar.add_argument("--login-force", action="store_true")
-arg = argpar.parse_args()
+DGP5_PATH = os.environ["APPDATA"] + "/dmmgameplayer5/"
 
 
 open("cookie.bytes", "a+")
 with open("cookie.bytes", "rb") as f:
     blob = f.read()
 if blob == b"" or arg.login_force:
-    session = get_dgp5_session(dgp5_path)
+    session = get_dgp5_session(DGP5_PATH)
     response = session.get(
         "https://www.dmm.com/my/-/login/auth/=/direct_login=1/path=DRVESVwZTkVPEh9cXltIVA4IGV5ETRQWVlID",
         headers=HEADERS,
