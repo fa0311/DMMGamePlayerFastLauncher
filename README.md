@@ -1,6 +1,3 @@
-# 重要なお知らせ
-## 2022年3月25日に配信されたDMMGamePlayer5.0.119以降のバージョンで動作しません
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 # DMMGamePlayerFastLauncher
 DMM Game Player のゲームを高速かつセキュアに起動できるランチャー
 
@@ -30,12 +27,8 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 | オプション           | エイリアス | デフォルト                                       | 備考                                    | タイプ |
 |----------------------|------------|--------------------------------------------------|-----------------------------------------|--------|
 | --help               | -h         | False                                            |                                         | bool   |
-| --game-path          |            | False                                            | Falseにすると自動                       |        |
-| --dmmgameplayer-path | -dgp-path  | C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe |                                         |        |
-| --non-kill           |            | False                                            | DMMGamePlayerが起動したままになる       | bool   |
-| --debug              |            | False                                            | デバッグモード                          | bool   |
+| --game-path          |            | False                                            | ゲームのパス Falseにすると自動           |        |
 | --login-force        |            | False                                            | ログインを強制する                      | bool   |
-| --anonymous          |            | False                                            | ハードウェアの情報をDMMに送信しなくなる | bool   |
 
 ## ヘルプ
 
@@ -50,11 +43,8 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > ショートカットを右クリック→プロパティ→アイコンの変更→参照
 
 > **このツールを使用するとDMMGamePlayerを起動する際に毎回ログインを求められるようになった**<br>
-> DMMGamePlayerのバグです<br>
-> `--non-kill` を指定すると毎回ログインを求められなくなりますがこのツールからゲームを起動する際にDMMGamePlayerを立ち上げたままになります<br>
-> 要するに旧DMMGamePlayerのショートカットと似た感じになります<br>
-例<br>
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --non-kill`<br>
+> DMMGamePlayerのバグ(仕様？)です<br>
+> どうすることも出来ないので頻繁にDMMGamePlayerを起動する方にこのツールはオススメしません<br>
 
 > **「ゲームのパスの検出に失敗しました」というエラーが出る**<br>
 > **アンインストーラーなどの別のソフトが起動する**<br>
@@ -69,27 +59,22 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 例<br>
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-path %UserProfile%/umamusume/umamusume.exe`<br>
 
-
 > **BlueStacksを利用しているゲームだとエラーが出る**<br>
 > 現在、BlueStacksを利用しているゲームは対応していません
+
+> **「ログインに失敗しました」というエラーが出る**<br>
+> DMMGamePlayerを起動してログインして下さい<br>
+> DMMGamePlayerを起動しているなら終了させて下さい<br>
 
 > **「要求された操作には管理者特権が必要です」というエラーが出る**<br>
 > DMMGamePlayerが管理者権限でインストールされています<br>
 > DMMGamePlayerから管理者権限を外して下さい<br>
 
 > **「指定されたファイルが見つかりません」というエラーが出る**<br>
-> DMMGamePlayerがインストールされていないかDMMGamePlayerのインストール先フォルダがデフォルトではない可能性があります<br>
-> インストール先フォルダがデフォルトではない場合は`--dmmgameplayer-path <DMMGamePlayerのパス>`で指定して下さい<br>
-例<br>
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --dmmgameplayer-path "C:/Program Files/DMMGamePlayer/DMMGamePlayer.exe"`<br>
-> ※パスに空白が含まれる場合は例のように `"` で囲んで下さい
-
-> **「DMMGamePlayerの実行中にエラーが発生しました」というエラーが出る**<br>
-> 既にDMMGamePlayerが実行中かDMMGamePlayerの実行中にDMMGamePlayerが何らかの理由で終了した可能性があります<br>
-> タスクバーにDMMGamePlayerが無くても裏で待機している可能性が高いです タスクキルするか再起動してみて下さい<br>
+> `--game-path` で指定したゲームのパスが間違っています<br>
 
 > **「起動にエラーが発生したため修復プログラムを実行しました」というエラーが出る**<br>
-> まれに表示される場合は正常な動作です 1年に1回程度ログイン情報が無効になる仕様なのでこの処置です<br>
+> まれに表示される場合は正常な動作です<br>
 
 > **「起動にエラーが発生したため修復プログラムを実行しました」と連続して何度も表示される**<br>
 > `%AppData%\DMMGamePlayerFastLauncher` の `cookie.bytes` を削除してみて下さい<br>
