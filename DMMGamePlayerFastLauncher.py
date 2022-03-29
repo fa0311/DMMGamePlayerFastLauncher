@@ -55,6 +55,7 @@ argpar = argparse.ArgumentParser(
 argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
+argpar.add_argument("--skip-exception", action="store_true")
 arg = argpar.parse_args()
 
 HEADERS = {
@@ -92,9 +93,10 @@ if blob == b"" or arg.login_force:
         headers=HEADERS,
     )
     if session.cookies.get("login_session_id") == None:
-        raise Exception(
-            "ログインに失敗しました\nDMMGamePlayerでログインしていない時またはDMMGamePlayerが起動している時にこのエラーが発生する可能性があります"
-        )
+        if not arg.skip_exception:
+            raise Exception(
+                "ログインに失敗しました\nDMMGamePlayerでログインしていない時またはDMMGamePlayerが起動している時にこのエラーが発生する可能性があります"
+            )
     contents = json.dumps(
         {
             "login_session_id": session.cookies.get("login_session_id"),
@@ -129,14 +131,18 @@ if not arg.game_path:
                     game_path = path
                     break
             else:
-                raise Exception("ゲームのパスの検出に失敗しました")
+                if not arg.skip_exception:
+                    raise Exception("ゲームのパスの検出に失敗しました")
             break
     else:
-        raise Exception(
-            "product_id が無効です\n"
-            + " ".join([contents["productId"] for contents in dpg5_config["contents"]])
-            + "から選択して下さい"
-        )
+        if not arg.skip_exception:
+            raise Exception(
+                "product_id が無効です\n"
+                + " ".join(
+                    [contents["productId"] for contents in dpg5_config["contents"]]
+                )
+                + "から選択して下さい"
+            )
 
 response = requests.post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
@@ -148,9 +154,11 @@ response = requests.post(
 
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
-    print(dmm_args)
-    subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
+    subprocess.Popen(
+        [game_path, dmm_args[0], dmm_args[1]], shell=True, stdout=subprocess.PIPE
+    )
 else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
-    raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
+    if not arg.skip_exception:
+        raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
