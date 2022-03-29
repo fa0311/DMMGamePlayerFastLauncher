@@ -8,6 +8,7 @@ import random
 import hashlib
 import sqlite3
 import os
+import time
 
 
 def gen_rand_hex():
@@ -80,7 +81,7 @@ DGP5_LAUNCH_PARAMS = {
     "motherboard": gen_rand_hex(),
     "user_os": "win",
 }
-DGP5_PATH = os.environ["APPDATA"] + "/dmmgameplayer5/"
+DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
 
 
 open("cookie.bytes", "a+")
@@ -154,6 +155,7 @@ response = requests.post(
 
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
+    start_time = time.time()
     process = subprocess.Popen(
         [game_path, dmm_args[0], dmm_args[1]], shell=True, stdout=subprocess.PIPE
     )
