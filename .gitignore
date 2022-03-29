@@ -1,4 +1,5 @@
 /build
 /dist
-/DMMGamePlayerFastLauncher.spec
+/*.spec
 /__pycache__
+*.exe

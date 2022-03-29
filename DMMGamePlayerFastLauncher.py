@@ -8,6 +8,7 @@ import random
 import hashlib
 import sqlite3
 import os
+import time
 
 
 def gen_rand_hex():
@@ -55,6 +56,7 @@ argpar = argparse.ArgumentParser(
 argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
+argpar.add_argument("--skip-exception", action="store_true")
 arg = argpar.parse_args()
 
 HEADERS = {
@@ -79,7 +81,7 @@ DGP5_LAUNCH_PARAMS = {
     "motherboard": gen_rand_hex(),
     "user_os": "win",
 }
-DGP5_PATH = os.environ["APPDATA"] + "/dmmgameplayer5/"
+DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
 
 
 open("cookie.bytes", "a+")
@@ -92,9 +94,10 @@ if blob == b"" or arg.login_force:
         headers=HEADERS,
     )
     if session.cookies.get("login_session_id") == None:
-        raise Exception(
-            "ログインに失敗しました\nDMMGamePlayerでログインしていない時またはDMMGamePlayerが起動している時にこのエラーが発生する可能性があります"
-        )
+        if not arg.skip_exception:
+            raise Exception(
+                "ログインに失敗しました\nDMMGamePlayerでログインしていない時またはDMMGamePlayerが起動している時にこのエラーが発生する可能性があります"
+            )
     contents = json.dumps(
         {
             "login_session_id": session.cookies.get("login_session_id"),
@@ -129,14 +132,18 @@ if not arg.game_path:
                     game_path = path
                     break
             else:
-                raise Exception("ゲームのパスの検出に失敗しました")
+                if not arg.skip_exception:
+                    raise Exception("ゲームのパスの検出に失敗しました")
             break
     else:
-        raise Exception(
-            "product_id が無効です\n"
-            + " ".join([contents["productId"] for contents in dpg5_config["contents"]])
-            + "から選択して下さい"
-        )
+        if not arg.skip_exception:
+            raise Exception(
+                "product_id が無効です\n"
+                + " ".join(
+                    [contents["productId"] for contents in dpg5_config["contents"]]
+                )
+                + "から選択して下さい"
+            )
 
 response = requests.post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
@@ -148,9 +155,16 @@ response = requests.post(
 
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
-    print(dmm_args)
-    subprocess.Popen([game_path, dmm_args[0], dmm_args[1]])
+    start_time = time.time()
+    process = subprocess.Popen(
+        [game_path, dmm_args[0], dmm_args[1]], shell=True, stdout=subprocess.PIPE
+    )
+    for line in process.stdout:
+        text = line.decode("utf-8").strip()
+    if time.time() - start_time < 2 and not arg.skip_exception:
+        raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
 else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
-    raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
+    if not arg.skip_exception:
+        raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
