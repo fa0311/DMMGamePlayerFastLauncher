@@ -41,7 +41,7 @@ def get_dgp5_session(dgp5_path):
 
 
 def get_dpg5_config(dgp5_path):
-    with open(dgp5_path + "dmmgame.cnf", "r") as f:
+    with open(dgp5_path + "dmmgame.cnf", "r", encoding="utf-8") as f:
         config = f.read()
     return json.loads(config)
 
