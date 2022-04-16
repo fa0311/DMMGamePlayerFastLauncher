@@ -32,6 +32,17 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 | --game-path          |            | False                                            | ゲームのパス Falseにすると自動           |        |
 | --login-force        |            | False                                            | ログインを強制する                      | bool   |
 | --skip-exception     |            | False                                            | エラーをスキップ                       | bool   |
+| --proxy-uri          |            | None                                             | HTTPプロクシを指定                   | string |
+
+### プロクシ
+
+`--proxy-uri`を指定することで、DMMへのリクエストがすべてプロクシーサーバーに通されます。
+
+フォーマット：
+`http://<ip>:<port>`
+
+認証が必要の場合(Basic認証のみ)：
+`http://<username>:<password>@<ip>:<port>`
 
 ## ヘルプ
 

@@ -57,8 +57,12 @@ argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
+argpar.add_argument("--proxy-uri", default=None)
 arg = argpar.parse_args()
 
+PROXY = None
+if arg.proxy_uri is not None:
+    PROXY = {"https": arg.proxy_uri}
 HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Upgrade-Insecure-Requests": "1",
@@ -92,6 +96,7 @@ if blob == b"" or arg.login_force:
     response = session.get(
         "https://www.dmm.com/my/-/login/auth/=/direct_login=1/path=DRVESVwZTkVPEh9cXltIVA4IGV5ETRQWVlID",
         headers=HEADERS,
+        proxies=PROXY,
     )
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
@@ -151,6 +156,7 @@ response = requests.post(
     headers=DGP5_HEADERS,
     json=DGP5_LAUNCH_PARAMS,
     verify=False,
+    proxies=PROXY,
 ).json()
 
 if response["result_code"] == 100:
