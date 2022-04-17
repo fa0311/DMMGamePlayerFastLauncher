@@ -59,7 +59,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri http://user:pass@host:port`<br>
 > Socks5<br>
 > `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri socks5://user:pass@host:port`<br>
-> [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/?highlight=proxy#proxies)
+> [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/#proxies)
 
 > **プロキシを設定した際、ゲームは起動するがゲーム側に通信エラーが発生する**<br>
 > ゲーム側で国外アクセスが禁止されています<br>
