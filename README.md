@@ -61,6 +61,10 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri socks5://user:pass@host:port`<br>
 > [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/?highlight=proxy#proxies)
 
+> **プロキシを設定した際、ゲームは起動するがゲーム側に通信エラーが発生する**<br>
+> ゲーム側で国外アクセスが禁止されています<br>
+> ウマ娘、プリコネRは禁止されていました<br>
+
 ### 特定のゲームに起こる症状
 
 > **「ゲームのパスの検出に失敗しました」というエラーが出る**<br>
