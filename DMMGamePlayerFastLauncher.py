@@ -57,6 +57,7 @@ argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
+argpar.add_argument("--https-proxy-uri", default=None)
 arg = argpar.parse_args()
 
 HEADERS = {
@@ -64,6 +65,9 @@ HEADERS = {
     "Upgrade-Insecure-Requests": "1",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
 }
+
+PROXY = {"https": arg.https_proxy_uri}
+
 DGP5_HEADERS = {
     "Host": "apidgp-gameplayer.games.dmm.com",
     "Connection": "keep-alive",
@@ -92,6 +96,7 @@ if blob == b"" or arg.login_force:
     response = session.get(
         "https://www.dmm.com/my/-/login/auth/=/direct_login=1/path=DRVESVwZTkVPEh9cXltIVA4IGV5ETRQWVlID",
         headers=HEADERS,
+        proxies=PROXY,
     )
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
@@ -151,6 +156,7 @@ response = requests.post(
     headers=DGP5_HEADERS,
     json=DGP5_LAUNCH_PARAMS,
     verify=False,
+    proxies=PROXY,
 ).json()
 
 if response["result_code"] == 100:
@@ -163,6 +169,8 @@ if response["result_code"] == 100:
         text = line.decode("utf-8").strip()
     if time.time() - start_time < 2 and not arg.skip_exception:
         raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
+elif response["result_code"] == 801:
+    raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
 else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
