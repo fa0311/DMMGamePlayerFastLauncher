@@ -57,17 +57,17 @@ argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
-argpar.add_argument("--proxy-uri", default=None)
+argpar.add_argument("--https-proxy-uri", default=None)
 arg = argpar.parse_args()
 
-PROXY = None
-if arg.proxy_uri is not None:
-    PROXY = {"https": arg.proxy_uri}
 HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "Upgrade-Insecure-Requests": "1",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
 }
+
+PROXY = {"https": arg.https_proxy_uri}
+
 DGP5_HEADERS = {
     "Host": "apidgp-gameplayer.games.dmm.com",
     "Connection": "keep-alive",
@@ -169,6 +169,8 @@ if response["result_code"] == 100:
         text = line.decode("utf-8").strip()
     if time.time() - start_time < 2 and not arg.skip_exception:
         raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
+elif response["result_code"] == 801:
+    raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
 else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
