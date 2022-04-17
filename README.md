@@ -52,13 +52,13 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > (このツールのv4.0以降このエラーは出ないと思いますが)
 
 > **「日本国外からのアクセスは禁止されています」というエラーが出る**<br>
-> `--proxy-uri`を指定してください<br>
+> `--https-proxy-uri`を指定してください<br>
 > 例<br>
-> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --proxy-uri http://host:port`<br>
+> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri http://host:port`<br>
 > Basic認証<br>
-> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --proxy-uri http://user:pass@host:port`<br>
+> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri http://user:pass@host:port`<br>
 > Socks5<br>
-> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --proxy-uri socks5://user:pass@host:port`<br>
+> `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri socks5://user:pass@host:port`<br>
 > [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/?highlight=proxy#proxies)
 
 ### 特定のゲームに起こる症状
