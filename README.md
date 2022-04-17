@@ -6,8 +6,17 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 - **管理者権限不要**
 
 ## インストール
-[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から DMMGamePlayerFastLauncher-Setup.exe をダウンロード<br>
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher-Setup.exe` をダウンロード<br>
 実行してセットアップする
+
+## その他のインストール(上級者向け)
+
+### 手動インストール
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher.exe` をダウンロード<br>
+
+### product_idチェッカーのみ
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerProductIdChecker.exe` をダウンロード<br>
+変更のない場合はアップロードされていないので過去のバージョンのReleaseからダウンロードしてください
 
 ## 使い方
 エクスプローラーやデスクトップで右クリックし**新規作成**、**ショートカットの作成**を選択<br>
