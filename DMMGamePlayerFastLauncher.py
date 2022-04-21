@@ -149,6 +149,8 @@ if not arg.game_path:
                 )
                 + "から選択して下さい"
             )
+else:
+    game_path = arg.game_path
 
 response = requests.post(
     "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
