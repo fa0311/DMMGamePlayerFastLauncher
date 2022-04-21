@@ -169,10 +169,12 @@ if response["result_code"] == 100:
     )
     for line in process.stdout:
         text = line.decode("utf-8").strip()
+        print(text)
     if time.time() - start_time < 2 and not arg.skip_exception:
         raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
 elif response["result_code"] == 801:
-    raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
+    if not arg.skip_exception:
+        raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
 else:
     with open("cookie.bytes", "wb") as f:
         f.write(b"")
