@@ -172,7 +172,7 @@ if response["result_code"] == 100:
         text = line.decode("utf-8").strip()
         print(text)
     if time.time() - start_time < 2 and not arg.skip_exception:
-        if response["data"]["is_administrator"] and arg.request_admin:
+        if response["data"]["is_administrator"] and not arg.non_request_admin:
             if not ctypes.windll.shell32.IsUserAnAdmin():
                 ctypes.windll.shell32.ShellExecuteW(
                     None, "runas", game_path, response["data"]["execute_args"], None, 1
