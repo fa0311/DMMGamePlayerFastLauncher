@@ -160,12 +160,12 @@ response = requests.post(
     verify=False,
     proxies=PROXY,
 ).json()
-
+print(response)
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     start_time = time.time()
     process = subprocess.Popen(
-        [game_path, dmm_args[0], dmm_args[1]], shell=True, stdout=subprocess.PIPE
+        [game_path] + dmm_args, shell=True, stdout=subprocess.PIPE
     )
     for line in process.stdout:
         text = line.decode("utf-8").strip()
