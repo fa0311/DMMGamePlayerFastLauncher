@@ -4,6 +4,7 @@ import argparse
 import json
 import glob
 import win32crypt
+import ctypes
 import random
 import hashlib
 import sqlite3
@@ -58,6 +59,7 @@ argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
+argpar.add_argument("--non-request-admin", action="store_true")
 arg = argpar.parse_args()
 
 HEADERS = {
@@ -160,7 +162,6 @@ response = requests.post(
     verify=False,
     proxies=PROXY,
 ).json()
-print(response)
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     start_time = time.time()
@@ -171,7 +172,18 @@ if response["result_code"] == 100:
         text = line.decode("utf-8").strip()
         print(text)
     if time.time() - start_time < 2 and not arg.skip_exception:
-        raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
+        if response["data"]["is_administrator"] and not arg.non_request_admin:
+            if not ctypes.windll.shell32.IsUserAnAdmin():
+                ctypes.windll.shell32.ShellExecuteW(
+                    None, "runas", game_path, response["data"]["execute_args"], None, 1
+                )
+            else:
+                raise Exception("ゲームが起動しませんでした。管理者権限を許可してください。")
+        elif response["data"]["is_administrator"]:
+            raise Exception("ゲームが起動しませんでした。管理者権限を許可してください。")
+        else:
+            if not arg.skip_exception:
+                raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
 elif response["result_code"] == 801:
     if not arg.skip_exception:
         raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
