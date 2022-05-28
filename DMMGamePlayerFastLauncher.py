@@ -59,7 +59,7 @@ argpar.add_argument("--game-path", default=False)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
-argpar.add_argument("--request-admin", default=True)
+argpar.add_argument("--non-request-admin", action="store_false")
 arg = argpar.parse_args()
 
 HEADERS = {
