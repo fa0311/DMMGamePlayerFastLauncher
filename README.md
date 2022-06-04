@@ -5,6 +5,9 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 - **ワンクリックでゲームを起動**
 - **管理者権限不要**
 
+## Githubってなに？
+[非開発者向けGithubの使い方](https://blog.yuki0311.com/github_for_beginners/)
+
 ## インストール
 [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher-Setup.exe` をダウンロード<br>
 実行してセットアップする
