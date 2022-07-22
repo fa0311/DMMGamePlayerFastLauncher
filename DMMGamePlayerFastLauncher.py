@@ -10,6 +10,7 @@ import hashlib
 import sqlite3
 import os
 import time
+import re
 
 
 def gen_rand_hex():
@@ -95,15 +96,25 @@ with open("cookie.bytes", "rb") as f:
     blob = f.read()
 if blob == b"" or arg.login_force:
     session = get_dgp5_session(DGP5_PATH)
+
     response = session.get(
-        "https://www.dmm.com/my/-/login/auth/=/direct_login=1/path=DRVESVwZTkVPEh9cXltIVA4IGV5ETRQWVlID",
+        "https://www.dmm.com/",
+        headers=HEADERS,
+        proxies=PROXY,
+    ).text
+
+    reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(any=".*?",data="([0-9a-zA-Z_]*)")
+    data_encoded = re.findall(reg, response)[0]
+
+    response = session.get(
+        f"https://accounts.dmm.com/service/login/token/=/path={data_encoded}",
         headers=HEADERS,
         proxies=PROXY,
     )
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
             raise Exception(
-                "ログインに失敗しました\nDMMGamePlayerでログインしていない時またはDMMGamePlayerが起動している時にこのエラーが発生する可能性があります"
+                "ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい"
             )
     contents = json.dumps(
         {
