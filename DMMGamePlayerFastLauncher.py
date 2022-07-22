@@ -103,7 +103,9 @@ if blob == b"" or arg.login_force:
         proxies=PROXY,
     ).text
 
-    reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(any=".*?",data="([0-9a-zA-Z_]*)")
+    reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(
+        any=".*?", data="([0-9a-zA-Z_]*)"
+    )
     data_encoded = re.findall(reg, response)[0]
 
     response = session.get(
@@ -113,9 +115,7 @@ if blob == b"" or arg.login_force:
     )
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
-            raise Exception(
-                "ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい"
-            )
+            raise Exception("ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい")
     contents = json.dumps(
         {
             "login_session_id": session.cookies.get("login_session_id"),
