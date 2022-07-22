@@ -3,3 +3,4 @@
 /*.spec
 /__pycache__
 *.exe
+*.bytes
