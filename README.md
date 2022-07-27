@@ -1,6 +1,8 @@
 # DMMGamePlayerFastLauncher
 DMM Game Player のゲームを高速かつセキュアに起動できるランチャー
 
+![](https://img.shields.io/github/downloads/fa0311/DMMGamePlayerFastLauncher/total)
+
 ## 特徴
 - **ワンクリックでゲームを起動**
 - **管理者権限不要**
