@@ -14,12 +14,12 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher-Setup.exe` をダウンロード<br>
 実行してセットアップする
 
-## その他のインストール(上級者向け)
+## その他のインストール
 
-### 手動インストール
+### 手動インストール(上級者向け)
 [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher.exe` をダウンロード<br>
 
-### product_idチェッカーのみ
+### product_idチェッカーのみインストール(上級者向け)
 [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerProductIdChecker.exe` をダウンロード<br>
 変更のない場合はアップロードされていないので過去のバージョンのReleaseからダウンロードしてください
 
@@ -32,10 +32,10 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume`<br>
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner`<br>
 
-## product_idって？
-ゲームに割り当てられているidです<br>
-`%AppData%\DMMGamePlayerFastLauncher\tools` にある `DMMGamePlayerProductIdChecker.exe` を実行することで確認できます
-
+## インストールしているゲームのproduct_idを取得する
+product_idとはゲームに割り当てられているidです<br>
+`%AppData%\DMMGamePlayerFastLauncher\tools` にある `DMMGamePlayerProductIdChecker.exe` を実行することで確認できます<br>
+※エクスプローラーのファイルパス入力欄に`%AppData%\DMMGamePlayerFastLauncher\tools`とそのまま入力すると移動できます
 
 ## 引数
 `DMMGamePlayerFastLauncher.exe <product_id>`
