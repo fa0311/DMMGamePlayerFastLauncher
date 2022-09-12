@@ -1,13 +1,27 @@
 # DMMGamePlayerFastLauncher
 DMM Game Player のゲームを高速かつセキュアに起動できるランチャー
 
+![](https://img.shields.io/github/downloads/fa0311/DMMGamePlayerFastLauncher/total)
+
 ## 特徴
 - **ワンクリックでゲームを起動**
 - **管理者権限不要**
 
+## Githubってなに？
+[非開発者向けGithubの使い方](https://blog.yuki0311.com/github_for_beginners/)
+
 ## インストール
-[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から DMMGamePlayerFastLauncher-Setup.exe をダウンロード<br>
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher-Setup.exe` をダウンロード<br>
 実行してセットアップする
+
+## その他のインストール(上級者向け)
+
+### 手動インストール
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerFastLauncher.exe` をダウンロード<br>
+
+### product_idチェッカーのみ
+[Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases) から `DMMGamePlayerProductIdChecker.exe` をダウンロード<br>
+変更のない場合はアップロードされていないので過去のバージョンのReleaseからダウンロードしてください
 
 ## 使い方
 エクスプローラーやデスクトップで右クリックし**新規作成**、**ショートカットの作成**を選択<br>
@@ -60,11 +74,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 > `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri http://user:pass@host:port`<br>
 > Socks5<br>
 > `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --https-proxy-uri socks5://user:pass@host:port`<br>
-> [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/?highlight=proxy#proxies)
-
-> **プロキシを設定した際、ゲームは起動するがゲーム側に通信エラーが発生する**<br>
-> ゲーム側で国外アクセスが禁止されています<br>
-> ウマ娘、プリコネRは禁止されていました<br>
+> [requests.org/Proxies](https://docs.python-requests.org/en/latest/user/advanced/#proxies)
 
 ### 特定のゲームに起こる症状
 
@@ -96,6 +106,10 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 > **「指定されたファイルが見つかりません」というエラーが出る**<br>
 > `--game-path` で指定したゲームのパスが間違っています<br>
+
+> **プロキシを設定した際、ゲームは起動するがゲーム側に通信エラーが発生する**<br>
+> ゲーム側で国外アクセスが禁止されています<br>
+> ウマ娘、プリコネRは禁止されていました<br>
 
 > **管理者権限が要求され起動しないかつエラーが出ない**<br>
 > そのゲームには対応していません<br>
