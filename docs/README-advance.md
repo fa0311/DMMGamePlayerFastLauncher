@@ -179,7 +179,22 @@ DMMGamePlayer のバグ(仕様？)です
 
 ### ボーダーレスにしたい
 
-ウマ娘の場合は
+ウマ娘の場合は  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`
 
 詳しくは [game-args](#game-args)
+
+### サブモニターでの起動を強制する
+
+プリコネ R の場合は  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-monitor 2"`
+
+### フルスクリーン
+
+プリコネ R の場合は  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-width 1920 -screen-height 1080"`
+
+### ボーダーレスフルスクリーン
+
+プリコネ R の場合は  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow 0 -width 1920 -screen-height 1080"`
