@@ -13,11 +13,7 @@ DMM Game Player Fast Launcher for secure and fast start-up
 - **One click to launch the game**
 - **Run with minimal privileges**
 - **Do not send hardware information to DMM**
-<<<<<<< HEAD
-- **Unity command line arguments can be used**
-=======
 - **Hidden command line arguments can be used**
->>>>>>> master
 
 ## Installation
 
