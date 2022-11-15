@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "DMMGamePlayerFastLauncher"
-#define MyAppVersion "4.3.0"
+#define MyAppVersion "4.4.0"
 #define MyAppPublisher "yuki"
 #define MyAppURL "https://github.com/fa0311/DMMGamePlayerFastLauncher"
 #define MyAppExeName "DMMGamePlayerFastLauncher.exe"
@@ -26,10 +26,10 @@ DisableDirPage=yes
 ChangesAssociations=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=C:\Project\Python\hack\DMMGamePlayerFastLauncher\LICENSE
+LicenseFile=Z:\Project\Python\hack\DMMGamePlayerFastLauncher\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
-OutputDir=C:\Project\Python\hack\DMMGamePlayerFastLauncher\dist
+OutputDir=Z:\Project\Python\hack\DMMGamePlayerFastLauncher\dist
 OutputBaseFilename=DMMGamePlayerFastLauncher-Setup
 Compression=lzma
 SolidCompression=yes
@@ -38,10 +38,11 @@ WizardStyle=modern
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Files]
-Source: "C:\Project\Python\hack\DMMGamePlayerFastLauncher\dist\{#MyAppExeName}"; DestDir: "{userappdata}\{#MyAppName}"; Flags: ignoreversion
-Source: "C:\Project\Python\hack\DMMGamePlayerFastLauncher\windows\*"; DestDir: "{userappdata}\{#MyAppName}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\dist\{#MyAppExeName}"; DestDir: "{userappdata}\{#MyAppName}"; Flags: ignoreversion
+Source: "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\windows\*"; DestDir: "{userappdata}\{#MyAppName}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

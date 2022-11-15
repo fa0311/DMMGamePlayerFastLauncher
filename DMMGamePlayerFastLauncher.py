@@ -56,7 +56,8 @@ argpar = argparse.ArgumentParser(
     description="DMM Game Player Fast Launcher",
 )
 argpar.add_argument("product_id", default=None)
-argpar.add_argument("--game-path", default=False)
+argpar.add_argument("--game-path", default=None)
+argpar.add_argument("--game-args", default=None)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
@@ -103,7 +104,13 @@ if blob == b"" or arg.login_force:
         proxies=PROXY,
     ).text
 
+<<<<<<< HEAD
     reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(any=".*?",data="([0-9a-zA-Z_]*)")
+=======
+    reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(
+        any=".*?", data="([0-9a-zA-Z_]*)"
+    )
+>>>>>>> d752ca3d77105c54d727238103a11f8314f8dcd6
     data_encoded = re.findall(reg, response)[0]
 
     response = session.get(
@@ -113,9 +120,13 @@ if blob == b"" or arg.login_force:
     )
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
+<<<<<<< HEAD
             raise Exception(
                 "ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい"
             )
+=======
+            raise Exception("ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい")
+>>>>>>> d752ca3d77105c54d727238103a11f8314f8dcd6
     contents = json.dumps(
         {
             "login_session_id": session.cookies.get("login_session_id"),
@@ -132,7 +143,7 @@ else:
 cookie = json.loads(contents)
 
 dpg5_config = get_dpg5_config(DGP5_PATH)
-if not arg.game_path:
+if arg.game_path is None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
             game_path_list = glob.glob(
@@ -146,7 +157,11 @@ if not arg.game_path:
             )
             for path in game_path_list:
                 lower_path = path.lower()
-                if not ("unity" in lower_path or "install" in lower_path):
+                if not (
+                    "unity" in lower_path
+                    or "install" in lower_path
+                    or "help" in lower_path
+                ):
                     game_path = path
                     break
             else:
@@ -175,6 +190,9 @@ response = requests.post(
 ).json()
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
+    if arg.game_args is not None:
+        dmm_args = dmm_args + arg.game_args.split(" ")
+    print(game_path)
     start_time = time.time()
     process = subprocess.Popen(
         [game_path] + dmm_args, shell=True, stdout=subprocess.PIPE
