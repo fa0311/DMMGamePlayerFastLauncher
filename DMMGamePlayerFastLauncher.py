@@ -57,7 +57,7 @@ argpar = argparse.ArgumentParser(
 )
 argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=None)
-argpar.add_argument("--game-args", default="")
+argpar.add_argument("--game-args", default=None)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
@@ -133,7 +133,7 @@ else:
 cookie = json.loads(contents)
 
 dpg5_config = get_dpg5_config(DGP5_PATH)
-if arg.game_path is not None:
+if arg.game_path is None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
             game_path_list = glob.glob(
@@ -176,9 +176,12 @@ response = requests.post(
 ).json()
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
+    if arg.game_args is not None:
+        dmm_args = dmm_args + arg.game_args.split(" ")
+    print(game_path)
     start_time = time.time()
     process = subprocess.Popen(
-        [game_path] + dmm_args + arg.game_args.split(" "), shell=True, stdout=subprocess.PIPE
+        [game_path] + dmm_args, shell=True, stdout=subprocess.PIPE
     )
     for line in process.stdout:
         text = line.decode("utf-8").strip()
