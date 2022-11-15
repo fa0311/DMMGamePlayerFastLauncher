@@ -4,6 +4,10 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 ![img.shields.io](https://img.shields.io/github/downloads/fa0311/DMMGamePlayerFastLauncher/total)
 
+[日本語](/README.md) / [English](/README-en.md)
+
+[詳しい使い方](/docs/README-advance.md)
+
 ## 特徴
 
 - **ワンクリックでゲームを起動**
