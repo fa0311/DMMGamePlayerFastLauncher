@@ -45,9 +45,12 @@ Unity 製ゲームの引数はここに詳しく載ってます
 [PlayerCommandLineArguments](https://docs.unity3d.com/ja/2022.2/Manual/PlayerCommandLineArguments.html)
 
 例:  
+ボーダーレスフルスクリーン  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow -screen-width 1920 -screen-height 1080 -screen-fullscreen 0"`  
-引数が 1 つの時はエスケープが必要だけど適当な文字列 (0 とか) を入れればなんとかなる  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`
+ボーダーレス (引数が 1 個の時はエスケープするか無理やり 2 つに増やす)  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`  
+サブモニターで起動  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-monitor 2"`
 
 ### login-force
 
@@ -177,24 +180,6 @@ DMMGamePlayer からゲームを起動できるか確認してみて下さい
 DMMGamePlayer のバグ(仕様？)です  
 どうすることも出来ないので頻繁に DMMGamePlayer を起動する方にこのツールはオススメしません
 
-### ボーダーレスにしたい
+### ゲームに起動引数を与える
 
-ウマ娘の場合は  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`
-
-詳しくは [game-args](#game-args)
-
-### サブモニターでの起動を強制する
-
-プリコネ R の場合は  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-monitor 2"`
-
-### フルスクリーン
-
-プリコネ R の場合は  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-width 1920 -screen-height 1080"`
-
-### ボーダーレスフルスクリーン
-
-プリコネ R の場合は  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow -width 1920 -screen-height 1080"`
+[game-args](#game-args)
