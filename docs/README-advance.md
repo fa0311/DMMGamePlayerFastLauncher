@@ -38,7 +38,8 @@
 
 ### game-args
 
-ゲーム特有の引数を追加したい場合はこれを指定します  
+ゲームに引数を追加したい場合はこれを指定します  
+通常の DMM を介した起動方法で使用できない隠された引数を使用することができます  
 `"` で囲む必要があることに注意してください
 
 Unity 製ゲームの引数はここに詳しく載ってます  
@@ -46,9 +47,9 @@ Unity 製ゲームの引数はここに詳しく載ってます
 
 例:  
 ボーダーレスフルスクリーン  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow -screen-width 1920 -screen-height 1080 -screen-fullscreen 0"`  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow -screen-width 1920 -screen-height 1080 -screen-fullscreen 0"`  
 ボーダーレス (引数が 1 個の時はエスケープするか無理やり 2 つに増やす)  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow 0"`  
 サブモニターで起動  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-monitor 2"`
 
