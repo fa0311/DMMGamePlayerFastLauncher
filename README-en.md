@@ -38,6 +38,9 @@ Examples:
 
 Then just double-click the shortcut to run it
 
+[Option](/docs/README-advance.md#引数)  
+[Help](/docs/README-advance.md#ヘルプ)
+
 ## Receive update notifications
 
 Notify me when there are updates to this tool
