@@ -17,12 +17,12 @@ DMM Game Player Fast Launcher for secure and fast start-up
 
 ## Installation
 
-Download `DMMGamePlayerFastLauncher-Setup.exe` from [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases)
+Download `DMMGamePlayerFastLauncher-Setup.exe` from [Releases](https://github.com/fa0311/DMMGamePlayerFastLauncher/releases)  
 Run and set up
 
 ## Using
 
-Run `DMMGamePlayerProductIdChecker.exe` in `%AppData%\DMMGamePlayerFastLauncher\tools`
+Run `DMMGamePlayerProductIdChecker.exe` in `%AppData%\DMMGamePlayerFastLauncher\tools`  
 Note down the `product_id` of the game you want to activate
 
 ![screenshot1](docs/img/DMMGamePlayerProductIdChecker1.png)
