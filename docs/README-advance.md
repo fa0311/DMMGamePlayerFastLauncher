@@ -179,4 +179,7 @@ DMMGamePlayer のバグ(仕様？)です
 
 ### ボーダーレスにしたい
 
-[game-args](#game-args)
+ウマ娘の場合は
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-popupwindow 0"`
+
+詳しくは [game-args](#game-args)
