@@ -146,7 +146,7 @@ if not arg.game_path:
             )
             for path in game_path_list:
                 lower_path = path.lower()
-                if not ("unity" in lower_path or "install" in lower_path):
+                if not ("unity" in lower_path or "install" in lower_path or "help" in lower_path):
                     game_path = path
                     break
             else:
