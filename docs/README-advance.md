@@ -197,4 +197,4 @@ DMMGamePlayer のバグ(仕様？)です
 ### ボーダーレスフルスクリーン
 
 プリコネ R の場合は  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow 0 -width 1920 -screen-height 1080"`
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner --game-args "-popupwindow -width 1920 -screen-height 1080"`
