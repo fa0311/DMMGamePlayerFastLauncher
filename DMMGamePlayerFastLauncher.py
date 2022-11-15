@@ -56,7 +56,7 @@ argpar = argparse.ArgumentParser(
     description="DMM Game Player Fast Launcher",
 )
 argpar.add_argument("product_id", default=None)
-argpar.add_argument("--game-path", default=False)
+argpar.add_argument("--game-path", default=None)
 argpar.add_argument("--game-args", default="")
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
@@ -133,7 +133,7 @@ else:
 cookie = json.loads(contents)
 
 dpg5_config = get_dpg5_config(DGP5_PATH)
-if not arg.game_path:
+if arg.game_path is not None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
             game_path_list = glob.glob(
