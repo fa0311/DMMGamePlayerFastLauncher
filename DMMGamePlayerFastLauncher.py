@@ -10,7 +10,7 @@ import hashlib
 import sqlite3
 import os
 import time
-import re
+from urllib.parse import urlparse
 
 
 def gen_rand_hex():
@@ -99,19 +99,27 @@ if blob == b"" or arg.login_force:
     session = get_dgp5_session(DGP5_PATH)
 
     response = session.get(
-        "https://www.dmm.com/",
+        "https://apidgp-gameplayer.games.dmm.com/v5/loginurl",
         headers=HEADERS,
         proxies=PROXY,
-    ).text
+    ).json()
 
-    reg = '<script{any}id="auto-login"{any}data-encoded="{data}"{any}></script>'.format(any=".*?",data="([0-9a-zA-Z_]*)")
-    data_encoded = re.findall(reg, response)[0]
-
-    response = session.get(
-        f"https://accounts.dmm.com/service/login/token/=/path={data_encoded}",
+    session.get(
+        response["data"]["url"],
         headers=HEADERS,
         proxies=PROXY,
     )
+
+    url = urlparse(response["data"]["url"])
+    token = url.path.split("path=")[-1]
+
+    session.get(
+        f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false",
+        headers=HEADERS,
+        proxies=PROXY,
+    )
+
+
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
             raise Exception(
