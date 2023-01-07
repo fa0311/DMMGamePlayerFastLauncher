@@ -53,14 +53,6 @@ Unity 製ゲームの引数はここに詳しく載ってます
 サブモニターで起動  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-args "-monitor 2"`
 
-### login-force
-
-ログインのキャッシュを無効にします  
-ほとんどの場合、この引数は不要です
-
-例:  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --login-force`
-
 ### skip-exception
 
 エラーを出力しません  
@@ -108,7 +100,7 @@ Socks5
 
 [https-proxy-uri](#https-proxy-uri)
 
-### 「ゲームのパスの検出に失敗しました」というエラーが出る
+### 「Game path detection failed.」というエラーが出る
 
 [game-path](#game-path)
 
@@ -116,7 +108,7 @@ Socks5
 
 [game-path](#game-path)
 
-### ゲームが起動しているのに「ゲームが起動しませんでした」というエラーが出る
+### ゲームが起動しているのに「Game did not start. Please allow administrative privileges」というエラーが出る
 
 [skip-exception](#skip-exception)
 
@@ -139,47 +131,21 @@ Socks5
 そのゲームには対応していません  
 Issue や Twitter でバグ報告お願いします
 
-### 「ログインに失敗しました」というエラーが出る
+### 「Login failed.」というエラーが出る
 
 DMMGamePlayer を起動してログインし直して下さい
 
-### 「ゲームが起動しませんでした」というエラーが出る
+### 「"Game did not start.」というエラーが出る
 
 ゲームにアップデートがないか確認して下さい  
 管理者権限を与えてみてください  
 それでも解決しなければ Issue や Twitter でバグ報告お願いします
-
-### 「起動にエラーが発生したため修復プログラムを実行しました」というエラーが出る
-
-まれに表示される場合は正常な動作です
-
-### 「起動にエラーが発生したため修復プログラムを実行しました」と連続して何度も表示される
-
-`%AppData%\DMMGamePlayerFastLauncher` の `cookie.bytes` を削除してみて下さい
-
-解決しない場合、アカウントに問題がある場合が高いです  
-DMMGamePlayer からゲームを起動できるか確認してみて下さい  
-それでも解決しない場合はエラーの一番下の{ }で囲まれた文字列の error の右側に理由が書いているので心当たりがあればそれで解決して下さい  
-心当たりがない場合は{ }で囲まれた文字列を開発者に送って下さい
-
-### 「データが無効です」というエラーが出る
-
-`%AppData%\DMMGamePlayerFastLauncher` の `cookie.bytes` を削除してみて下さい
-
-### その他のエラー
-
-`%AppData%\DMMGamePlayerFastLauncher` の `cookie.bytes` を削除してみて下さい
 
 ## 不具合以外のヘルプ
 
 ### ゲームのアイコンに寄せたい
 
 ショートカットを右クリック → プロパティ → アイコンの変更 → 参照
-
-### このツールを使用すると DMMGamePlayer を起動する際に毎回ログインを求められるようになった
-
-DMMGamePlayer のバグ(仕様？)です  
-どうすることも出来ないので頻繁に DMMGamePlayer を起動する方にこのツールはオススメしません
 
 ### ゲームに起動引数を与える
 
