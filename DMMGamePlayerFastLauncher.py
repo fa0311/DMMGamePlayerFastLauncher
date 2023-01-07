@@ -119,12 +119,9 @@ if blob == b"" or arg.login_force:
         proxies=PROXY,
     )
 
-
     if session.cookies.get("login_session_id") == None:
         if not arg.skip_exception:
-            raise Exception(
-                "ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい"
-            )
+            raise Exception("ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい")
     contents = json.dumps(
         {
             "login_session_id": session.cookies.get("login_session_id"),
