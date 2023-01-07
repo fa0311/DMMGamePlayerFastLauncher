@@ -3,6 +3,7 @@ import requests
 import argparse
 import json
 import glob
+import win32crypt
 import ctypes
 import random
 import hashlib
@@ -84,6 +85,41 @@ class DgpSession:
                 requests.cookies.create_cookie(**cookie_data)
             )
 
+    def write_cache(self, file: str = "cookie.bytes"):
+        contents = []
+        for cookie in self.session.cookies:
+            cookie_dict = dict(
+                version=cookie.version,
+                name=cookie.name,
+                value=cookie.value,
+                port=cookie.port,
+                domain=cookie.domain,
+                path=cookie.path,
+                secure=cookie.secure,
+                expires=cookie.expires,
+                discard=cookie.discard,
+                comment=cookie.comment,
+                comment_url=cookie.comment_url,
+                rfc2109=cookie.rfc2109,
+                rest=cookie._rest,
+            )
+            contents.append(cookie_dict)
+        data = win32crypt.CryptProtectData(
+            json.dumps(contents).encode(), "DMMGamePlayerFastLauncher"
+        )
+        with open(file, "wb") as f:
+            f.write(data)
+
+    def read_cache(self, file: str = "cookie.bytes"):
+        open(file, "a+")
+        with open(file, "rb") as f:
+            data = f.read()
+            _, contents = win32crypt.CryptUnprotectData(data)
+            for cookie in json.loads(contents):
+                self.session.cookies.set_cookie(
+                    requests.cookies.create_cookie(**cookie)
+                )
+
     def get(self, url: str) -> requests.Response:
         return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY)
 
@@ -123,33 +159,72 @@ argpar = argparse.ArgumentParser(
 argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=None)
 argpar.add_argument("--game-args", default=None)
+argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
-arg = argpar.parse_args()
+try:
+    arg = argpar.parse_args()
+except:
+    raise Exception(
+        "\n".join(
+            [
+                "Could not parse argument.",
+                "Is the product_id specified correctly?",
+                "https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#%E5%BC%95%E6%95%B0",
+            ]
+        )
+    )
 
 
 session = DgpSession(arg.https_proxy_uri)
 
-session.read()
-url = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl").json()["data"][
-    "url"
-]
-token = urlparse(url).path.split("path=")[-1]
+try:
+    session.read()
+except:
+    print("Read Error")
+    try:
+        session.read_cache()
+    except:
+        print("Read Cache Error")
 
+if session.cookies.get("login_session_id") == None or arg.login_force:
+    response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
+    url = response.json()["data"]["url"]
+    token = urlparse(url).path.split("path=")[-1]
+    session.get(url)
+    res = session.get(
+        f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+    )
 
-session.get(url)
-res = session.get(
-    f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
-)
+if session.cookies.get("login_session_id") == None:
+    try:
+        session.read_cache()
+    except:
+        print("Read Cache Error")
 
 if session.cookies.get("login_session_id") == None:
     if not arg.skip_exception:
         raise Exception(
-            "\n".join(["Login failed.", "Please start DMMGamePlayer and login again."])
+            "\n".join(
+                [
+                    "Login failed.",
+                    "If DMMGamePlayer is running, exit it or Please start DMMGamePlayer and login again.",
+                ]
+            )
         )
 
-session.write()
+try:
+    session.write()
+except:
+    print("Write Error")
+
+
+try:
+    session.write_cache()
+except:
+    print("Write Cache Error")
+
 session.close()
 
 dpg5_config = session.get_config()
