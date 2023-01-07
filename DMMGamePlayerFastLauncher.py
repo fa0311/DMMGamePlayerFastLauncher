@@ -3,7 +3,6 @@ import requests
 import argparse
 import json
 import glob
-import win32crypt
 import ctypes
 import random
 import hashlib
@@ -13,42 +12,108 @@ import time
 from urllib.parse import urlparse
 
 
-def gen_rand_hex():
-    return hashlib.sha256(str(random.random()).encode()).hexdigest()
+class DgpSession:
+    DGP5_PATH: str
+    HEADERS: dict[str, str]
+    PROXY: dict[str, str | None]
+    DGP5_HEADERS: dict[str, str]
+    DGP5_LAUNCH_PARAMS: dict[str, str]
+    db: sqlite3.Connection
+    session: requests.Session
+    cookies: requests.cookies.RequestsCookieJar
 
-
-def gen_rand_address():
-    hex = gen_rand_hex()
-    address = ""
-    for x in range(12):
-        address += hex[x]
-        if x % 2 == 1:
-            address += ":"
-    return address[:-1]
-
-
-def get_dgp5_session(dgp5_path):
-    db = sqlite3.connect(dgp5_path + "Network/Cookies").cursor()
-    session = requests.session()
-    for cookie_row in db.execute("select * from cookies"):
-        cookie_data = {
-            "name": cookie_row[3],
-            "value": cookie_row[4],
-            "domain": cookie_row[1],
-            "path": cookie_row[6],
-            "secure": cookie_row[8],
+    def __init__(self, https_proxy_uri: str | None = None):
+        requests.packages.urllib3.disable_warnings()
+        self.DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
+        self.PROXY = {"https": https_proxy_uri}
+        self.HEADERS = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "Upgrade-Insecure-Requests": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
         }
-        session.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
-    return session
+        self.DGP5_HEADERS = {
+            "Host": "apidgp-gameplayer.games.dmm.com",
+            "Connection": "keep-alive",
+            "User-Agent": "DMMGamePlayer5-Win/17.1.2 Electron/17.1.2",
+            "Client-App": "DMMGamePlayer5",
+            "Client-version": "17.1.2",
+        }
+        self.DGP5_LAUNCH_PARAMS = {
+            "game_type": "GCL",
+            "game_os": "win",
+            "launch_type": "LIB",
+            "mac_address": self.gen_rand_address(),
+            "hdd_serial": self.gen_rand_hex(),
+            "motherboard": self.gen_rand_hex(),
+            "user_os": "win",
+        }
+        self.open()
 
+    def gen_rand_hex(self):
+        return hashlib.sha256(str(random.random()).encode()).hexdigest()
 
-def get_dpg5_config(dgp5_path):
-    with open(dgp5_path + "dmmgame.cnf", "r", encoding="utf-8") as f:
-        config = f.read()
-    return json.loads(config)
+    def gen_rand_address(self):
+        hex = self.gen_rand_hex()
+        address = ""
+        for x in range(12):
+            address += hex[x]
+            if x % 2 == 1:
+                address += ":"
+        return address[:-1]
 
+    def write(self):
+        for cookie_row in self.db.cursor().execute("select * from cookies"):
+            name = cookie_row[3]
+            value = self.session.cookies.get(name)
+            if value != None:
+                self.db.execute(
+                    f"update cookies set value = '{value}' where name = '{name}'"
+                )
+        self.db.commit()
 
-requests.packages.urllib3.disable_warnings()
+    def read(self):
+        for cookie_row in self.db.cursor().execute("select * from cookies"):
+            cookie_data = {
+                "name": cookie_row[3],
+                "value": cookie_row[4],
+                "domain": cookie_row[1],
+                "path": cookie_row[6],
+                "secure": cookie_row[8],
+            }
+            self.session.cookies.set_cookie(
+                requests.cookies.create_cookie(**cookie_data)
+            )
+
+    def get(self, url: str) -> requests.Response:
+        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY)
+
+    def post(self, url: str) -> requests.Response:
+        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY)
+
+    def lunch(self, url: str, product_id: str) -> requests.Response:
+        json = {"product_id": product_id}
+        json.update(self.DGP5_LAUNCH_PARAMS)
+        return self.session.post(
+            url,
+            headers=self.DGP5_HEADERS,
+            proxies=self.PROXY,
+            json=json,
+            verify=False,
+        )
+
+    def get_config(self):
+        with open(self.DGP5_PATH + "dmmgame.cnf", "r", encoding="utf-8") as f:
+            config = f.read()
+        return json.loads(config)
+
+    def open(self):
+        self.db = sqlite3.connect(self.DGP5_PATH + "Network/Cookies")
+        self.session = requests.session()
+        self.cookies = self.session.cookies
+
+    def close(self):
+        self.db.close()
+
 
 argpar = argparse.ArgumentParser(
     prog="DMMGamePlayerFastLauncher",
@@ -58,86 +123,36 @@ argpar = argparse.ArgumentParser(
 argpar.add_argument("product_id", default=None)
 argpar.add_argument("--game-path", default=None)
 argpar.add_argument("--game-args", default=None)
-argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
 arg = argpar.parse_args()
 
-HEADERS = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "Upgrade-Insecure-Requests": "1",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
-}
 
-PROXY = {"https": arg.https_proxy_uri}
+session = DgpSession(arg.https_proxy_uri)
 
-DGP5_HEADERS = {
-    "Host": "apidgp-gameplayer.games.dmm.com",
-    "Connection": "keep-alive",
-    "User-Agent": "DMMGamePlayer5-Win/17.1.2 Electron/17.1.2",
-    "Client-App": "DMMGamePlayer5",
-    "Client-version": "17.1.2",
-}
-DGP5_LAUNCH_PARAMS = {
-    "product_id": arg.product_id,
-    "game_type": "GCL",
-    "game_os": "win",
-    "launch_type": "LIB",
-    "mac_address": gen_rand_address(),
-    "hdd_serial": gen_rand_hex(),
-    "motherboard": gen_rand_hex(),
-    "user_os": "win",
-}
-DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
+session.read()
+url = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl").json()["data"][
+    "url"
+]
+token = urlparse(url).path.split("path=")[-1]
 
 
-open("cookie.bytes", "a+")
-with open("cookie.bytes", "rb") as f:
-    blob = f.read()
-if blob == b"" or arg.login_force:
-    session = get_dgp5_session(DGP5_PATH)
+session.get(url)
+res = session.get(
+    f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+)
 
-    response = session.get(
-        "https://apidgp-gameplayer.games.dmm.com/v5/loginurl",
-        headers=HEADERS,
-        proxies=PROXY,
-    ).json()
+if session.cookies.get("login_session_id") == None:
+    if not arg.skip_exception:
+        raise Exception(
+            "\n".join(["Login failed.", "Please start DMMGamePlayer and login again."])
+        )
 
-    session.get(
-        response["data"]["url"],
-        headers=HEADERS,
-        proxies=PROXY,
-    )
+session.write()
+session.close()
 
-    url = urlparse(response["data"]["url"])
-    token = url.path.split("path=")[-1]
-
-    session.get(
-        f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false",
-        headers=HEADERS,
-        proxies=PROXY,
-    )
-
-    if session.cookies.get("login_session_id") == None:
-        if not arg.skip_exception:
-            raise Exception("ログインに失敗しました\nDMMGamePlayerを起動してログインし直して下さい")
-    contents = json.dumps(
-        {
-            "login_session_id": session.cookies.get("login_session_id"),
-            "login_secure_id": session.cookies.get("login_secure_id"),
-        }
-    )
-    new_blob = win32crypt.CryptProtectData(
-        contents.encode(), "DMMGamePlayerFastLauncher"
-    )
-    with open("cookie.bytes", "wb") as f:
-        f.write(new_blob)
-else:
-    _, contents = win32crypt.CryptUnprotectData(blob)
-cookie = json.loads(contents)
-
-dpg5_config = get_dpg5_config(DGP5_PATH)
+dpg5_config = session.get_config()
 if arg.game_path is None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
@@ -161,28 +176,33 @@ if arg.game_path is None:
                     break
             else:
                 if not arg.skip_exception:
-                    raise Exception("ゲームのパスの検出に失敗しました")
+                    raise Exception(
+                        "\n".join(
+                            [
+                                "Game path detection failed.",
+                                "Try using --game_path.",
+                                "https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#game-path",
+                            ]
+                        )
+                    )
             break
     else:
         if not arg.skip_exception:
-            raise Exception(
-                "product_id が無効です\n"
-                + " ".join(
+            message = [
+                "product_id is invalid.",
+                "Please select:",
+                " ".join(
                     [contents["productId"] for contents in dpg5_config["contents"]]
-                )
-                + "から選択して下さい"
-            )
+                ),
+            ]
+            raise Exception("\n".join(message))
 else:
     game_path = arg.game_path
 
-response = requests.post(
-    "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl",
-    cookies=cookie,
-    headers=DGP5_HEADERS,
-    json=DGP5_LAUNCH_PARAMS,
-    verify=False,
-    proxies=PROXY,
+response = session.lunch(
+    "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", arg.product_id
 ).json()
+
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     if arg.game_args is not None:
@@ -202,17 +222,23 @@ if response["result_code"] == 100:
                     None, "runas", game_path, response["data"]["execute_args"], None, 1
                 )
             else:
-                raise Exception("ゲームが起動しませんでした。管理者権限を許可してください。")
+                raise Exception(
+                    "Game did not start. Please allow administrative privileges."
+                )
         elif response["data"]["is_administrator"]:
-            raise Exception("ゲームが起動しませんでした。管理者権限を許可してください。")
+            raise Exception(
+                "Game did not start. Please allow administrative privileges."
+            )
         else:
             if not arg.skip_exception:
-                raise Exception("ゲームが起動しませんでした。ゲームにアップデートがある可能性があります。")
+                raise Exception(
+                    "Game did not start. There may be an update to the game."
+                )
 elif response["result_code"] == 801:
     if not arg.skip_exception:
-        raise Exception("日本国外からのアクセスは禁止されています\n" + json.dumps(response))
+        raise Exception(
+            "\n".join(["Access from outside Japan is prohibited", json.dumps(response)])
+        )
 else:
-    with open("cookie.bytes", "wb") as f:
-        f.write(b"")
     if not arg.skip_exception:
-        raise Exception("起動にエラーが発生したため修復プログラムを実行しました\n" + json.dumps(response))
+        raise Exception("\n".join(["Error in startup.", json.dumps(response)]))
