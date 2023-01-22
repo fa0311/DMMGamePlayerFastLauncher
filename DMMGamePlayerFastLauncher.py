@@ -151,6 +151,82 @@ class DgpSession:
         self.db.close()
 
 
+class ErrorManagerType:
+    message: str
+    solution: str | None
+    url: str | None
+
+    def __init__(
+        self,
+        message: str,
+        solution: str | None = None,
+        url: str | None = None,
+    ):
+        self.message = message
+        self.solution = solution
+        self.url = url
+
+
+class ErrorManager:
+    skip: bool = False
+    argument_error: ErrorManagerType = ErrorManagerType(
+        message="Could not parse argument.",
+        solution="Is the product_id specified correctly?",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#引数",
+    )
+    login_error: ErrorManagerType = ErrorManagerType(
+        message="Login failed",
+        solution="If DMMGamePlayer is running, exit it or Please start DMMGamePlayer and login again.",
+    )
+    game_path_error: ErrorManagerType = ErrorManagerType(
+        message="Game path detection failed.",
+        solution="Try using --game_path.",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#game-path",
+    )
+    product_id_error: ErrorManagerType = ErrorManagerType(
+        message="product_id is invalid.",
+        solution="Please select:",
+    )
+    permission_error: ErrorManagerType = ErrorManagerType(
+        message="Game did not start.",
+        solution="Please allow administrative privileges.",
+    )
+    process_error: ErrorManagerType = ErrorManagerType(
+        message="Game did not start.",
+        solution="There may be an update to the game.",
+    )
+    access_error: ErrorManagerType = ErrorManagerType(
+        message="Access from outside Japan is prohibited.",
+        solution="Try using --https-proxy-uri or VPN.",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#https-proxy-uri",
+    )
+    auth_device_error: ErrorManagerType = ErrorManagerType(
+        message="Failed to authenticate device.",
+        solution="Check the box for 'DMMGAMEPLAYER Settings' > 'デバイス設定' > 'デバイス認証' > '有料ゲームと一部基本無料ゲームでデバイス認証'",
+        url="",
+    )
+    startup_error: ErrorManagerType = ErrorManagerType(
+        message="Error in startup.",
+        solution="Report an Issues.",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
+    )
+
+    def error(self, error: ErrorManagerType, log: str | None = None):
+        output = filter(
+            lambda x: x != None,
+            [error.message, error.solution, error.url, log],
+        )
+        if self.skip:
+            self.info("\n".join(output))
+        else:
+            raise Exception("\n".join(output))
+
+    def info(self, text: str):
+        print(text)
+
+
+error_manager = ErrorManager()
+
 argpar = argparse.ArgumentParser(
     prog="DMMGamePlayerFastLauncher",
     usage="https://github.com/fa0311/DMMGamePlayerFastLauncher",
@@ -165,28 +241,20 @@ argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
 try:
     arg = argpar.parse_args()
+    error_manager.skip = arg.skip_exception
 except:
-    raise Exception(
-        "\n".join(
-            [
-                "Could not parse argument.",
-                "Is the product_id specified correctly?",
-                "https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#%E5%BC%95%E6%95%B0",
-            ]
-        )
-    )
-
+    error_manager.error(error=ErrorManager.argument_error)
 
 session = DgpSession(arg.https_proxy_uri)
 
 try:
     session.read()
 except:
-    print("Read Error")
+    error_manager.info("Read Error")
     try:
         session.read_cache()
     except:
-        print("Read Cache Error")
+        error_manager.info("Read Cache Error")
 
 if session.cookies.get("login_session_id") == None or arg.login_force:
     response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
@@ -201,29 +269,21 @@ if session.cookies.get("login_session_id") == None:
     try:
         session.read_cache()
     except:
-        print("Read Cache Error")
+        error_manager.info("Read Cache Error")
 
 if session.cookies.get("login_session_id") == None:
-    if not arg.skip_exception:
-        raise Exception(
-            "\n".join(
-                [
-                    "Login failed.",
-                    "If DMMGamePlayer is running, exit it or Please start DMMGamePlayer and login again.",
-                ]
-            )
-        )
+    error_manager.error(error=ErrorManager.login_error)
 
 try:
     session.write()
 except:
-    print("Write Error")
+    error_manager.info("Write Error")
 
 
 try:
     session.write_cache()
 except:
-    print("Write Cache Error")
+    error_manager.info("Write Cache Error")
 
 session.close()
 
@@ -242,35 +302,15 @@ if arg.game_path is None:
             )
             for path in game_path_list:
                 lower_path = path.lower()
-                if not (
-                    "unity" in lower_path
-                    or "install" in lower_path
-                    or "help" in lower_path
-                ):
+                if not all([i in lower_path for i in ["unity", "install", "help"]]):
                     game_path = path
                     break
             else:
-                if not arg.skip_exception:
-                    raise Exception(
-                        "\n".join(
-                            [
-                                "Game path detection failed.",
-                                "Try using --game_path.",
-                                "https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#game-path",
-                            ]
-                        )
-                    )
+                error_manager.error(error=ErrorManager.game_path_error)
             break
     else:
-        if not arg.skip_exception:
-            message = [
-                "product_id is invalid.",
-                "Please select:",
-                " ".join(
-                    [contents["productId"] for contents in dpg5_config["contents"]]
-                ),
-            ]
-            raise Exception("\n".join(message))
+        ids = ", ".join([contents["productId"] for contents in dpg5_config["contents"]])
+        error_manager.error(error=ErrorManager.product_id_error, log=ids)
 else:
     game_path = arg.game_path
 
@@ -291,29 +331,17 @@ if response["result_code"] == 100:
         text = line.decode("utf-8").strip()
         print(text)
     if time.time() - start_time < 2 and not arg.skip_exception:
-        if response["data"]["is_administrator"] and not arg.non_request_admin:
-            if not ctypes.windll.shell32.IsUserAnAdmin():
+        if response["data"]["is_administrator"]:
+            if not ctypes.windll.shell32.IsUserAnAdmin() and not arg.non_request_admin:
                 ctypes.windll.shell32.ShellExecuteW(
                     None, "runas", game_path, response["data"]["execute_args"], None, 1
                 )
             else:
-                raise Exception(
-                    "Game did not start. Please allow administrative privileges."
-                )
-        elif response["data"]["is_administrator"]:
-            raise Exception(
-                "Game did not start. Please allow administrative privileges."
-            )
-        else:
-            if not arg.skip_exception:
-                raise Exception(
-                    "Game did not start. There may be an update to the game."
-                )
+                error_manager.error(error=ErrorManager.permission_error)
+
+elif response["result_code"] == 307:
+    error_manager.error(error=ErrorManager.auth_device_error)
 elif response["result_code"] == 801:
-    if not arg.skip_exception:
-        raise Exception(
-            "\n".join(["Access from outside Japan is prohibited", json.dumps(response)])
-        )
+    error_manager.error(error=ErrorManager.access_error)
 else:
-    if not arg.skip_exception:
-        raise Exception("\n".join(["Error in startup.", json.dumps(response)]))
+    error_manager.error(error=ErrorManager.startup_error, log=json.dumps(response))
