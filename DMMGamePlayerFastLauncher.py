@@ -203,7 +203,7 @@ class ErrorManager:
     auth_device_error: ErrorManagerType = ErrorManagerType(
         message="Failed to authenticate device.",
         solution="Check the box for 'DMMGAMEPLAYER Settings' > 'デバイス設定' > 'デバイス認証' > '有料ゲームと一部基本無料ゲームでデバイス認証'",
-        url="",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/blob/master/docs/README-advance.md#failed-to-authenticate-deviceというエラーが出る",
     )
     startup_error: ErrorManagerType = ErrorManagerType(
         message="Error in startup.",
