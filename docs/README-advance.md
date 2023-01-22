@@ -100,7 +100,7 @@ Socks5
 
 [https-proxy-uri](#https-proxy-uri)
 
-### 「Game path detection failed.」というエラーが出る
+### 「Game path detection failed」というエラーが出る
 
 [game-path](#game-path)
 
@@ -131,15 +131,19 @@ Socks5
 そのゲームには対応していません  
 Issue や Twitter でバグ報告お願いします
 
-### 「Login failed.」というエラーが出る
+### 「Login failed」というエラーが出る
 
 DMMGamePlayer を起動してログインし直して下さい
 
-### 「"Game did not start.」というエラーが出る
+### 「Game did not start」というエラーが出る
 
 ゲームにアップデートがないか確認して下さい  
 管理者権限を与えてみてください  
 それでも解決しなければ Issue や Twitter でバグ報告お願いします
+
+### 「Failed to authenticate device」というエラーが出る
+
+<img src="./img/device_auth_config.png" height="300">
 
 ## 不具合以外のヘルプ
 

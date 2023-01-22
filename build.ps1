@@ -4,4 +4,4 @@ pyinstaller DMMGamePlayerFastLauncher.py --onefile --noconsole
 pyinstaller DMMGamePlayerProductIdChecker.py --onefile
 New-Item "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\windows\tools" -ItemType Directory -Force
 Copy-Item -Path "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\dist\DMMGamePlayerProductIdChecker.exe" -Destination "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\windows\tools" -Force
-start "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\setup.iss"
+Start-Process "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Z:\Project\Python\hack\DMMGamePlayerFastLauncher\setup.iss"

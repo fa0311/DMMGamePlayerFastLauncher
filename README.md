@@ -45,8 +45,8 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 このツールにアップデートがあった時に通知します
 
-![screenshot1](docs/img/subscribe1.png)
-![screenshot1](docs/img/subscribe2.png)
+<img src="docs/img/subscribe1.png" height="300">
+<img src="docs/img/subscribe2.png" height="300">
 
 ## 典拠
 
