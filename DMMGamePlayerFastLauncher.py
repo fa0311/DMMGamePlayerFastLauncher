@@ -314,6 +314,7 @@ if arg.bypass_uac:
                 template.replace(r"{{UID}}", schtasks_file)
                 .replace(r"{{SID}}", get_sid())
                 .replace(r"{{COMMAND}}", schtasks_task_path)
+                .replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
             )
 
         create_args = [
@@ -327,9 +328,6 @@ if arg.bypass_uac:
         process_manager.run(create_args, admin=True)
         time.sleep(3)
         process_manager.run(run_args)
-    time.sleep(8)
-    error_manager.error(error=ErrorManager.elevate_admin_error)
-
 
 session = DgpSession(arg.https_proxy_uri)
 
