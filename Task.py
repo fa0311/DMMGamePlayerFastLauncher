@@ -1,14 +1,17 @@
 import psutil
-import subprocess
 import os
 import signal
+import ctypes
 
 
 for p in psutil.process_iter(attrs=("name", "pid", "cmdline")):
     if p.info["name"] != "DMMGamePlayerFastLauncher.exe":
         continue
-    if "--bypass-uac" in p.info["cmdline"]:
-        p.info["cmdline"].remove("--bypass-uac")
+    cmdline = p.info["cmdline"]
+    if "--bypass-uac" in cmdline:
+        cmdline.remove("--bypass-uac")
         os.kill(p.info["pid"], signal.SIGTERM)
-        subprocess.Popen(p.info["cmdline"], shell=True)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", cmdline[0], " ".join(cmdline[1:]), None, 1
+        )
         break

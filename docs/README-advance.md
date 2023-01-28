@@ -19,15 +19,37 @@
 
 `DMMGamePlayerFastLauncher.exe <product_id>`
 
-| オプション          | エイリアス | デフォルト | タイプ             |
-| ------------------- | ---------- | ---------- | ------------------ |
-| --help              | -h         | False      | Bool               |
-| --game-path         |            | None       | String &#124; None |
-| --game-args         |            | None       | String &#124; None |
-| --login-force       |            | Flase      | Bool               |
-| --skip-exception    |            | False      | Bool               |
-| --https-proxy-uri   |            | None       | String &#124; None |
-| --non-request-admin |            | False      | Bool               |
+| オプション          | エイリアス | デフォルト   | タイプ             | note       |
+| ------------------- | ---------- | ------------ | ------------------ | ---------- |
+| --help              | -h         | False        | Bool               |            |
+| --game-path         |            | None         | String &#124; None |            |
+| --game-args         |            | None         | String &#124; None |            |
+| --login-force       |            | Flase        | Bool               | deprecated |
+| --skip-exception    |            | False        | Bool               |            |
+| --https-proxy-uri   |            | None         | String &#124; None |            |
+| --non-request-admin |            | False        | Bool               | deprecated |
+| --non-bypass-uac    |            | False        | Bool               |            |
+| --schtasks-path     |            | schtasks.exe | String             |            |
+
+```mermaid
+    graph TD;
+        ゲームのプロセスを開始 --権限不備で起動しない--> non-bypass-uac;
+        ゲームのプロセスを開始 --Start/Error--> 続行;
+        non-bypass-uac --false--> 最初のリクエスト;
+        最初のリクエスト --no-->ゲームに権限与える
+        最初のリクエスト --yes--> non-request-admin
+        non-bypass-uac --true--> non-request-admin;
+        non-request-admin --true--> skip-exception;
+        non-request-admin --false--> UAC;
+        UAC --allow--> ゲームに権限与える
+        UAC --disabled--> 続行
+        skip-exception --true--> 続行
+        skip-exception --false--> エラー
+```
+
+**最初のリクエスト** - 最初のリクエストは、管理者権限を要求します  
+これは、タスクスケジューラーに自動的に権限を昇格させるプログラムを登録するために必要です  
+**skip-exception** - `skip-exception`はエラーが発生しても続行するためのものですが無限ループになる可能性があるためここでは特別に強制終了されます
 
 ### game-path
 
@@ -55,7 +77,7 @@ Unity 製ゲームの引数はここに詳しく載ってます
 
 ### skip-exception
 
-エラーを出力しません  
+エラーを出力しなくなります  
 これはあくまで応急処置で基本的には使わないで下さい  
 原因不明なエラーが発生した場合は [issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues) に報告して下さい
 
@@ -84,6 +106,39 @@ Socks5
 
 例:  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --non-request-admin`
+
+### non-bypass-uac
+
+この引数を使用すると UAC の自動許可を行わなくなります
+
+指定していない場合はタスクスケジューラを使った権限の自動昇格を行います  
+タスクの詳細はこのコマンドで確認できます  
+複雑な処理を行うため少し起動速度が遅くなります  
+`schtasks.exe /query /tn \Microsoft\Windows\DMMGamePlayerFastLauncher\`
+
+また、このコマンドで削除できます
+`Get-ScheduledTask | where TaskPath -eq "\Microsoft\Windows\DMMGamePlayerFastLauncher" | Unregister-ScheduledTask -Confirm:$false`
+
+### schtasks-path
+
+`schtasks.exe`の起動パスです
+ほとんどの場合、この引数は不要です
+
+## ファイル階層
+
+| ファイル名                              | 削除 | 詳細                                                                           |
+| --------------------------------------- | ---- | ------------------------------------------------------------------------------ |
+| DMMGamePlayerFastLauncher.exe           | x    | 本体                                                                           |
+| unins000.dat                            | o    | アンインストールする際に必要                                                   |
+| unins000.exe                            | x    | アンインストールする際に必要                                                   |
+| cookie.bytes                            | o    | セッションのキャッシュファイル, DMM のセッションが取得できなかった際に使用する |
+| tools/DMMGamePlayerProductIdChecker.exe | o    | プロダクト ID のチェッカー,左ダブルクリックで実行                              |
+| tools/Task.exe                          | x    | タスクスケジューラから呼び出される                                             |
+| tools/refresh.ps1                       | o    | タスクを削除する,右クリックメニューから PowerShell で実行                      |
+| sample/ウマ娘.lnk                       | o    | ウマ娘の起動ショートカット,左ダブルクリックで実行                              |
+| sample/プリコネ R.lnk                   | o    | プリコネ R の起動ショートカット,左ダブルクリックで実行                         |
+| assets/template.xml                     | x    | タスクスケジューラのテンプレートファイル                                       |
+| assets/schtasks_v1\_{username}.xml      | o    | タスクスケジューラの残骸ファイル                                               |
 
 ## ヘルプ
 

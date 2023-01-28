@@ -12,6 +12,7 @@ import os
 import time
 from urllib.parse import urlparse
 import win32security
+import sys
 
 
 class DgpSession:
@@ -234,6 +235,7 @@ class ErrorManager:
 
 class ProcessManager:
     non_request_admin: bool = False
+    non_bypass_uac: bool = False
     error_manager: ErrorManager
 
     def __init__(self, error_manager: ErrorManager) -> None:
@@ -244,7 +246,9 @@ class ProcessManager:
     ) -> subprocess.Popen[bytes] | None:
         print(" ".join(args))
         if admin:
-            if self.non_request_admin:
+            if not self.non_bypass_uac:
+                run_bypass_uac()
+            elif self.non_request_admin:
                 self.error_manager.error(error=ErrorManager.permission_error)
             else:
                 ctypes.windll.shell32.ShellExecuteW(
@@ -263,33 +267,7 @@ def get_sid() -> str:
     return sidstr
 
 
-error_manager = ErrorManager()
-process_manager = ProcessManager(error_manager)
-
-argpar = argparse.ArgumentParser(
-    prog="DMMGamePlayerFastLauncher",
-    usage="https://github.com/fa0311/DMMGamePlayerFastLauncher",
-    description="DMM Game Player Fast Launcher",
-)
-argpar.add_argument("product_id", default=None)
-argpar.add_argument("--game-path", default=None)
-argpar.add_argument("--game-args", default=None)
-argpar.add_argument("--login-force", action="store_true")
-argpar.add_argument("--skip-exception", action="store_true")
-argpar.add_argument("--https-proxy-uri", default=None)
-argpar.add_argument("--non-request-admin", action="store_true")
-argpar.add_argument("--bypass-uac", action="store_true")
-argpar.add_argument("--schtasks-path", default="schtasks.exe")
-
-try:
-    arg = argpar.parse_args()
-    error_manager.skip = arg.skip_exception
-    process_manager.non_request_admin = arg.non_request_admin
-except:
-    error_manager.error(error=ErrorManager.argument_error)
-
-
-if arg.bypass_uac:
+def run_bypass_uac():
     schtasks_file = "schtasks_v1_" + os.getlogin()
     schtasks_name = f"\Microsoft\Windows\DMMGamePlayerFastLauncher\{schtasks_file}"
 
@@ -325,9 +303,41 @@ if arg.bypass_uac:
             "/tn",
             schtasks_name,
         ]
+        if arg.non_request_admin:
+            error_manager.error(error=ErrorManager.permission_error)
+            return
         process_manager.run(create_args, admin=True)
         time.sleep(3)
-        process_manager.run(run_args)
+        process_manager.run(run_args).wait()
+    time.sleep(5)
+    sys.exit()
+
+
+error_manager = ErrorManager()
+process_manager = ProcessManager(error_manager)
+
+argpar = argparse.ArgumentParser(
+    prog="DMMGamePlayerFastLauncher",
+    usage="https://github.com/fa0311/DMMGamePlayerFastLauncher",
+    description="DMM Game Player Fast Launcher",
+)
+argpar.add_argument("product_id", default=None)
+argpar.add_argument("--game-path", default=None)
+argpar.add_argument("--game-args", default=None)
+argpar.add_argument("--login-force", action="store_true")
+argpar.add_argument("--skip-exception", action="store_true")
+argpar.add_argument("--https-proxy-uri", default=None)
+argpar.add_argument("--non-request-admin", action="store_true")
+argpar.add_argument("--non-bypass-uac", action="store_true")
+argpar.add_argument("--schtasks-path", default="schtasks.exe")
+
+try:
+    arg = argpar.parse_args()
+    error_manager.skip = arg.skip_exception
+    process_manager.non_request_admin = arg.non_request_admin
+    process_manager.non_bypass_uac = arg.non_bypass_uac
+except:
+    error_manager.error(error=ErrorManager.argument_error)
 
 session = DgpSession(arg.https_proxy_uri)
 
