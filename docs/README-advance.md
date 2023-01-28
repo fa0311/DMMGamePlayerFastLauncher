@@ -55,14 +55,15 @@
 
 ### game-path
 
-何も指定していない場合は自動で検出しますがゲームによってはうまくいかない場合があります
+ゲームのパスを指定します  
+何も指定していない場合は自動で検出しますがうまくいかない場合は指定してください
 
 例:  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --game-path %UserProfile%/umamusume/umamusume.exe`
 
 ### game-args
 
-ゲームに引数を追加したい場合はこれを指定します  
+ゲームに引数を追加したい場合はこの引数を使用します  
 通常の DMM を介した起動方法で使用できない隠された引数を使用することができます  
 `"` で囲む必要があることに注意してください
 
@@ -79,7 +80,7 @@ Unity 製ゲームの引数はここに詳しく載ってます
 
 ### skip-exception
 
-エラーを出力しなくなります  
+この引数を使用するとエラーを出力しなくなります  
 これはあくまで応急処置で基本的には使わないで下さい  
 原因不明なエラーが発生した場合は [issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues) に報告して下さい
 
@@ -103,7 +104,7 @@ Socks5
 
 ### non-request-admin
 
-このツールは管理者権限を必要なときのみ要求することがありますがそれを要求しなくなります  
+この引数を使用すると管理者権限を要求しません  
 ほとんどの場合、この引数は不要です
 
 例:  
@@ -120,10 +121,11 @@ Socks5
 
 また、このコマンドで削除できます
 `Get-ScheduledTask | where TaskPath -eq "\Microsoft\Windows\DMMGamePlayerFastLauncher" | Unregister-ScheduledTask -Confirm:$false`
+または `.\tools\refresh.ps1`
 
 ### schtasks-path
 
-`schtasks.exe`の起動パスです
+`schtasks.exe`のパスを指定します
 ほとんどの場合、この引数は不要です
 
 ## ファイル階層
