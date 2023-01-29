@@ -251,6 +251,7 @@ class ProcessManager:
             elif self.non_request_admin:
                 self.error_manager.error(error=ErrorManager.permission_error)
             else:
+                args = [f'"{arg}"' for arg in args]
                 ctypes.windll.shell32.ShellExecuteW(
                     None, "runas", args[0], " ".join(args[1:]), None, 1
                 )
