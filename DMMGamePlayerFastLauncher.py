@@ -242,11 +242,11 @@ class ProcessManager:
         self.error_manager = error_manager
 
     def run(
-        self, args: dict[str], admin: bool = False
+        self, args: dict[str], admin: bool = False, force: bool = False
     ) -> subprocess.Popen[bytes] | None:
         print(" ".join(args))
         if admin:
-            if not self.non_bypass_uac:
+            if not self.non_bypass_uac and not force:
                 run_bypass_uac()
             elif self.non_request_admin:
                 self.error_manager.error(error=ErrorManager.permission_error)
@@ -303,10 +303,7 @@ def run_bypass_uac():
             "/tn",
             schtasks_name,
         ]
-        if arg.non_request_admin:
-            error_manager.error(error=ErrorManager.permission_error)
-            return
-        process_manager.run(create_args, admin=True)
+        process_manager.run(create_args, admin=True, force=True)
         time.sleep(3)
         process_manager.run(run_args).wait()
     time.sleep(5)
