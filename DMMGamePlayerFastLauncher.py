@@ -11,6 +11,8 @@ import sqlite3
 import os
 import time
 from urllib.parse import urlparse
+import win32security
+import sys
 
 
 class DgpSession:
@@ -211,6 +213,12 @@ class ErrorManager:
         url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
     )
 
+    elevate_admin_error: ErrorManagerType = ErrorManagerType(
+        message="Failed to elevate to administrator privileges.",
+        solution="Report an Issues.",
+        url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
+    )
+
     def error(self, error: ErrorManagerType, log: str | None = None):
         output = filter(
             lambda x: x != None,
@@ -225,7 +233,86 @@ class ErrorManager:
         print(text)
 
 
+class ProcessManager:
+    non_request_admin: bool = False
+    non_bypass_uac: bool = False
+    error_manager: ErrorManager
+
+    def __init__(self, error_manager: ErrorManager) -> None:
+        self.error_manager = error_manager
+
+    def run(
+        self, args: dict[str], admin: bool = False, force: bool = False
+    ) -> subprocess.Popen[bytes] | None:
+        print(" ".join(args))
+        if admin:
+            if not self.non_bypass_uac and not force:
+                run_bypass_uac()
+            elif self.non_request_admin:
+                self.error_manager.error(error=ErrorManager.permission_error)
+            else:
+                args = [f'"{arg}"' for arg in args]
+                ctypes.windll.shell32.ShellExecuteW(
+                    None, "runas", args[0], " ".join(args[1:]), None, 1
+                )
+        else:
+            return subprocess.Popen(
+                args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+
+
+def get_sid() -> str:
+    desc = win32security.GetFileSecurity(".", win32security.OWNER_SECURITY_INFORMATION)
+    sid = desc.GetSecurityDescriptorOwner()
+    sidstr = win32security.ConvertSidToStringSid(sid)
+    return sidstr
+
+
+def run_bypass_uac():
+    schtasks_file = "schtasks_v1_" + os.getlogin()
+    schtasks_name = f"\Microsoft\Windows\DMMGamePlayerFastLauncher\{schtasks_file}"
+
+    run_args = [arg.schtasks_path, "/run", "/tn", schtasks_name]
+
+    if process_manager.run(run_args).wait() == 1:
+        schtasks_xml_path = (
+            r"{appdata}\DMMGamePlayerFastLauncher\assets\{name}.xml".format(
+                appdata=os.environ["APPDATA"], name=schtasks_file
+            )
+        )
+        schtasks_task_path = (
+            r"{appdata}\DMMGamePlayerFastLauncher\Tools\Task.exe".format(
+                appdata=os.environ["APPDATA"]
+            )
+        )
+        with open("assets/template.xml", "r") as f:
+            template = f.read()
+
+        with open(f"assets/{schtasks_file}.xml", "w") as f:
+            f.write(
+                template.replace(r"{{UID}}", schtasks_file)
+                .replace(r"{{SID}}", get_sid())
+                .replace(r"{{COMMAND}}", schtasks_task_path)
+                .replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
+            )
+
+        create_args = [
+            arg.schtasks_path,
+            "/create",
+            "/xml",
+            schtasks_xml_path,
+            "/tn",
+            schtasks_name,
+        ]
+        process_manager.run(create_args, admin=True, force=True)
+        time.sleep(3)
+        process_manager.run(run_args).wait()
+    time.sleep(5)
+    sys.exit()
+
+
 error_manager = ErrorManager()
+process_manager = ProcessManager(error_manager)
 
 argpar = argparse.ArgumentParser(
     prog="DMMGamePlayerFastLauncher",
@@ -239,9 +326,14 @@ argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
+argpar.add_argument("--non-bypass-uac", action="store_true")
+argpar.add_argument("--schtasks-path", default="schtasks.exe")
+
 try:
     arg = argpar.parse_args()
     error_manager.skip = arg.skip_exception
+    process_manager.non_request_admin = arg.non_request_admin
+    process_manager.non_bypass_uac = arg.non_bypass_uac
 except:
     error_manager.error(error=ErrorManager.argument_error)
 
@@ -324,20 +416,17 @@ if response["result_code"] == 100:
         dmm_args = dmm_args + arg.game_args.split(" ")
     print(game_path)
     start_time = time.time()
-    process = subprocess.Popen(
-        [game_path] + dmm_args, shell=True, stdout=subprocess.PIPE
-    )
+    process = process_manager.run([game_path] + dmm_args)
     for line in process.stdout:
         text = line.decode("utf-8").strip()
         print(text)
-    if time.time() - start_time < 2 and not arg.skip_exception:
+    if time.time() - start_time < 2:
         if response["data"]["is_administrator"]:
-            if not ctypes.windll.shell32.IsUserAnAdmin() and not arg.non_request_admin:
-                ctypes.windll.shell32.ShellExecuteW(
-                    None, "runas", game_path, response["data"]["execute_args"], None, 1
-                )
-            else:
-                error_manager.error(error=ErrorManager.permission_error)
+            process = process_manager.run([game_path] + dmm_args, admin=True)
+        else:
+            error_manager.error(
+                error=ErrorManager.startup_error, log=json.dumps(response)
+            )
 
 elif response["result_code"] == 307:
     error_manager.error(error=ErrorManager.auth_device_error)

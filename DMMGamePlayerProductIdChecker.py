@@ -17,5 +17,5 @@ df = pd.DataFrame(table, columns=["productId", "path", "version"])
 pd.set_option("display.unicode.east_asian_width", True)
 
 print(df)
-print("終了するには何かキーを押してください")
+print("Please press any key to exit")
 input()

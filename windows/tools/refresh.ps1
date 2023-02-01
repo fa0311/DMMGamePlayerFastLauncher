@@ -1,0 +1,2 @@
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Administrators")) { Start-Process powershell.exe "-File `"$PSCommandPath`" -NoNewWindow -Wait" -Verb RunAs; exit }
+Get-ScheduledTask | where TaskPath -eq "\Microsoft\Windows\DMMGamePlayerFastLauncher\" | Unregister-ScheduledTask -Confirm:$false
