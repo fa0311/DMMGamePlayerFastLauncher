@@ -13,6 +13,8 @@ import time
 from urllib.parse import urlparse
 import win32security
 import sys
+import base64
+from Crypto.Cipher import AES
 
 
 class DgpSession:
@@ -75,10 +77,16 @@ class DgpSession:
         self.db.commit()
 
     def read(self):
+        with open(self.DgpSession + '\\Local State', "r") as f:
+            local_state = json.load(f)
+        encrypted_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"].encode())[5:]
+        encrypted_data = win32crypt.CryptUnprotectData(encrypted_key,None,None,None,0)[1]
         for cookie_row in self.db.cursor().execute("select * from cookies"):
+            cipher = AES.new(encrypted_data, AES.MODE_GCM, cookie_row[5][3:15])
+            value = cipher.decrypt(cookie_row[5][15:])[:-16].decode()
             cookie_data = {
                 "name": cookie_row[3],
-                "value": cookie_row[4],
+                "value": value,
                 "domain": cookie_row[1],
                 "path": cookie_row[6],
                 "secure": cookie_row[8],
