@@ -29,12 +29,16 @@
 | --https-proxy-uri   |            | None         | String &#124; None |            |
 | --non-request-admin |            | False        | Bool               | deprecated |
 | --non-bypass-uac    |            | False        | Bool               |            |
+| --force-bypass-uac  |            | False        | Bool               |            |
 | --schtasks-path     |            | schtasks.exe | String             |            |
 
 ```mermaid
     graph TD;
-        ゲームのプロセスを開始 --権限不備で起動しない--> non-bypass-uac;
-        ゲームのプロセスを開始 --Start/Error--> 続行;
+        ゲームが権限を要求 --> force-bypass-uac;
+        force-bypass-uac --true--> non-bypass-uac
+        force-bypass-uac --false--> 権限与えずゲームを開始
+        権限与えずゲームを開始 --起動しない--> non-bypass-uac;
+        権限与えずゲームを開始 --起動--> 続行;
         non-bypass-uac --false--> 最初のリクエスト;
         最初のリクエスト --no-->ゲームに権限与える
         最初のリクエスト --yes--> non-request-admin
@@ -43,7 +47,7 @@
         non-request-admin --false--> UAC;
         UAC --allow--> ゲームに権限与える
         UAC --disabled--> 続行
-        skip-exception --true--> 続行
+        skip-exception --true--> ゲームに権限与えにず続行
         skip-exception --false--> エラー
 ```
 
@@ -51,7 +55,8 @@
 これは、タスクスケジューラーに自動的に権限を昇格させるプログラムを登録するために必要です
 
 特にこだわりが無ければ product_id 以外の引数は不要です  
-ゲームや環境によっては`game-path` `https-proxy-uri` `schtasks-path` などが必要です
+ゲームや環境によっては`game-path` `https-proxy-uri` `schtasks-path` などが必要です  
+更に高速化を求めるのであれば `--force-bypass-uac` などが必要ですが不安定になる可能性があります  
 
 ### game-path
 
@@ -112,7 +117,9 @@ Socks5
 
 ### non-bypass-uac
 
-この引数を使用すると UAC の自動昇格を行わなくなります
+この引数を使用すると UAC の自動昇格を行わなくなります  
+環境によってUACの自動昇格が行われなかったり起動速度を優先したい人はこれを付けてください  
+(開発者向けヒント; ビルド前の開発環境ではこの引数は必須です)
 
 指定していない場合はタスクスケジューラを使った権限の自動昇格を行います  
 タスクの詳細はこのコマンドで確認できます  
@@ -122,6 +129,15 @@ Socks5
 また、このコマンドで削除できます
 `Get-ScheduledTask | where TaskPath -eq "\Microsoft\Windows\DMMGamePlayerFastLauncher" | Unregister-ScheduledTask -Confirm:$false`
 または `.\tools\refresh.ps1`
+
+### force-bypass-uac
+
+ゲームが管理者権限を求めた際に必ずUACの自動昇格を行います  
+管理者権限でないと起動できないゲーム(non-bypass-uacを付けた際に必ずUACを要求するゲーム)はこれを付けると早く起動できます  
+ウマ娘やプリコネRなどの稀に要求するゲームは無い方が早いかもしれません  
+
+例:  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --force-bypass-uac`
 
 ### schtasks-path
 

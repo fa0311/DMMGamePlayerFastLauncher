@@ -13,6 +13,8 @@ import time
 from urllib.parse import urlparse
 import win32security
 import sys
+import base64
+from Crypto.Cipher import AES
 
 
 class DgpSession:
@@ -65,20 +67,28 @@ class DgpSession:
         return address[:-1]
 
     def write(self):
+        aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            name = cookie_row[3]
-            value = self.session.cookies.get(name)
-            if value != None:
-                self.db.execute(
-                    f"update cookies set value = '{value}' where name = '{name}'"
-                )
+            value = self.session.cookies.get(cookie_row[3])
+            v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
+            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+            decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
+            data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
+            self.db.execute(
+                "update cookies set encrypted_value = ? where name = ?",
+                (memoryview(data), cookie_row[3]),
+            )
         self.db.commit()
 
     def read(self):
+        aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
+            _, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
+            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+            value = cipher.decrypt_and_verify(data, mac).decode()
             cookie_data = {
                 "name": cookie_row[3],
-                "value": cookie_row[4],
+                "value": value,
                 "domain": cookie_row[1],
                 "path": cookie_row[6],
                 "secure": cookie_row[8],
@@ -148,6 +158,28 @@ class DgpSession:
         self.db = sqlite3.connect(self.DGP5_PATH + "Network/Cookies")
         self.session = requests.session()
         self.cookies = self.session.cookies
+
+    def get_aes_key(self):
+        with open(self.DGP5_PATH + "\\Local State", "r") as f:
+            local_state = json.load(f)
+        encrypted_key = base64.b64decode(
+            local_state["os_crypt"]["encrypted_key"].encode()
+        )[5:]
+        key = win32crypt.CryptUnprotectData(encrypted_key, None, None, None, 0)[1]
+        return key
+
+    def split_encrypted_data(self, encrypted_data: bytes) -> bytes:
+        return (
+            encrypted_data[0:3],
+            encrypted_data[3:15],
+            encrypted_data[15:-16],
+            encrypted_data[-16:],
+        )
+
+    def join_encrypted_data(
+        self, v10: bytes, nonce: bytes, data: bytes, mac: bytes
+    ) -> bytes:
+        return v10 + nonce + data + mac
 
     def close(self):
         self.db.close()
@@ -327,6 +359,7 @@ argpar.add_argument("--skip-exception", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
 argpar.add_argument("--non-bypass-uac", action="store_true")
+argpar.add_argument("--force-bypass-uac", action="store_true")
 argpar.add_argument("--schtasks-path", default="schtasks.exe")
 
 try:
@@ -414,7 +447,12 @@ if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     if arg.game_args is not None:
         dmm_args = dmm_args + arg.game_args.split(" ")
-    print(game_path)
+    if (
+        arg.force_bypass_uac
+        and not arg.non_bypass_uac
+        and response["data"]["is_administrator"]
+    ):
+        run_bypass_uac()
     start_time = time.time()
     process = process_manager.run([game_path] + dmm_args)
     for line in process.stdout:
