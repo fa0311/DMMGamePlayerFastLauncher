@@ -11,7 +11,7 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["umamusume"]
+      "args": ["umamusume", "--non-bypass-uac"]
     }
   ]
 }
