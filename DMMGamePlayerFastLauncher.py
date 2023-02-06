@@ -387,7 +387,9 @@ if session.cookies.get("login_session_id") == None or arg.login_force:
     token = urlparse(url).path.split("path=")[-1]
     session.get(url)
     try:
-        session.get(f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false")
+        session.get(
+            f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+        )
     except:
         pass
 
