@@ -207,7 +207,10 @@ except:
     except:
         error_manager.info("Read Cache Error")
 
-if session.cookies.get("login_session_id") == None or arg.login_force:
+if arg.login_force:
+    requests.cookies.remove_cookie_by_name(session.cookies,'login_session_id')
+
+if session.cookies.get("login_session_id") == None:
     response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
     url = response.json()["data"]["url"]
     token = urlparse(url).path.split("path=")[-1]

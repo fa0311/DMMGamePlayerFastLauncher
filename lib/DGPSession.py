@@ -6,6 +6,7 @@ import random
 import hashlib
 import sqlite3
 import base64
+import requests.cookies
 from Crypto.Cipher import AES
 
 class DgpSession:
@@ -60,7 +61,7 @@ class DgpSession:
     def write(self):
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            value = self.session.cookies.get(cookie_row[3])
+            value = self.cookies.get(cookie_row[3])
             v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
             cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
             decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
@@ -84,13 +85,13 @@ class DgpSession:
                 "path": cookie_row[6],
                 "secure": cookie_row[8],
             }
-            self.session.cookies.set_cookie(
+            self.cookies.set_cookie(
                 requests.cookies.create_cookie(**cookie_data)
             )
 
     def write_cache(self, file: str = "cookie.bytes"):
         contents = []
-        for cookie in self.session.cookies:
+        for cookie in self.cookies:
             cookie_dict = dict(
                 version=cookie.version,
                 name=cookie.name,
@@ -119,7 +120,7 @@ class DgpSession:
             data = f.read()
             _, contents = win32crypt.CryptUnprotectData(data)
             for cookie in json.loads(contents):
-                self.session.cookies.set_cookie(
+                self.cookies.set_cookie(
                     requests.cookies.create_cookie(**cookie)
                 )
 
