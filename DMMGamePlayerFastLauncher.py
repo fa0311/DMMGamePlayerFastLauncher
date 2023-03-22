@@ -96,6 +96,7 @@ class ErrorManager:
         else:
             print(text)
 
+
 class ProcessManager:
     non_request_admin: bool = False
     non_bypass_uac: bool = False
@@ -215,7 +216,7 @@ except Exception as e:
         error_manager.info("Read Cache Error", e)
 
 if arg.login_force:
-    requests.cookies.remove_cookie_by_name(session.cookies,'login_session_id')
+    requests.cookies.remove_cookie_by_name(session.cookies, "login_session_id")
 
 if session.cookies.get("login_session_id") == None:
     response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
