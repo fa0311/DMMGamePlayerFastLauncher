@@ -1,16 +1,13 @@
 import os
 import json
 import pandas as pd
+from lib.DGPSession import *
 
-DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
-
-with open(DGP5_PATH + "dmmgame.cnf", "r", encoding="utf-8") as f:
-    config = f.read()
-dpg5_config = json.loads(config)
+session = DgpSession()
 
 table = [
     (contents["productId"], contents["detail"]["path"], contents["detail"]["version"])
-    for contents in dpg5_config["contents"]
+    for contents in session.get_config()["contents"]
 ]
 
 df = pd.DataFrame(table, columns=["productId", "path", "version"])
