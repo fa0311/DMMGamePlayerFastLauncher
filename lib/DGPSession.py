@@ -8,6 +8,8 @@ import sqlite3
 import base64
 import requests.cookies
 from Crypto.Cipher import AES
+from http.cookies import SimpleCookie
+import re
 
 class DgpSession:
     DGP5_PATH: str
@@ -61,7 +63,7 @@ class DgpSession:
     def write(self):
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            value = self.cookies.get(cookie_row[3])
+            value = self.cookies.get(cookie_row[3], default="", domain=cookie_row[1], path=cookie_row[6])
             v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
             cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
             decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
@@ -88,6 +90,22 @@ class DgpSession:
             self.cookies.set_cookie(
                 requests.cookies.create_cookie(**cookie_data)
             )
+
+    # debug
+    def read_raw(self, raw):
+        cookie = SimpleCookie()
+        cookie.load(raw)
+        name_list = [e.name for e in self.cookies]
+        for name, value in  cookie.items():
+            cookie_data = {
+                "name": name,
+                "value": value.value,
+            }
+            if name not in name_list:
+                # print(f"not found name {name}")
+                self.cookies.set_cookie(
+                    requests.cookies.create_cookie(**cookie_data)
+                )
 
     def write_cache(self, file: str = "cookie.bytes"):
         contents = []
@@ -175,3 +193,8 @@ class DgpSession:
 
     def close(self):
         self.db.close()
+
+def extract_next_data(html):
+    pattern = '<script id="__NEXT_DATA__" type="application/json">(.+?)</script>'
+    data = json.loads(re.findall(pattern, html)[0])
+    return data
