@@ -29,6 +29,7 @@ class ErrorManagerType:
 
 class ErrorManager:
     skip: bool = False
+    debug: bool = False
     argument_error: ErrorManagerType = ErrorManagerType(
         message="Could not parse argument.",
         solution="Is the product_id specified correctly?",
@@ -79,7 +80,7 @@ class ErrorManager:
 
     def error(self, error: ErrorManagerType, log: str | None = None):
         output = filter(
-            lambda x: x != None,
+            lambda x: x is not None,
             [error.message, error.solution, error.url, log],
         )
         if self.skip:
@@ -87,9 +88,13 @@ class ErrorManager:
         else:
             raise Exception("\n".join(output))
 
-    def info(self, text: str):
-        print(text)
-
+    def info(self, text: str, e: Exception | None = None):
+        if e is None:
+            print(text)
+        elif self.debug:
+            raise e
+        else:
+            print(text)
 
 class ProcessManager:
     non_request_admin: bool = False
@@ -182,6 +187,7 @@ argpar.add_argument("--game-path", default=None)
 argpar.add_argument("--game-args", default=None)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
+argpar.add_argument("--debug", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
 argpar.add_argument("--non-bypass-uac", action="store_true")
@@ -191,21 +197,22 @@ argpar.add_argument("--schtasks-path", default="schtasks.exe")
 try:
     arg = argpar.parse_args()
     error_manager.skip = arg.skip_exception
+    error_manager.debug = arg.debug
     process_manager.non_request_admin = arg.non_request_admin
     process_manager.non_bypass_uac = arg.non_bypass_uac
-except:
+except Exception as e:
     error_manager.error(error=ErrorManager.argument_error)
 
 session = DgpSession(arg.https_proxy_uri)
 
 try:
     session.read()
-except:
-    error_manager.info("Read Error")
+except Exception as e:
+    error_manager.info("Read Error", e)
     try:
         session.read_cache()
-    except:
-        error_manager.info("Read Cache Error")
+    except Exception as e:
+        error_manager.info("Read Cache Error", e)
 
 if arg.login_force:
     requests.cookies.remove_cookie_by_name(session.cookies,'login_session_id')
@@ -219,28 +226,28 @@ if session.cookies.get("login_session_id") == None:
         session.get(
             f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
         )
-    except:
+    except Exception as e:
         pass
 
 if session.cookies.get("login_session_id") == None:
     error_manager.info("Login Error")
     try:
         session.read_cache()
-    except:
-        error_manager.info("Read Cache Error")
+    except Exception as e:
+        error_manager.info("Read Cache Error", e)
 
 if session.cookies.get("login_session_id") == None:
     error_manager.error(error=ErrorManager.login_error)
 
 try:
     session.write()
-except:
-    error_manager.info("Write Error")
+except Exception as e:
+    error_manager.info("Write Error", e)
 
 
 try:
     session.write_cache()
-except:
+except Exception as e:
     error_manager.info("Write Cache Error")
 
 session.close()
