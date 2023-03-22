@@ -26,6 +26,7 @@
 | --game-args         |            | None         | String &#124; None |            |
 | --login-force       |            | Flase        | Bool               | deprecated |
 | --skip-exception    |            | False        | Bool               |            |
+| --debug             |            | False        | Bool               |            |
 | --https-proxy-uri   |            | None         | String &#124; None |            |
 | --non-request-admin |            | False        | Bool               | deprecated |
 | --non-bypass-uac    |            | False        | Bool               |            |
@@ -91,6 +92,14 @@ Unity 製ゲームの引数はここに詳しく載ってます
 
 例:  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --skip-exception`
+
+### debug
+
+デバックモードです  
+バグ報告の際など指示がある場合に付けてください
+
+例:  
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --debug`
 
 ### https-proxy-uri
 
