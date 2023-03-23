@@ -10,6 +10,7 @@ import requests.cookies
 from Crypto.Cipher import AES
 from http.cookies import SimpleCookie
 import re
+import logging
 
 class DgpSession:
     DGP5_PATH: str
@@ -24,6 +25,7 @@ class DgpSession:
         "domain": ".dmm.com",
         "path":"/",
     }
+    logger:logging.Logger = logging.getLogger(__qualname__)
 
     def __init__(self, https_proxy_uri: str | None = None):
         requests.packages.urllib3.disable_warnings()
@@ -67,33 +69,39 @@ class DgpSession:
     def write(self):
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6])
-            v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
-            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-            decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
-            data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
-            self.db.execute(
-                "update cookies set encrypted_value = ? where name = ?",
-                (memoryview(data), cookie_row[3]),
-            )
+            try:
+                value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6])
+                v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
+                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+                decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
+                data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
+                self.db.execute(
+                    "update cookies set encrypted_value = ? where name = ?",
+                    (memoryview(data), cookie_row[3]),
+                )
+            except:
+                self.logger.warning("\n".join([f"Failed to encrypt {cookie_row[3]}", "dumps: " + self.dump(cookie_row[5],mask=True)]), exc_info=True)
         self.db.commit()
 
     def read(self):
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            _, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
-            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-            value = cipher.decrypt_and_verify(data, mac).decode()
-            cookie_data = {
-                "name": cookie_row[3],
-                "value": value,
-                "domain": cookie_row[1],
-                "path": cookie_row[6],
-                "secure": cookie_row[8],
-            }
-            self.cookies.set_cookie(
-                requests.cookies.create_cookie(**cookie_data)
-            )
+            try:
+                _, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
+                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+                value = cipher.decrypt_and_verify(data, mac).decode()
+                cookie_data = {
+                    "name": cookie_row[3],
+                    "value": value,
+                    "domain": cookie_row[1],
+                    "path": cookie_row[6],
+                    "secure": cookie_row[8],
+                }
+                self.cookies.set_cookie(
+                    requests.cookies.create_cookie(**cookie_data)
+                )
+            except:
+                self.logger.warning("\n".join([f"Failed to decrypt {cookie_row[3]}", "dumps: " + self.dump(cookie_row[5],mask=True)]), exc_info=True)
 
     # debug
     def read_raw(self, raw):
@@ -194,6 +202,29 @@ class DgpSession:
         self, v10: bytes, nonce: bytes, data: bytes, mac: bytes
     ) -> bytes:
         return v10 + nonce + data + mac
+
+    def dump(self, value, mask:bool)->str:
+        response = {}
+        data = "{}"
+        try:
+            response.update({"type": str(type(value))})
+            data = json.dumps(response)
+        except:
+            pass
+        try:
+            if mask:
+                response.update({"str": str(value[:5])})
+            else:
+                response.update({"str": str(value)})
+            data = json.dumps(response)
+        except:
+            pass
+        try:
+            response.update({"len": len(value)})
+            data = json.dumps(response)
+        except:
+            pass
+        return data
 
     def close(self):
         self.db.close()

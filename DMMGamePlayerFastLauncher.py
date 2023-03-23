@@ -11,6 +11,7 @@ import sys
 from lib.DGPSession import *
 import logging
 
+
 class ErrorManagerType:
     message: str
     solution: str | None
@@ -29,6 +30,7 @@ class ErrorManagerType:
 
 class LogHandler(logging.Handler):
     records: list[object] = []
+
     def __init__(self, level=logging.NOTSET):
         super().__init__(level=level)
 
@@ -37,6 +39,7 @@ class LogHandler(logging.Handler):
 
     def output(self) -> list[str]:
         return [self.format(record) for record in self.records]
+
 
 class ErrorManager:
     skip: bool = False
@@ -88,19 +91,17 @@ class ErrorManager:
         url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
     )
 
-    format:logging.Formatter = logging.Formatter("[%(levelname)s] %(message)s")
-    logger:logging.Logger = logging.getLogger(__name__)
-    logHandler:LogHandler = LogHandler()
-    streamHandler:logging.StreamHandler = logging.StreamHandler()
+    format: logging.Formatter = logging.Formatter(
+        "[%(name)s][%(levelname)s] %(message)s"
+    )
+    logger: logging.Logger = logging.getLogger(__qualname__)
+    logHandler: LogHandler = LogHandler()
+    streamHandler: logging.StreamHandler = logging.StreamHandler()
 
-    def __init__(self, level: logging.NOTSET, devlop:bool=False) -> None:
-        self.logger.setLevel(level)
-        if devlop:
-            self.streamHandler.setFormatter(self.format)
-            self.logger.addHandler(self.streamHandler)
-        else:
-            self.logHandler.setFormatter(self.format)
-            self.logger.addHandler(self.logHandler)
+    def __init__(self) -> None:
+        self.streamHandler.setFormatter(self.format)
+        self.logHandler.setFormatter(self.format)
+        self.set_logger(self.logger)
 
     def error(self, error: ErrorManagerType, log: str | None = None):
         output = filter(
@@ -110,7 +111,17 @@ class ErrorManager:
         if self.skip:
             self.logger.warning("\n".join(output), exc_info=True)
         else:
-            raise Exception("\n".join([error.message] + self.logHandler.output() + list(output)))
+            raise Exception(
+                "\n".join([error.message] + self.logHandler.output() + list(output))
+            )
+
+    def set_logger(self, logger: logging.Logger):
+        logger.setLevel(logging.DEBUG)
+        if os.environ.get("ENV") == "DEVELOP":
+            logger.addHandler(self.streamHandler)
+        else:
+            logger.addHandler(self.logHandler)
+
 
 class ProcessManager:
     non_request_admin: bool = False
@@ -191,7 +202,7 @@ def run_bypass_uac():
     sys.exit()
 
 
-error_manager = ErrorManager(level=logging.DEBUG, devlop=os.environ.get("ENV") == "DEVELOP")
+error_manager = ErrorManager()
 process_manager = ProcessManager(error_manager)
 
 argpar = argparse.ArgumentParser(
@@ -204,7 +215,6 @@ argpar.add_argument("--game-path", default=None)
 argpar.add_argument("--game-args", default=None)
 argpar.add_argument("--login-force", action="store_true")
 argpar.add_argument("--skip-exception", action="store_true")
-argpar.add_argument("--debug", action="store_true")
 argpar.add_argument("--https-proxy-uri", default=None)
 argpar.add_argument("--non-request-admin", action="store_true")
 argpar.add_argument("--non-bypass-uac", action="store_true")
@@ -215,7 +225,6 @@ argpar.add_argument("--schtasks-path", default="schtasks.exe")
 try:
     arg = argpar.parse_args()
     error_manager.skip = arg.skip_exception
-    error_manager.debug = arg.debug
     process_manager.non_request_admin = arg.non_request_admin
     process_manager.non_bypass_uac = arg.non_bypass_uac
 except Exception as e:
@@ -226,6 +235,7 @@ error_manager.logger.info(" ".join(sys.argv))
 try:
     error_manager.logger.info("Start DgpSession")
     session = DgpSession(arg.https_proxy_uri)
+    error_manager.set_logger(session.logger)
 except:
     error_manager.logger.info("DgpSession Error", exc_info=True)
 
@@ -255,7 +265,9 @@ if session.cookies.get("login_session_id", **session.cookies_kwargs) == None:
     url = response.json()["data"]["url"]
     token = urlparse(url).path.split("path=")[-1]
     session.get(url)
-    login_url = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+    login_url = (
+        "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+    )
     try:
         session.get(login_url)
     except:
@@ -338,7 +350,7 @@ if response["result_code"] == 100:
     process = process_manager.run([game_path] + dmm_args)
     for line in process.stdout:
         text = line.decode("utf-8").strip()
-        print(text) # GameLog
+        print(text)  # GameLog
     if time.time() - start_time < 2:
         if response["data"]["is_administrator"]:
             process = process_manager.run([game_path] + dmm_args, admin=True)
