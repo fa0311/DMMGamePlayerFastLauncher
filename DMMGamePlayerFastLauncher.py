@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import win32security
 import sys
 from lib.DGPSession import *
-
+import logging
 
 class ErrorManagerType:
     message: str
@@ -27,9 +27,19 @@ class ErrorManagerType:
         self.url = url
 
 
+class LogHandler(logging.Handler):
+    records: list[object] = []
+    def __init__(self, level=logging.NOTSET):
+        super().__init__(level=level)
+
+    def emit(self, record):
+        self.records.append(record)
+
+    def output(self) -> list[str]:
+        return [self.format(record) for record in self.records]
+
 class ErrorManager:
     skip: bool = False
-    debug: bool = False
     argument_error: ErrorManagerType = ErrorManagerType(
         message="Could not parse argument.",
         solution="Is the product_id specified correctly?",
@@ -78,24 +88,29 @@ class ErrorManager:
         url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
     )
 
+    format:logging.Formatter = logging.Formatter("[%(levelname)s] %(message)s")
+    logger:logging.Logger = logging.getLogger(__name__)
+    logHandler:LogHandler = LogHandler()
+    streamHandler:logging.StreamHandler = logging.StreamHandler()
+
+    def __init__(self, level: logging.NOTSET, devlop:bool=False) -> None:
+        self.logger.setLevel(level)
+        if devlop:
+            self.streamHandler.setFormatter(self.format)
+            self.logger.addHandler(self.streamHandler)
+        else:
+            self.logHandler.setFormatter(self.format)
+            self.logger.addHandler(self.logHandler)
+
     def error(self, error: ErrorManagerType, log: str | None = None):
         output = filter(
             lambda x: x is not None,
-            [error.message, error.solution, error.url, log],
+            [error.solution, error.url, log],
         )
         if self.skip:
-            self.info("\n".join(output))
+            self.logger.warning("\n".join(output), exc_info=True)
         else:
-            raise Exception("\n".join(output))
-
-    def info(self, text: str, e: Exception | None = None):
-        if e is None:
-            print(text)
-        elif self.debug:
-            raise e
-        else:
-            print(text)
-
+            raise Exception("\n".join([error.message] + self.logHandler.output() + list(output)))
 
 class ProcessManager:
     non_request_admin: bool = False
@@ -108,9 +123,10 @@ class ProcessManager:
     def run(
         self, args: dict[str], admin: bool = False, force: bool = False
     ) -> subprocess.Popen[bytes] | None:
-        print(" ".join(args))
+        error_manager.logger.info(" ".join(args))
         if admin:
             if not self.non_bypass_uac and not force:
+                error_manager.logger.info("Run Bypass UAC")
                 run_bypass_uac()
             elif self.non_request_admin:
                 self.error_manager.error(error=ErrorManager.permission_error)
@@ -175,7 +191,7 @@ def run_bypass_uac():
     sys.exit()
 
 
-error_manager = ErrorManager()
+error_manager = ErrorManager(level=logging.DEBUG, devlop=os.environ.get("ENV") == "DEVELOP")
 process_manager = ProcessManager(error_manager)
 
 argpar = argparse.ArgumentParser(
@@ -195,6 +211,7 @@ argpar.add_argument("--non-bypass-uac", action="store_true")
 argpar.add_argument("--force-bypass-uac", action="store_true")
 argpar.add_argument("--schtasks-path", default="schtasks.exe")
 
+
 try:
     arg = argpar.parse_args()
     error_manager.skip = arg.skip_exception
@@ -204,56 +221,77 @@ try:
 except Exception as e:
     error_manager.error(error=ErrorManager.argument_error)
 
-session = DgpSession(arg.https_proxy_uri)
+error_manager.logger.info(" ".join(sys.argv))
 
 try:
+    error_manager.logger.info("Start DgpSession")
+    session = DgpSession(arg.https_proxy_uri)
+except:
+    error_manager.logger.info("DgpSession Error", exc_info=True)
+
+try:
+    error_manager.logger.info("Read DB")
     session.read()
-except Exception as e:
-    error_manager.info("Read Error", e)
+except:
+    error_manager.logger.info("Read Error", exc_info=True)
+
+
+if len(session.cookies.items()) == 0:
     try:
+        error_manager.logger.info("Read Cache")
         session.read_cache()
-    except Exception as e:
-        error_manager.info("Read Cache Error", e)
+    except:
+        error_manager.logger.info("Read Cache Error", exc_info=True)
 
 if arg.login_force:
-    requests.cookies.remove_cookie_by_name(session.cookies, "login_session_id")
+    try:
+        requests.cookies.remove_cookie_by_name(session.cookies, "login_session_id")
+    except:
+        pass
 
 if session.cookies.get("login_session_id") == None:
+    error_manager.logger.info("Request Session Id")
     response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
     url = response.json()["data"]["url"]
     token = urlparse(url).path.split("path=")[-1]
     session.get(url)
+    login_url = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
     try:
-        session.get(
-            f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
-        )
-    except Exception as e:
+        session.get(login_url)
+    except:
         pass
 
 if session.cookies.get("login_session_id") == None:
-    error_manager.info("Login Error")
     try:
+        error_manager.logger.info("Read Cookies Cache")
         session.read_cache()
-    except Exception as e:
-        error_manager.info("Read Cache Error", e)
+    except:
+        error_manager.logger.info("Read Cache Error", exc_info=True)
 
 if session.cookies.get("login_session_id") == None:
     error_manager.error(error=ErrorManager.login_error)
 
 try:
+    error_manager.logger.info("Write DB")
     session.write()
-except Exception as e:
-    error_manager.info("Write Error", e)
+except:
+    error_manager.logger.info("Write Error", exc_info=True)
 
 
 try:
+    error_manager.logger.info("Write Cache")
     session.write_cache()
-except Exception as e:
-    error_manager.info("Write Cache Error")
+except:
+    error_manager.logger.info("Write Cache Error", exc_info=True)
 
 session.close()
 
-dpg5_config = session.get_config()
+try:
+    error_manager.logger.info("Read DGP Congig")
+    dpg5_config = session.get_config()
+except:
+    error_manager.logger.info("Read DGP Congig Error", exc_info=True)
+
 if arg.game_path is None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
@@ -280,9 +318,10 @@ if arg.game_path is None:
 else:
     game_path = arg.game_path
 
-response = session.lunch(
-    "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", arg.product_id
-).json()
+error_manager.logger.info("Request to Launch Token")
+
+launch_url = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
+response = session.lunch(launch_url, arg.product_id).json()
 
 if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
@@ -293,12 +332,13 @@ if response["result_code"] == 100:
         and not arg.non_bypass_uac
         and response["data"]["is_administrator"]
     ):
+        error_manager.logger.info("Run Bypass UAC")
         run_bypass_uac()
     start_time = time.time()
     process = process_manager.run([game_path] + dmm_args)
     for line in process.stdout:
         text = line.decode("utf-8").strip()
-        print(text)
+        print(text) # GameLog
     if time.time() - start_time < 2:
         if response["data"]["is_administrator"]:
             process = process_manager.run([game_path] + dmm_args, admin=True)
