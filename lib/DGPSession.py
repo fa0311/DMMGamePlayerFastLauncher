@@ -20,6 +20,10 @@ class DgpSession:
     db: sqlite3.Connection
     session: requests.Session
     cookies: requests.cookies.RequestsCookieJar
+    cookies_kwargs = {
+        "domain": ".dmm.com",
+        "path":"/",
+    }
 
     def __init__(self, https_proxy_uri: str | None = None):
         requests.packages.urllib3.disable_warnings()
@@ -63,7 +67,7 @@ class DgpSession:
     def write(self):
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
-            value = self.cookies.get(cookie_row[3], default="", domain=cookie_row[1], path=cookie_row[6])
+            value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6])
             v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
             cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
             decrypt_data, mac = cipher.encrypt_and_digest(value.encode())

@@ -249,7 +249,7 @@ if arg.login_force:
     except:
         pass
 
-if session.cookies.get("login_session_id") == None:
+if session.cookies.get("login_session_id", **session.cookies_kwargs) == None:
     error_manager.logger.info("Request Session Id")
     response = session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
     url = response.json()["data"]["url"]
@@ -261,14 +261,14 @@ if session.cookies.get("login_session_id") == None:
     except:
         pass
 
-if session.cookies.get("login_session_id") == None:
+if session.cookies.get("login_session_id", **session.cookies_kwargs) == None:
     try:
         error_manager.logger.info("Read Cookies Cache")
         session.read_cache()
     except:
         error_manager.logger.info("Read Cache Error", exc_info=True)
 
-if session.cookies.get("login_session_id") == None:
+if session.cookies.get("login_session_id", **session.cookies_kwargs) == None:
     error_manager.error(error=ErrorManager.login_error)
 
 try:
