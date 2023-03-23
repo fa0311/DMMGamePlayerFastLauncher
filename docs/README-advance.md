@@ -26,7 +26,6 @@
 | --game-args         |            | None         | String &#124; None |            |
 | --login-force       |            | Flase        | Bool               | deprecated |
 | --skip-exception    |            | False        | Bool               |            |
-| --debug             |            | False        | Bool               |            |
 | --https-proxy-uri   |            | None         | String &#124; None |            |
 | --non-request-admin |            | False        | Bool               | deprecated |
 | --non-bypass-uac    |            | False        | Bool               |            |
@@ -92,14 +91,6 @@ Unity 製ゲームの引数はここに詳しく載ってます
 
 例:  
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --skip-exception`
-
-### debug
-
-デバックモードです  
-バグ報告の際など指示がある場合に付けてください
-
-例:  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume --debug`
 
 ### https-proxy-uri
 
@@ -238,3 +229,18 @@ DMMGamePlayer を起動してログインし直して下さい
 ### ゲームに起動引数を与える
 
 [game-args](#game-args)
+
+## それでも解決しない
+
+Issuesを送るのが望ましいがとにかく動かしたい人向け
+
+| ファイル名      | 詳細                                       | 消した際の影響                                                          |
+| --------------- | ------------------------------------------ | ------------------------------------------------------------------------|
+| dmmgame.cnf     | DMMGamePlayerに関するすべての設定ファイル   | ゲームのインストール状況も消えるのでゲームを再インストールする羽目になる |
+| Local State     | 暗号化に使うキーが入っている                | ログイン情報の再入力を求められる                             |
+| Network/Cookies | セッション情報が含まれるデータベース        | ログイン情報の再入力を求められる                             |
+
+これ以外はキャッシュだけど消すときは念のためバックアップを取ることを推奨します
+
+`Local State`と`Network/Cookies` を消した時に直るケースが多いかも(消した後はDMMGamePlayerを起動してログインし直してください)
+`dmmgame.cnf` はあんまり関係ないので消すのはオススメできない
