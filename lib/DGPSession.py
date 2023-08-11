@@ -1,5 +1,6 @@
 import os
 import json
+from typing import Optional
 import requests
 import win32crypt
 import random
@@ -12,10 +13,15 @@ from http.cookies import SimpleCookie
 import re
 import logging
 
+import urllib3
+
+urllib3.disable_warnings()
+
+
 class DgpSession:
     DGP5_PATH: str
     HEADERS: dict[str, str]
-    PROXY: dict[str, str | None]
+    PROXY: Optional[dict[str, str]]
     DGP5_HEADERS: dict[str, str]
     DGP5_LAUNCH_PARAMS: dict[str, str]
     db: sqlite3.Connection
@@ -23,14 +29,13 @@ class DgpSession:
     cookies: requests.cookies.RequestsCookieJar
     cookies_kwargs = {
         "domain": ".dmm.com",
-        "path":"/",
+        "path": "/",
     }
-    logger:logging.Logger = logging.getLogger(__qualname__)
+    logger: logging.Logger = logging.getLogger(__qualname__)
 
-    def __init__(self, https_proxy_uri: str | None = None):
-        requests.packages.urllib3.disable_warnings()
+    def __init__(self, https_proxy_uri: Optional[str] = None):
         self.DGP5_PATH = os.environ["APPDATA"] + "\\dmmgameplayer5\\"
-        self.PROXY = {"https": https_proxy_uri}
+        self.PROXY = None if https_proxy_uri is None else {"https": https_proxy_uri}
         self.HEADERS = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             "Upgrade-Insecure-Requests": "1",
@@ -70,7 +75,9 @@ class DgpSession:
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
             try:
-                value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6])
+                value = self.cookies.get(
+                    cookie_row[3], domain=cookie_row[1], path=cookie_row[6]
+                )
                 v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
                 decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
@@ -80,7 +87,15 @@ class DgpSession:
                     (memoryview(data), cookie_row[3]),
                 )
             except:
-                self.logger.warning("\n".join([f"Failed to encrypt {cookie_row[3]}", "dumps: " + self.dump(cookie_row[5],mask=True)]), exc_info=True)
+                self.logger.warning(
+                    "\n".join(
+                        [
+                            f"Failed to encrypt {cookie_row[3]}",
+                            "dumps: " + self.dump(cookie_row[5], mask=True),
+                        ]
+                    ),
+                    exc_info=True,
+                )
         self.db.commit()
 
     def read(self):
@@ -97,27 +112,31 @@ class DgpSession:
                     "path": cookie_row[6],
                     "secure": cookie_row[8],
                 }
-                self.cookies.set_cookie(
-                    requests.cookies.create_cookie(**cookie_data)
-                )
+                self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
             except:
-                self.logger.warning("\n".join([f"Failed to decrypt {cookie_row[3]}", "dumps: " + self.dump(cookie_row[5],mask=True)]), exc_info=True)
+                self.logger.warning(
+                    "\n".join(
+                        [
+                            f"Failed to decrypt {cookie_row[3]}",
+                            "dumps: " + self.dump(cookie_row[5], mask=True),
+                        ]
+                    ),
+                    exc_info=True,
+                )
 
     # debug
     def read_raw(self, raw):
         cookie = SimpleCookie()
         cookie.load(raw)
         name_list = [e.name for e in self.cookies]
-        for name, value in  cookie.items():
+        for name, value in cookie.items():
             cookie_data = {
                 "name": name,
                 "value": value.value,
             }
             if name not in name_list:
                 # print(f"not found name {name}")
-                self.cookies.set_cookie(
-                    requests.cookies.create_cookie(**cookie_data)
-                )
+                self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
 
     def write_cache(self, file: str = "cookie.bytes"):
         contents = []
@@ -135,7 +154,7 @@ class DgpSession:
                 comment=cookie.comment,
                 comment_url=cookie.comment_url,
                 rfc2109=cookie.rfc2109,
-                rest=cookie._rest,
+                rest=cookie._rest,  # type: ignore
             )
             contents.append(cookie_dict)
         data = win32crypt.CryptProtectData(
@@ -150,9 +169,7 @@ class DgpSession:
             data = f.read()
             _, contents = win32crypt.CryptUnprotectData(data)
             for cookie in json.loads(contents):
-                self.cookies.set_cookie(
-                    requests.cookies.create_cookie(**cookie)
-                )
+                self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
 
     def get(self, url: str) -> requests.Response:
         return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY)
@@ -190,7 +207,9 @@ class DgpSession:
         key = win32crypt.CryptUnprotectData(encrypted_key, None, None, None, 0)[1]
         return key
 
-    def split_encrypted_data(self, encrypted_data: bytes) -> bytes:
+    def split_encrypted_data(
+        self, encrypted_data: bytes
+    ) -> tuple[bytes, bytes, bytes, bytes]:
         return (
             encrypted_data[0:3],
             encrypted_data[3:15],
@@ -203,7 +222,7 @@ class DgpSession:
     ) -> bytes:
         return v10 + nonce + data + mac
 
-    def dump(self, value, mask:bool)->str:
+    def dump(self, value, mask: bool) -> str:
         response = {}
         data = "{}"
         try:
@@ -228,6 +247,7 @@ class DgpSession:
 
     def close(self):
         self.db.close()
+
 
 def extract_next_data(html):
     pattern = '<script id="__NEXT_DATA__" type="application/json">(.+?)</script>'

@@ -1,3 +1,4 @@
+# type: ignore
 import subprocess
 import argparse
 import json
