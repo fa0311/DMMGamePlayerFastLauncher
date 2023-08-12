@@ -9,16 +9,33 @@ ja:
     export: エクスポート
     logout: ログアウト
 
+    create: 作成
+    edit: 編集
+
     reference: 参照
     save: 保存
     cancel: キャンセル
     login: ログイン
 
+    product_id: product_id
+
+    file: ファイル
+    filename: ファイル名
+    game_path: ゲームのファイルパス
+    game_args: ゲームの引数
+
   description:
-    import: DMMGamePlayerにアカウント情報をインポートします。
-    export: 現在のDMMGamePlayerにアカウント情報をエクスポートします。
-    logout: DMMGamePlayerにログインしているアカウントをログアウトします。
     save_file: "保存するファイル名"
+    select: "%{name}の選択"
+
+  detail:
+    shortcut:
+      add: ショートカットの設定ファイルを作成します。
+      edit: ショートカットの設定ファイルを編集します。
+    account:
+      import: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
+      export: アカウント情報をFastLauncherからDMMGamePlayerにエクスポートします。
+      logout: DMMGamePlayerにログインしているアカウントからログアウトします。
 
   message:
     success: "%{name}に成功しました"

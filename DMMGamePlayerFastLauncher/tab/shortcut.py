@@ -79,7 +79,9 @@ class ShortcutAdd(CTkScrollableFrame):
         self.data.product_id.set(self.product_ids[0])
 
     def create(self):
-        CTkLabel(self, text="productIdの選択").pack(anchor=ctk.W)
+        if not self.winfo_children():
+            CTkLabel(self, text=i18n.t("app.detail.shortcut.add")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.product_id"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.product_ids, variable=self.data.product_id).pack(fill=ctk.X)
         CTkLabel(self, text=i18n.t("app.word.filename")).pack(anchor=ctk.W)
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
@@ -114,7 +116,8 @@ class ShortcutEdit(ShortcutAdd):
         if self.selected.get() in self.values:
             self.data = self.read()
 
-        CTkLabel(self, text="ファイルの選択").pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.detail.shortcut.edit")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.callback).pack(fill=ctk.X)
 
         if self.selected.get() in self.values:

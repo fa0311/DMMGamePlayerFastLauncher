@@ -57,7 +57,7 @@ class AccountImport(CTkScrollableFrame):
         self.name = StringVar()
 
     def create(self):
-        CTkLabel(self, text=i18n.t("app.description.import")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.detail.account.import")).pack(anchor=ctk.W)
         EntryComponent(self, text=i18n.t("app.description.save_file"), var=self.name).create()
         CTkButton(self, text=i18n.t("app.word.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
@@ -91,9 +91,9 @@ class AccountExport(CTkScrollableFrame):
         self.selected = StringVar(value=self.values[0] if self.values else None)
 
     def create(self):
-        CTkLabel(self, text=i18n.t("app.description.export")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.detail.account.export")).pack(anchor=ctk.W)
 
-        CTkLabel(self, text="ファイル選択").pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(
             self,
             values=self.values,
@@ -123,7 +123,7 @@ class AccountLogout(CTkScrollableFrame):
         self.toast = ToastController(self)
 
     def create(self):
-        CTkLabel(self, text=i18n.t("app.description.logout")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.detail.account.logout")).pack(anchor=ctk.W)
         CTkButton(self, text=i18n.t("app.word.logout"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
