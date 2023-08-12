@@ -22,8 +22,8 @@ from customtkinter import ThemeManager as CTKM
 class HelpTab(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
-        self.create()
 
     def create(self):
         text = CTkLabel(self, text="help")
         text.pack()
+        return self

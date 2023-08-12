@@ -1,39 +1,24 @@
-from ast import List
-import os
-from tkinter import Entry, StringVar, filedialog
-import i18n
-from pathlib import Path
+from tkinter import StringVar
 
-import customtkinter as ctk
 from customtkinter import (
-    CTk,
-    CTkFrame,
-    CTkLabel,
-    CTkButton,
-    CTkEntry,
-    CTkScrollbar,
     CTkScrollableFrame,
     CTkBaseClass,
 )
 from customtkinter import ThemeManager as CTKM
+from config import PathConf
 
-from lib.Component import FilePathComponent, TabMenuComponent
+from lib.Component import DirectoryPathComponent
 
 
 class SettingTab(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
-        self.create()
 
     def create(self):
-        appdata: Path = Path(os.getenv("APPDATA", default=""))
-        FilePathComponent(
+        path = PathConf.DMMGAMEPLAYER.joinpath("dmmgameplayer5")
+        DirectoryPathComponent(
             self,
-            title="DMMGamePlayerのパス",
-            defaultPath=appdata.joinpath("dmmgameplayer5"),
-        )
-        FilePathComponent(
-            self,
-            title="DMMGamePlayerFastLauncherのパス",
-            defaultPath=appdata.joinpath("dmmgameplayer5"),
-        )
+            text="DMMGamePlayerのフォルダ",
+            var=StringVar(value=str(path)),
+        ).create()
+        return self

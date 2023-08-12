@@ -92,9 +92,7 @@ class ErrorManager:
         url="https://github.com/fa0311/DMMGamePlayerFastLauncher/issues",
     )
 
-    format: logging.Formatter = logging.Formatter(
-        "[%(name)s][%(levelname)s] %(message)s"
-    )
+    format: logging.Formatter = logging.Formatter("[%(name)s][%(levelname)s] %(message)s")
     logger: logging.Logger = logging.getLogger(__qualname__)
     logHandler: LogHandler = LogHandler()
     streamHandler: logging.StreamHandler = logging.StreamHandler()
@@ -112,9 +110,7 @@ class ErrorManager:
         if self.skip:
             self.logger.warning("\n".join(output), exc_info=True)
         else:
-            raise Exception(
-                "\n".join([error.message] + self.logHandler.output() + list(output))
-            )
+            raise Exception("\n".join([error.message] + self.logHandler.output() + list(output)))
 
     def set_logger(self, logger: logging.Logger):
         logger.setLevel(logging.DEBUG)
@@ -132,9 +128,7 @@ class ProcessManager:
     def __init__(self, error_manager: ErrorManager) -> None:
         self.error_manager = error_manager
 
-    def run(
-        self, args: dict[str], admin: bool = False, force: bool = False
-    ) -> subprocess.Popen[bytes] | None:
+    def run(self, args: dict[str], admin: bool = False, force: bool = False) -> subprocess.Popen[bytes] | None:
         error_manager.logger.info(" ".join(args))
         if admin:
             if not self.non_bypass_uac and not force:
@@ -144,13 +138,9 @@ class ProcessManager:
                 self.error_manager.error(error=ErrorManager.permission_error)
             else:
                 args = [f'"{arg}"' for arg in args]
-                ctypes.windll.shell32.ShellExecuteW(
-                    None, "runas", args[0], " ".join(args[1:]), None, 1
-                )
+                ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join(args[1:]), None, 1)
         else:
-            return subprocess.Popen(
-                args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
+            return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def get_sid() -> str:
@@ -167,16 +157,8 @@ def run_bypass_uac():
     run_args = [arg.schtasks_path, "/run", "/tn", schtasks_name]
 
     if process_manager.run(run_args).wait() == 1:
-        schtasks_xml_path = (
-            r"{appdata}\DMMGamePlayerFastLauncher\assets\{name}.xml".format(
-                appdata=os.environ["APPDATA"], name=schtasks_file
-            )
-        )
-        schtasks_task_path = (
-            r"{appdata}\DMMGamePlayerFastLauncher\Tools\Task.exe".format(
-                appdata=os.environ["APPDATA"]
-            )
-        )
+        schtasks_xml_path = r"{appdata}\DMMGamePlayerFastLauncher\assets\{name}.xml".format(appdata=os.environ["APPDATA"], name=schtasks_file)
+        schtasks_task_path = r"{appdata}\DMMGamePlayerFastLauncher\Tools\Task.exe".format(appdata=os.environ["APPDATA"])
         with open("assets/template.xml", "r") as f:
             template = f.read()
 
@@ -266,9 +248,7 @@ if session.cookies.get("login_session_id", **session.cookies_kwargs) == None:
     url = response.json()["data"]["url"]
     token = urlparse(url).path.split("path=")[-1]
     session.get(url)
-    login_url = (
-        "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
-    )
+    login_url = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
     try:
         session.get(login_url)
     except:
@@ -308,15 +288,11 @@ except:
 if arg.game_path is None:
     for contents in dpg5_config["contents"]:
         if contents["productId"] == arg.product_id:
-            game_path_list = glob.glob(
-                "{path}\*.exe._".format(path=contents["detail"]["path"])
-            )
+            game_path_list = glob.glob("{path}\*.exe._".format(path=contents["detail"]["path"]))
             if len(game_path_list) > 0:
                 game_path = game_path_list[0][:-2]
                 break
-            game_path_list = glob.glob(
-                "{path}\*.exe".format(path=contents["detail"]["path"])
-            )
+            game_path_list = glob.glob("{path}\*.exe".format(path=contents["detail"]["path"]))
             for path in game_path_list:
                 lower_path = path.lower()
                 if not all([i in lower_path for i in ["unity", "install", "help"]]):
@@ -340,11 +316,7 @@ if response["result_code"] == 100:
     dmm_args = response["data"]["execute_args"].split(" ")
     if arg.game_args is not None:
         dmm_args = dmm_args + arg.game_args.split(" ")
-    if (
-        arg.force_bypass_uac
-        and not arg.non_bypass_uac
-        and response["data"]["is_administrator"]
-    ):
+    if arg.force_bypass_uac and not arg.non_bypass_uac and response["data"]["is_administrator"]:
         error_manager.logger.info("Run Bypass UAC")
         run_bypass_uac()
     start_time = time.time()
@@ -356,9 +328,7 @@ if response["result_code"] == 100:
         if response["data"]["is_administrator"]:
             process = process_manager.run([game_path] + dmm_args, admin=True)
         else:
-            error_manager.error(
-                error=ErrorManager.startup_error, log=json.dumps(response)
-            )
+            error_manager.error(error=ErrorManager.startup_error, log=json.dumps(response))
 
 elif response["result_code"] == 307:
     error_manager.error(error=ErrorManager.auth_device_error)

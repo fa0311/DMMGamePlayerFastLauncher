@@ -5,3 +5,7 @@ __pycache__
 *.exe
 *.bytes
 /.venv
+
+
+
+/data

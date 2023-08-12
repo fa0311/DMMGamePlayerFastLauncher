@@ -1,6 +1,8 @@
 {
+  "flake8.args": ["--ignore=E501"],
   "markdownlint.config": {
     "MD033": false
   },
-  "python.analysis.typeCheckingMode": "basic"
+  "python.analysis.typeCheckingMode": "basic",
+  "black-formatter.args": ["--line-length=180"]
 }

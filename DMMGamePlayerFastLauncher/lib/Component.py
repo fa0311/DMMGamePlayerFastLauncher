@@ -91,60 +91,62 @@ class TabMenuComponent:
         callback(self.body_master)
 
 
-class FilePathComponent:
-    master: Frame
-    path: StringVar
-
-    def __init__(self, master: Frame, title: str, defaultPath: Path) -> None:
-        self.master = CTkFrame(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
-        self.master.pack(fill=ctk.X, expand=True)
-        self.title = title
-        self.path = StringVar(value=str(defaultPath))
-        self.create()
-
-    def create(self):
-        CTkLabel(self.master, text=self.title).pack(anchor=ctk.W)
-
-        CTkEntry(self.master, textvariable=self.path).pack(
-            side=ctk.LEFT,
-            fill=ctk.BOTH,
-            expand=True,
-        )
-
-        CTkButton(
-            self.master,
-            text=i18n.t("app.component.reference"),
-            command=self.filedialog_clicked,
-            width=10,
-        ).pack(side=ctk.LEFT)
-
-    def filedialog_clicked(self):
-        path = filedialog.askdirectory(title=self.title, initialdir=self.path.get())
-        self.path.set(str(Path(path)))
-
-    def is_valid(self):
-        return Path(self.path.get()).exists()
-
-
 class EntryComponent:
     master: Frame
     var: StringVar
+    text: str
 
-    def __init__(self, master: Frame, title: str, var: StringVar) -> None:
+    def __init__(
+        self,
+        master: Frame,
+        text: str,
+        var: StringVar,
+    ) -> None:
         self.master = CTkFrame(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
         self.master.pack(fill=ctk.X, expand=True)
-        self.title = title
+        self.text = text
         self.var = var
-        self.create()
 
     def create(self):
-        CTkLabel(self.master, text=self.title).pack(anchor=ctk.W)
+        CTkLabel(self.master, text=self.text).pack(anchor=ctk.W)
 
-        CTkEntry(self.master, textvariable=self.var).pack(
+        CTkEntry(
+            self.master,
+            textvariable=self.var,
+        ).pack(
             side=ctk.LEFT,
             fill=ctk.BOTH,
             expand=True,
         )
+        return self
+
+
+class PathComponentBase(EntryComponent):
+    def create(self):
+        super().create()
+
+        CTkButton(
+            self.master,
+            text=i18n.t("app.word.reference"),
+            command=self.callback,
+            width=10,
+        ).pack(side=ctk.LEFT)
+        return self
+
+    def callback(self):
+        raise NotImplementedError
+
+
+class FilePathComponent(PathComponentBase):
+    def callback(self):
+        path = filedialog.askopenfilename(title=self.text, initialdir=self.var.get())
+        self.var.set(str(Path(path)))
+
+
+class DirectoryPathComponent(PathComponentBase):
+    def callback(self):
+        path = filedialog.askdirectory(title=self.text, initialdir=self.var.get())
+        self.var.set(str(Path(path)))
 
 
 T = TypeVar("T")

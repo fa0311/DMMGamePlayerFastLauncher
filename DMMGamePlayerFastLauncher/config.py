@@ -1,6 +1,11 @@
 from pathlib import Path
+import os
 
 
-class Config:
-    DATA_PATH = Path("data")
-    ACCOUNT_PATH = DATA_PATH.joinpath("account")
+class PathConf:
+    DATA = Path("data")
+    ACCOUNT = DATA.joinpath("account")
+    SHORTCUT = DATA.joinpath("shortcut")
+
+    APPDATA = Path(os.getenv("APPDATA", default=""))
+    DMMGAMEPLAYER = APPDATA.joinpath("dmmgameplayer5")

@@ -86,8 +86,11 @@ class DgpSessionV2:
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
             try:
-                value = self.cookies.get(
-                    cookie_row[3], domain=cookie_row[1], path=cookie_row[6]
+                value = (
+                    self.cookies.get(
+                        cookie_row[3], domain=cookie_row[1], path=cookie_row[6]
+                    )
+                    or ""
                 )
                 v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
@@ -135,10 +138,6 @@ class DgpSessionV2:
                     exc_info=True,
                 )
 
-    def logout(self):
-        self.db.execute("delete from cookies")
-        self.db.commit()
-
     def write_bytes(self, file: str):
         contents = []
         for cookie in self.cookies:
@@ -166,7 +165,7 @@ class DgpSessionV2:
             f.write(data)
 
     def read_bytes(self, file: str):
-        open(file, "a+")
+        open(file, "a+").close()
         with open(file, "rb") as f:
             data = f.read()
             _, contents = win32crypt.CryptUnprotectData(data)

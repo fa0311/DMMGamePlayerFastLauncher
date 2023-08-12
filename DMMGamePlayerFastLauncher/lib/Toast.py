@@ -1,36 +1,20 @@
-from typing import Optional, TypeVar, Union, List
-import os
+from typing import Union
 from tkinter import (
-    BaseWidget,
-    Entry,
-    Frame,
-    StringVar,
     Tk,
     Toplevel,
-    Widget,
-    filedialog,
     Misc,
-    Label,
 )
 import webbrowser
-import i18n
-from pathlib import Path
 
 import customtkinter as ctk
 from customtkinter import (
-    CTk,
     CTkFrame,
     CTkLabel,
     CTkButton,
-    CTkEntry,
-    CTkScrollbar,
-    CTkScrollableFrame,
     CTkBaseClass,
     CTkToplevel,
     CTkTextbox,
 )
-from customtkinter import ThemeManager as CTKM
-import queue
 
 import traceback
 
@@ -81,11 +65,11 @@ class ToastController(CTkFrame):
             print("create")
 
     def info(self, text: str):
-        widget = InfoLabel(self.instance.master, text=text)
+        widget = InfoLabel(self.instance.master, text=text).create()
         self.instance.show(widget)
 
     def error(self, text: str):
-        widget = ErrorLabel(self.instance.master, text=text)
+        widget = ErrorLabel(self.instance.master, text=text).create()
         self.instance.show(widget)
 
     def show(self, widget: "CTkBaseClass"):
@@ -110,13 +94,13 @@ class InfoLabel(CTkFrame):
     def __init__(self, master: Union[Tk, Toplevel], text: str) -> None:
         super().__init__(master, corner_radius=10)
         self.text = text
-        self.create()
 
     def create(self):
         CTkLabel(
             self,
             text=self.text,
         ).pack(side=ctk.LEFT, padx=10)
+        return self
 
 
 class ErrorLabel(CTkFrame):
@@ -127,7 +111,6 @@ class ErrorLabel(CTkFrame):
         super().__init__(master, fg_color="red", corner_radius=10)
         self.text = text
         self.trace = traceback.format_exc()
-        self.create()
 
     def create(self):
         CTkLabel(
@@ -144,9 +127,10 @@ class ErrorLabel(CTkFrame):
             text_color="black",
             hover_color="white",
         ).pack(side=ctk.LEFT, padx=10)
+        return self
 
     def copy(self):
-        ErrorWindow(self.master, self.text, self.trace)
+        ErrorWindow(self.master, self.text, self.trace).create()
 
 
 class ErrorWindow(CTkToplevel):
@@ -158,7 +142,6 @@ class ErrorWindow(CTkToplevel):
         self.text = text
         self.trace = trace
         self.geometry("600x300")
-        self.create()
 
     def create(self):
         CTkLabel(self, text=self.text).pack(pady=10)
@@ -181,6 +164,7 @@ class ErrorWindow(CTkToplevel):
             text="報告",
             command=lambda: self.report(),
         ).pack(side=ctk.LEFT, expand=True)
+        return self
 
     def clipboard(self, box: CTkTextbox):
         self.clipboard_clear()

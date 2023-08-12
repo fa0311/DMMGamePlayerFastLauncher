@@ -26,3 +26,4 @@ ja:
 
   error:
     not_exists: "%{name}が存在しません"
+    not_entered: "%{name}が入力されていません"
