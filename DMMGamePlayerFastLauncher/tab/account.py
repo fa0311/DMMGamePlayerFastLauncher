@@ -4,7 +4,7 @@ from tkinter import StringVar
 from typing import TypeVar
 
 import customtkinter as ctk
-from config import PathConf
+from config import PathConfig
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
 from lib.component import EntryComponent, TabMenuComponent, children_destroy, file_create
@@ -65,7 +65,7 @@ class AccountImport(CTkScrollableFrame):
 
     @error_toast
     def callback(self):
-        path = PathConf.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
+        path = PathConfig.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
         if self.name.get() == "":
             raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
         if path.exists():
@@ -87,20 +87,20 @@ class AccountExport(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.toast = ToastController(self)
-        self.values = [Path(x).stem for x in glob.glob(str(PathConf.ACCOUNT.joinpath("*.bytes")))]
+        self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
         self.selected = StringVar()
 
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.export")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.selected).pack(anchor=ctk.W, fill=ctk.X)
         CTkButton(self, text=i18n.t("app.word.export"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
     @error_toast
     def callback(self):
-        path = PathConf.ACCOUNT.joinpath(self.selected.get()).with_suffix(".bytes")
+        path = PathConfig.ACCOUNT.joinpath(self.selected.get()).with_suffix(".bytes")
         if self.selected.get() == "":
             raise Exception(i18n.t("app.error.not_selected", name=i18n.t("app.word.file")))
         with DgpSessionV2() as session:
@@ -122,7 +122,7 @@ class AccountEdit(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.toast = ToastController(self)
-        self.values = [Path(x).stem for x in glob.glob(str(PathConf.ACCOUNT.joinpath("*.bytes")))]
+        self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
         self.filename = StringVar()
         self.body_var = {}
         self.body_filename = StringVar()
@@ -130,7 +130,7 @@ class AccountEdit(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.edit")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.filename, command=self.select_callback).pack(anchor=ctk.W, fill=ctk.X)
         self.body = CTkFrame(self, fg_color=CTkm.theme["CTkToplevel"]["fg_color"], height=0)
         self.body.pack(expand=True, fill=ctk.BOTH)
@@ -139,7 +139,7 @@ class AccountEdit(CTkScrollableFrame):
     @error_toast
     def select_callback(self, value: str):
         children_destroy(self.body)
-        path = PathConf.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         self.body_filename.set(self.filename.get())
         EntryComponent(self.body, text=i18n.t("app.word.filename"), var=self.body_filename).create()
 
@@ -157,8 +157,8 @@ class AccountEdit(CTkScrollableFrame):
         if self.body_filename.get() == "":
             raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
 
-        path = PathConf.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        body_path = PathConf.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
+        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        body_path = PathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
 
         def write():
             session = DgpSessionV2()
@@ -186,7 +186,7 @@ class AccountEdit(CTkScrollableFrame):
 
     @error_toast
     def delete_callback(self):
-        path = PathConf.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         path.unlink()
         self.values.remove(self.filename.get())
         self.filename.set("")

@@ -1,11 +1,12 @@
 import os
 
 import customtkinter as ctk
-from config import PathConf
+from config import PathConfig
 from customtkinter import CTk, CTkFrame
 from lib.component import TabMenuComponent
 from tab.account import AccountTab
 from tab.help import HelpTab
+from tab.home import HomeTab
 from tab.setting import SettingTab
 from tab.shortcut import ShortcutTab
 
@@ -14,8 +15,8 @@ import i18n
 i18n.load_path.append("./i18n")
 i18n.set("locale", "ja")
 
-os.makedirs(PathConf.ACCOUNT, exist_ok=True)
-os.makedirs(PathConf.SHORTCUT, exist_ok=True)
+os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
+os.makedirs(PathConfig.SHORTCUT, exist_ok=True)
 
 
 class App(CTk):
@@ -30,11 +31,15 @@ class App(CTk):
 
     def create(self):
         tab = TabMenuComponent(self)
+        tab.add(text=i18n.t("app.word.home"), callback=self.home_callback)
         tab.add(text=i18n.t("app.word.shortcut"), callback=self.shortcut_callback)
         tab.add(text=i18n.t("app.word.account"), callback=self.account_callback)
         tab.add(text=i18n.t("app.word.setting"), callback=self.setting_callback)
         tab.add(text=i18n.t("app.word.help"), callback=self.help_callback)
         return self
+
+    def home_callback(self, master: CTkFrame):
+        HomeTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
     def shortcut_callback(self, master: CTkFrame):
         ShortcutTab(master).create().pack(expand=True, fill=ctk.BOTH)

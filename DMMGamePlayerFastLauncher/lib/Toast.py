@@ -4,6 +4,7 @@ from tkinter import Misc, Tk, Toplevel
 from typing import Union
 
 import customtkinter as ctk
+from config import UrlConfig
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkTextbox, CTkToplevel
 from lib.component import get_isinstance
 
@@ -87,10 +88,7 @@ class ErrorLabel(CTkFrame):
         self.trace = traceback.format_exc()
 
     def create(self):
-        CTkLabel(
-            self,
-            text=self.text,
-        ).pack(side=ctk.LEFT, padx=10)
+        CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
         CTkButton(
             self,
             text=i18n.t("app.word.details"),
@@ -127,17 +125,9 @@ class ErrorWindow(CTkToplevel):
         frame = CTkFrame(self)
         frame.pack(fill=ctk.BOTH, padx=10, pady=(0, 10))
 
-        CTkButton(
-            frame,
-            text=i18n.t("app.description.copy_to_clipboard"),
-            command=lambda: self.clipboard(box),
-        ).pack(side=ctk.LEFT, expand=True)
+        CTkButton(frame, text=i18n.t("app.copy_to_clipboard"), command=lambda: self.clipboard(box)).pack(side=ctk.LEFT, expand=True)
 
-        CTkButton(
-            frame,
-            text=i18n.t("app.word.report"),
-            command=lambda: self.report(),
-        ).pack(side=ctk.LEFT, expand=True)
+        CTkButton(frame, text=i18n.t("app.word.report"), command=lambda: self.report()).pack(side=ctk.LEFT, expand=True)
         return self
 
     def clipboard(self, box: CTkTextbox):
@@ -146,5 +136,4 @@ class ErrorWindow(CTkToplevel):
         self.update()
 
     def report(self):
-        url = "https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new"
-        webbrowser.open(url)
+        webbrowser.open(UrlConfig.ISSUE)

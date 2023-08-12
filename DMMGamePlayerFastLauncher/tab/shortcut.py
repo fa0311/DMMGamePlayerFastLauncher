@@ -5,7 +5,7 @@ from pathlib import Path
 from tkinter import Frame, StringVar
 
 import customtkinter as ctk
-from config import PathConf
+from config import PathConfig
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
 from lib.component import EntryComponent, FilePathComponent, TabMenuComponent, VariableBase, children_destroy, file_create
@@ -62,7 +62,7 @@ class ShortcutCreate(CTkScrollableFrame):
     def create(self):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.detail.shortcut.add")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.product_id"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.product_id"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.product_ids, variable=self.data.product_id).pack(fill=ctk.X)
         CTkLabel(self, text=i18n.t("app.word.filename")).pack(anchor=ctk.W)
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
@@ -78,7 +78,7 @@ class ShortcutCreate(CTkScrollableFrame):
         if self.filename.get() == "":
             raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
 
-        path = PathConf.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        path = PathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         if not exists:
             file_create(path, name=i18n.t("app.word.filename"))
         with open(path, "w", encoding="utf-8") as f:
@@ -92,13 +92,13 @@ class ShortcutEdit(ShortcutCreate):
 
     def __init__(self, master: Frame):
         super().__init__(master)
-        self.values = [Path(x).stem for x in glob.glob(str(PathConf.SHORTCUT.joinpath("*.json")))]
+        self.values = [Path(x).stem for x in glob.glob(str(PathConfig.SHORTCUT.joinpath("*.json")))]
         self.selected = StringVar()
 
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.shortcut.edit")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.option_callback).pack(fill=ctk.X)
 
         if self.selected.get() in self.values:
@@ -111,8 +111,8 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def callback(self):
-        path = PathConf.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
-        selected = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = PathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        selected = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         if path == selected:
             super().callback(exists=True)
         else:
@@ -125,7 +125,7 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def delete_callback(self):
-        path = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         path.unlink()
         self.values.remove(self.selected.get())
         self.selected.set("")
@@ -138,6 +138,6 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def read(self) -> ShortcutData:
-        path = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             return ShortcutData.from_dict(json.load(f))
