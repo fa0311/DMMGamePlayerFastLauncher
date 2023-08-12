@@ -1,0 +1,28 @@
+ja:
+  word:
+    shortcut: ショートカット
+    account: アカウント
+    setting: 設定
+    help: ヘルプ
+
+    import: インポート
+    export: エクスポート
+    logout: ログアウト
+
+    reference: 参照
+    save: 保存
+    cancel: キャンセル
+    login: ログイン
+
+  description:
+    import: DMMGamePlayerにアカウント情報をインポートします。
+    export: 現在のDMMGamePlayerにアカウント情報をエクスポートします。
+    logout: DMMGamePlayerにログインしているアカウントをログアウトします。
+    save_file: "保存するファイル名"
+
+  message:
+    success: "%{name}に成功しました"
+    failure: "%{name}に失敗しました"
+
+  error:
+    not_exists: "%{name}が存在しません"

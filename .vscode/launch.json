@@ -8,7 +8,7 @@
       "name": "DMMGamePlayerFastLauncher",
       "type": "python",
       "request": "launch",
-      "program": "DMMGamePlayerFastLauncher.py",
+      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
       "justMyCode": true,
       "env": {
