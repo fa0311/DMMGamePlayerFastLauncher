@@ -61,11 +61,11 @@ class DgpSessionV2:
             "motherboard": self.gen_rand_hex(),
             "user_os": "win",
         }
+        self.session = requests.session()
+        self.cookies = self.session.cookies
 
     def __enter__(self):
         self.db = sqlite3.connect(self.DGP5_PATH.joinpath("Network", "Cookies"))
-        self.session = requests.session()
-        self.cookies = self.session.cookies
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):

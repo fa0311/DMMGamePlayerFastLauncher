@@ -30,7 +30,6 @@ ja:
     game_args: ゲームの引数
 
   description:
-    save_file: "保存するファイル名"
     select: "%{name}の選択"
     copy_to_clipboard: "クリップボードにコピー"
 

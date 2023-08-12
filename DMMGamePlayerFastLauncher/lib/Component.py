@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Frame, Misc, StringVar, filedialog
+from tkinter import Frame, Misc, StringVar, Variable, filedialog
 from typing import Optional, TypeVar
 
 import customtkinter as ctk
@@ -7,6 +7,19 @@ from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel
 from customtkinter import ThemeManager as CTkm
 
 import i18n
+
+
+class VariableBase:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def to_dict(self) -> dict[str, str]:
+        return {k: v.get() if isinstance(v, Variable) else v for k, v in self.__dict__.items()}
+
+    @classmethod
+    def from_dict(cls, obj: dict[str, str]):
+        item = {k: StringVar(value=v) for k, v in obj.items()}
+        return cls(**item)
 
 
 class TabMenuComponent:
@@ -19,23 +32,12 @@ class TabMenuComponent:
         self.body_master = CTkFrame(master)
 
         self.tab_master.pack(side=ctk.LEFT, fill=ctk.Y, padx=5, pady=5)
-        self.body_master.pack(
-            side=ctk.LEFT,
-            expand=True,
-            fill=ctk.BOTH,
-            padx=0,
-            pady=5,
-        )
+        self.body_master.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH, padx=0, pady=5)
 
     def add(self, text: str, callback):
         row = self.row
 
-        CTkButton(
-            self.tab_master,
-            text=text,
-            fg_color=CTkm.theme["CTkFrame"]["fg_color"],
-            command=lambda: self.callback_wrapper(callback, row=row),
-        ).pack(pady=2)
+        CTkButton(self.tab_master, text=text, fg_color=CTkm.theme["CTkFrame"]["fg_color"], command=lambda: self.callback_wrapper(callback, row=row)).pack(pady=2)
 
         if self.row == 0:
             self.callback_wrapper(callback, row=self.row)
@@ -65,12 +67,7 @@ class EntryComponent:
     var: StringVar
     text: str
 
-    def __init__(
-        self,
-        master: Frame,
-        text: str,
-        var: StringVar,
-    ) -> None:
+    def __init__(self, master: Frame, text: str, var: StringVar) -> None:
         self.master = CTkFrame(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.master.pack(fill=ctk.X, expand=True)
         self.text = text
@@ -79,14 +76,7 @@ class EntryComponent:
     def create(self):
         CTkLabel(self.master, text=self.text).pack(anchor=ctk.W)
 
-        CTkEntry(
-            self.master,
-            textvariable=self.var,
-        ).pack(
-            side=ctk.LEFT,
-            fill=ctk.BOTH,
-            expand=True,
-        )
+        CTkEntry(self.master, textvariable=self.var).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
         return self
 
 
@@ -94,12 +84,7 @@ class PathComponentBase(EntryComponent):
     def create(self):
         super().create()
 
-        CTkButton(
-            self.master,
-            text=i18n.t("app.word.reference"),
-            command=self.callback,
-            width=0,
-        ).pack(side=ctk.LEFT, padx=2)
+        CTkButton(self.master, text=i18n.t("app.word.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
         return self
 
     def callback(self):

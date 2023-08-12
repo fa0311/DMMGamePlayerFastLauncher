@@ -3,7 +3,6 @@ import os
 import customtkinter as ctk
 from config import PathConf
 from customtkinter import CTk, CTkFrame
-from customtkinter import ThemeManager as CTkm
 from lib.component import TabMenuComponent
 from tab.account import AccountTab
 from tab.help import HelpTab
@@ -17,8 +16,6 @@ i18n.set("locale", "ja")
 
 os.makedirs(PathConf.ACCOUNT, exist_ok=True)
 os.makedirs(PathConf.SHORTCUT, exist_ok=True)
-
-a = CTkm.theme["CTkButton"]["fg_color"]
 
 
 class App(CTk):

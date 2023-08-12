@@ -8,7 +8,7 @@ import customtkinter as ctk
 from config import PathConf
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
-from lib.component import EntryComponent, FilePathComponent, TabMenuComponent, children_destroy, file_create
+from lib.component import EntryComponent, FilePathComponent, TabMenuComponent, VariableBase, children_destroy, file_create
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
 
@@ -16,22 +16,10 @@ import i18n
 
 
 @dataclass
-class ShortcutData:
+class ShortcutData(VariableBase):
     product_id: StringVar = field(default_factory=StringVar)
     game_path: StringVar = field(default_factory=StringVar)
     game_args: StringVar = field(default_factory=StringVar)
-
-    def to_dict(self) -> dict[str, str]:
-        return {
-            "product_id": self.product_id.get(),
-            "game_path": self.game_path.get(),
-            "game_args": self.game_args.get(),
-        }
-
-    @staticmethod
-    def from_dict(obj: dict[str, str]) -> "ShortcutData":
-        item = {k: StringVar(value=v) for k, v in obj.items()}
-        return ShortcutData(**item)
 
 
 # ===== Shortcut Sub Menu =====
@@ -117,6 +105,7 @@ class ShortcutEdit(ShortcutCreate):
             self.data = self.read()
             super().create()
             self.filename.set(self.selected.get())
+            CTkButton(self, text=i18n.t("app.word.delete"), command=self.delete_callback).pack(fill=ctk.X)
 
         return self
 
@@ -133,6 +122,14 @@ class ShortcutEdit(ShortcutCreate):
             self.values.append(self.filename.get())
             self.selected.set(self.filename.get())
             self.option_callback("_")
+
+    @error_toast
+    def delete_callback(self):
+        path = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path.unlink()
+        self.values.remove(self.selected.get())
+        self.selected.set("")
+        self.option_callback("_")
 
     @error_toast
     def option_callback(self, _: str):
