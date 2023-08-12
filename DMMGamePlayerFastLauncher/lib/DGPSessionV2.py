@@ -1,20 +1,21 @@
-import os
-import json
-from typing import Optional
-import requests
-import win32crypt
-import random
-import hashlib
-import sqlite3
-import base64
-import requests.cookies
-from Crypto.Cipher import AES
-from http.cookies import SimpleCookie
-import re
-import logging
-from pathlib import Path
+# flake8: noqa
 
+import base64
+import hashlib
+import json
+import logging
+import os
+import random
+import re
+import sqlite3
+from pathlib import Path
+from typing import Optional
+
+import requests
+import requests.cookies
 import urllib3
+import win32crypt
+from Crypto.Cipher import AES
 
 urllib3.disable_warnings()
 
@@ -86,12 +87,7 @@ class DgpSessionV2:
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
             try:
-                value = (
-                    self.cookies.get(
-                        cookie_row[3], domain=cookie_row[1], path=cookie_row[6]
-                    )
-                    or ""
-                )
+                value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6]) or ""
                 v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
                 decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
@@ -165,7 +161,6 @@ class DgpSessionV2:
             f.write(data)
 
     def read_bytes(self, file: str):
-        open(file, "a+").close()
         with open(file, "rb") as f:
             data = f.read()
             _, contents = win32crypt.CryptUnprotectData(data)
@@ -195,17 +190,13 @@ class DgpSessionV2:
         return json.loads(config)
 
     def get_aes_key(self):
-        with open(self.DGP5_PATH.joinpath("Local State"), "r") as f:
+        with open(self.DGP5_PATH.joinpath("Local State"), "r", encoding="utf-8") as f:
             local_state = json.load(f)
-        encrypted_key = base64.b64decode(
-            local_state["os_crypt"]["encrypted_key"].encode()
-        )[5:]
+        encrypted_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"].encode())[5:]
         key = win32crypt.CryptUnprotectData(encrypted_key, None, None, None, 0)[1]
         return key
 
-    def split_encrypted_data(
-        self, encrypted_data: bytes
-    ) -> tuple[bytes, bytes, bytes, bytes]:
+    def split_encrypted_data(self, encrypted_data: bytes) -> tuple[bytes, bytes, bytes, bytes]:
         return (
             encrypted_data[0:3],
             encrypted_data[3:15],
@@ -213,9 +204,7 @@ class DgpSessionV2:
             encrypted_data[-16:],
         )
 
-    def join_encrypted_data(
-        self, v10: bytes, nonce: bytes, data: bytes, mac: bytes
-    ) -> bytes:
+    def join_encrypted_data(self, v10: bytes, nonce: bytes, data: bytes, mac: bytes) -> bytes:
         return v10 + nonce + data + mac
 
     def dump(self, value, mask: bool) -> str:

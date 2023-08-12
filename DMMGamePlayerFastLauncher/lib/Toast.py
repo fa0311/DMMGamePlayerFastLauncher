@@ -1,50 +1,25 @@
-from typing import Union
-from tkinter import (
-    Tk,
-    Toplevel,
-    Misc,
-)
+import traceback
 import webbrowser
+from tkinter import Misc, Tk, Toplevel
+from typing import Union
 
 import customtkinter as ctk
-from customtkinter import (
-    CTkFrame,
-    CTkLabel,
-    CTkButton,
-    CTkBaseClass,
-    CTkToplevel,
-    CTkTextbox,
-)
+from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkTextbox, CTkToplevel
+from lib.component import get_isinstance
 
-import traceback
-
-from lib.Component import get_isinstance
+import i18n
 
 
-# class ToastComponent(CTkFrame):
-#     def __init__(self, master: Misc) -> None:
-#         self.instance = get_isinstance(master, ToastComponent)
+def error_toast(func):
+    def _wrapper(self, *arg, **kwargs):
+        try:
+            assert isinstance(self.toast, ToastController)
+            return func(self, *arg, **kwargs)
+        except Exception as e:
+            self.toast.error(str(e))
+            raise
 
-#         super().__init__(
-#             master,
-#             width=0,
-#             height=0,
-#             bg_color="transparent",
-#             fg_color="transparent",
-#         )
-#         self.place(x=-20, relx=1, rely=1, anchor=ctk.SE)
-#         CTkBaseClass(self, width=0, height=0).pack()
-
-#     def show(self, text: str) -> None:
-#         if self.instance:
-#             return self.instance.show(text)
-
-#         label = CTkLabel(self, text=text, fg_color="transparent")
-#         label.pack(anchor=ctk.SE, padx=10)
-#         self.after(3000, lambda: self.hide(label))
-
-#     def hide(self, label: CTkLabel):
-#         label.destroy()
+    return _wrapper
 
 
 class ToastController(CTkFrame):
@@ -62,7 +37,6 @@ class ToastController(CTkFrame):
             super().__init__(self.master)
             self.place()
             self.instance = self
-            print("create")
 
     def info(self, text: str):
         widget = InfoLabel(self.instance.master, text=text).create()
@@ -74,17 +48,17 @@ class ToastController(CTkFrame):
 
     def show(self, widget: "CTkBaseClass"):
         self.toast_list.append(widget)
-        self.update()
+        self.update_state()
         self.after(5000, self.hide)
 
-    def update(self):
+    def update_state(self):
         for key, x in enumerate(reversed(self.toast_list)):
             x.place(x=-18, y=-28 * key - 10, relx=1, rely=1, anchor=ctk.SE)
 
     def hide(self):
         widget = self.toast_list.pop(0)
         widget.destroy()
-        self.update()
+        self.update_state()
 
 
 class InfoLabel(CTkFrame):
@@ -119,7 +93,7 @@ class ErrorLabel(CTkFrame):
         ).pack(side=ctk.LEFT, padx=10)
         CTkButton(
             self,
-            text="詳細",
+            text=i18n.t("app.word.details"),
             command=self.copy,
             width=0,
             height=0,
@@ -155,13 +129,13 @@ class ErrorWindow(CTkToplevel):
 
         CTkButton(
             frame,
-            text="クリップボードにコピー",
+            text=i18n.t("app.description.copy_to_clipboard"),
             command=lambda: self.clipboard(box),
         ).pack(side=ctk.LEFT, expand=True)
 
         CTkButton(
             frame,
-            text="報告",
+            text=i18n.t("app.word.report"),
             command=lambda: self.report(),
         ).pack(side=ctk.LEFT, expand=True)
         return self

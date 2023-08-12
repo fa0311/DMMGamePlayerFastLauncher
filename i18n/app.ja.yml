@@ -11,6 +11,11 @@ ja:
 
     create: 作成
     edit: 編集
+    delete: 削除
+    add: 追加
+    details: 詳細
+
+    report: 報告
 
     reference: 参照
     save: 保存
@@ -27,6 +32,7 @@ ja:
   description:
     save_file: "保存するファイル名"
     select: "%{name}の選択"
+    copy_to_clipboard: "クリップボードにコピー"
 
   detail:
     shortcut:
@@ -37,10 +43,15 @@ ja:
       export: アカウント情報をFastLauncherからDMMGamePlayerにエクスポートします。
       logout: DMMGamePlayerにログインしているアカウントからログアウトします。
 
+    setting:
+      # DMMGamePlayerのフォルダ
+      dmm_game_player_folder: DMMGamePlayerのフォルダ
+
   message:
     success: "%{name}に成功しました"
     failure: "%{name}に失敗しました"
 
   error:
+    already_exists: "%{name}が既に存在します"
     not_exists: "%{name}が存在しません"
     not_entered: "%{name}が入力されていません"

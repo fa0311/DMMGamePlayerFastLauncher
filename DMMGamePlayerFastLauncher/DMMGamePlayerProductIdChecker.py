@@ -1,7 +1,5 @@
-import os
-import json
 import pandas as pd
-from lib.DGPSession import *
+from lib.DGPSession import DgpSession
 
 session = DgpSession()
 

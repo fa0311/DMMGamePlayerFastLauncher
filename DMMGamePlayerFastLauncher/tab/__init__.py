@@ -1,3 +1,4 @@
+# flake8: noqa
 from DMMGamePlayerFastLauncher.tab.account import AccountTab
 from DMMGamePlayerFastLauncher.tab.help import HelpTab
 from DMMGamePlayerFastLauncher.tab.setting import SettingTab

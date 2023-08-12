@@ -1,8 +1,11 @@
-import psutil
+# flake8: noqa
+# type: ignore
+
+import ctypes
 import os
 import signal
-import ctypes
 
+import psutil
 
 for p in psutil.process_iter(attrs=("name", "pid", "cmdline")):
     if p.info["name"] != "DMMGamePlayerFastLauncher.exe":
@@ -14,9 +17,7 @@ for p in psutil.process_iter(attrs=("name", "pid", "cmdline")):
         cmdline = [f'"{cmd}"' for cmd in cmdline]
         os.kill(p.info["pid"], signal.SIGTERM)
         print("killed " + " ".join(cmdline))
-        ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", cmdline[0], " ".join(cmdline[1:]), None, 1
-        )
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", cmdline[0], " ".join(cmdline[1:]), None, 1)
         break
 else:
     print("Error")

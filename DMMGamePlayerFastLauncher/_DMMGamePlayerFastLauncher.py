@@ -1,16 +1,19 @@
+# flake8: noqa
 # type: ignore
-import subprocess
+
 import argparse
-import json
-import glob
 import ctypes
+import glob
+import json
+import logging
 import os
+import subprocess
+import sys
 import time
 from urllib.parse import urlparse
+
 import win32security
-import sys
 from lib.DGPSession import *
-import logging
 
 
 class ErrorManagerType:

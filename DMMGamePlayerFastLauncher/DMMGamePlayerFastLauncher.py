@@ -1,34 +1,24 @@
-from ast import List
 import os
-from tkinter import Entry, StringVar, filedialog
-import i18n
-from pathlib import Path
 
 import customtkinter as ctk
-from customtkinter import (
-    CTk,
-    CTkFrame,
-    CTkLabel,
-    CTkButton,
-    CTkEntry,
-    CTkScrollbar,
-    CTkScrollableFrame,
-    CTkBaseClass,
-)
-from customtkinter import ThemeManager as CTKM
 from config import PathConf
-
-from lib.Component import FilePathComponent, TabMenuComponent
+from customtkinter import CTk, CTkFrame
+from customtkinter import ThemeManager as CTkm
+from lib.component import TabMenuComponent
 from tab.account import AccountTab
 from tab.help import HelpTab
 from tab.setting import SettingTab
 from tab.shortcut import ShortcutTab
+
+import i18n
 
 i18n.load_path.append("./i18n")
 i18n.set("locale", "ja")
 
 os.makedirs(PathConf.ACCOUNT, exist_ok=True)
 os.makedirs(PathConf.SHORTCUT, exist_ok=True)
+
+a = CTkm.theme["CTkButton"]["fg_color"]
 
 
 class App(CTk):

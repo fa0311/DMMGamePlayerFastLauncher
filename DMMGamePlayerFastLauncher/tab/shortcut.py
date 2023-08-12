@@ -1,31 +1,18 @@
-from dataclasses import dataclass, field
 import glob
+import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from tkinter import Frame, StringVar
-import i18n
 
 import customtkinter as ctk
-from customtkinter import (
-    CTkFrame,
-    CTkLabel,
-    CTkButton,
-    CTkEntry,
-    CTkScrollableFrame,
-    CTkBaseClass,
-    CTkOptionMenu,
-)
-from customtkinter import ThemeManager as CTKM
 from config import PathConf
-from lib.Toast import ToastController
-
-from lib.Component import (
-    FilePathComponent,
-    TabMenuComponent,
-    EntryComponent,
-)
+from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
+from customtkinter import ThemeManager as CTkm
+from lib.component import EntryComponent, FilePathComponent, TabMenuComponent, children_destroy, file_create
 from lib.DGPSessionV2 import DgpSessionV2
+from lib.toast import ToastController, error_toast
 
-import json
+import i18n
 
 
 @dataclass
@@ -47,9 +34,12 @@ class ShortcutData:
         return ShortcutData(**item)
 
 
+# ===== Shortcut Sub Menu =====
+
+
 class ShortcutTab(CTkFrame):
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
 
     def create(self):
         tab = TabMenuComponent(self)
@@ -58,26 +48,29 @@ class ShortcutTab(CTkFrame):
         return self
 
     def create_callback(self, master: CTkBaseClass):
-        ShortcutAdd(master).create().pack(expand=True, fill=ctk.BOTH)
+        ShortcutCreate(master).create().pack(expand=True, fill=ctk.BOTH)
 
     def edit_callback(self, master: CTkBaseClass):
         ShortcutEdit(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
-class ShortcutAdd(CTkScrollableFrame):
+# ===== Shortcut Body =====
+
+
+class ShortcutCreate(CTkScrollableFrame):
     toast: ToastController
     data: ShortcutData
     filename: StringVar
     product_ids: list[str]
 
     def __init__(self, master: Frame):
-        super().__init__(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.toast = ToastController(self)
         self.data = ShortcutData()
-        self.filename = StringVar(value="main")
+        self.filename = StringVar()
         self.product_ids = [x["productId"] for x in DgpSessionV2().get_config()["contents"]]
-        self.data.product_id.set(self.product_ids[0])
 
+    @error_toast
     def create(self):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.detail.shortcut.add")).pack(anchor=ctk.W)
@@ -90,54 +83,64 @@ class ShortcutAdd(CTkScrollableFrame):
         CTkButton(self, text=i18n.t("app.word.save"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
-    def callback(self):
-        try:
-            path = PathConf.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
-            open(path, "a+").close()
-            with open(path, "w") as f:
-                f.write(json.dumps(self.data.to_dict()))
-            self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.save")))
+    @error_toast
+    def callback(self, exists=False):
+        if self.data.product_id.get() == "":
+            raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.product_id")))
+        if self.filename.get() == "":
+            raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
 
-        except Exception as e:
-            self.toast.error(str(e))
+        path = PathConf.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        if not exists:
+            file_create(path, name=i18n.t("app.word.filename"))
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(self.data.to_dict()))
+        self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.save")))
 
 
-class ShortcutEdit(ShortcutAdd):
+class ShortcutEdit(ShortcutCreate):
     selected: StringVar
     values: list[str]
 
     def __init__(self, master: Frame):
         super().__init__(master)
-        values = glob.glob(str(PathConf.SHORTCUT.joinpath("*.json")))
-        self.values = [Path(x).stem for x in values]
-        self.selected = StringVar(value=self.values[0] if self.values else None)
+        self.values = [Path(x).stem for x in glob.glob(str(PathConf.SHORTCUT.joinpath("*.json")))]
+        self.selected = StringVar()
 
+    @error_toast
     def create(self):
-        if self.selected.get() in self.values:
-            self.data = self.read()
-
         CTkLabel(self, text=i18n.t("app.detail.shortcut.edit")).pack(anchor=ctk.W)
         CTkLabel(self, text=i18n.t("app.description.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
-        CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.callback).pack(fill=ctk.X)
+        CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.option_callback).pack(fill=ctk.X)
 
         if self.selected.get() in self.values:
+            self.data = self.read()
             super().create()
             self.filename.set(self.selected.get())
 
         return self
 
-    def callback(self, value: str):
-        for child in self.winfo_children():
-            child.destroy()
+    @error_toast
+    def callback(self):
+        path = PathConf.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        selected = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        if path == selected:
+            super().callback(exists=True)
+        else:
+            super().callback()
+            selected.unlink()
+            self.values.remove(self.selected.get())
+            self.values.append(self.filename.get())
+            self.selected.set(self.filename.get())
+            self.option_callback("_")
 
-        self.selected.set(value)
+    @error_toast
+    def option_callback(self, _: str):
+        children_destroy(self)
         self.create()
 
+    @error_toast
     def read(self) -> ShortcutData:
-        try:
-            path = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
-            with open(path, "r") as f:
-                return ShortcutData.from_dict(json.load(f))
-        except Exception as e:
-            self.toast.error(str(e))
-            raise
+        path = PathConf.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        with open(path, "r", encoding="utf-8") as f:
+            return ShortcutData.from_dict(json.load(f))

@@ -1,38 +1,12 @@
-from typing import Optional, TypeVar, Union, List
-import os
-from tkinter import (
-    BaseWidget,
-    Entry,
-    Frame,
-    StringVar,
-    Tk,
-    Toplevel,
-    Widget,
-    filedialog,
-    Misc,
-    Label,
-)
-import webbrowser
-import i18n
 from pathlib import Path
+from tkinter import Frame, Misc, StringVar, filedialog
+from typing import Optional, TypeVar
 
 import customtkinter as ctk
-from customtkinter import (
-    CTk,
-    CTkFrame,
-    CTkLabel,
-    CTkButton,
-    CTkEntry,
-    CTkScrollbar,
-    CTkScrollableFrame,
-    CTkBaseClass,
-    CTkToplevel,
-    CTkTextbox,
-)
-from customtkinter import ThemeManager as CTKM
-import queue
+from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel
+from customtkinter import ThemeManager as CTkm
 
-import traceback
+import i18n
 
 
 class TabMenuComponent:
@@ -49,7 +23,7 @@ class TabMenuComponent:
             side=ctk.LEFT,
             expand=True,
             fill=ctk.BOTH,
-            padx=(5, 0),
+            padx=0,
             pady=5,
         )
 
@@ -59,9 +33,9 @@ class TabMenuComponent:
         CTkButton(
             self.tab_master,
             text=text,
-            fg_color=CTKM.theme["CTkFrame"]["fg_color"],
+            fg_color=CTkm.theme["CTkFrame"]["fg_color"],
             command=lambda: self.callback_wrapper(callback, row=row),
-        ).pack()
+        ).pack(pady=2)
 
         if self.row == 0:
             self.callback_wrapper(callback, row=self.row)
@@ -69,22 +43,17 @@ class TabMenuComponent:
         self.row += 1
 
     def callback_wrapper(self, callback, row):
-        tab_children: list[CTkButton] = self.tab_master.winfo_children()
-        body_children: list[CTkBaseClass] = self.body_master.winfo_children()
-
-        for child in body_children:
-            child.destroy()
-
-        for key, child in enumerate(tab_children):
+        children_destroy(self.body_master)
+        for key, child in enumerate(self.tab_master.winfo_children()):
             if key == row:
                 child.configure(
-                    fg_color=CTKM.theme["CTkButton"]["fg_color"],
-                    hover_color=CTKM.theme["CTkButton"]["fg_color"],
+                    fg_color=CTkm.theme["CTkButton"]["fg_color"],
+                    hover_color=CTkm.theme["CTkButton"]["fg_color"],
                 )
             else:
                 child.configure(
-                    fg_color=CTKM.theme["CTkFrame"]["fg_color"],
-                    hover_color=CTKM.theme["CTkButton"]["hover_color"],
+                    fg_color=CTkm.theme["CTkFrame"]["fg_color"],
+                    hover_color=CTkm.theme["CTkButton"]["hover_color"],
                 )
             child.update()
 
@@ -102,7 +71,7 @@ class EntryComponent:
         text: str,
         var: StringVar,
     ) -> None:
-        self.master = CTkFrame(master, fg_color=CTKM.theme["CTkToplevel"]["fg_color"])
+        self.master = CTkFrame(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.master.pack(fill=ctk.X, expand=True)
         self.text = text
         self.var = var
@@ -129,8 +98,8 @@ class PathComponentBase(EntryComponent):
             self.master,
             text=i18n.t("app.word.reference"),
             command=self.callback,
-            width=10,
-        ).pack(side=ctk.LEFT)
+            width=0,
+        ).pack(side=ctk.LEFT, padx=2)
         return self
 
     def callback(self):
@@ -161,3 +130,15 @@ def get_isinstance(obj, cls: type[T]) -> Optional[T]:
     if len(ins) > 0:
         return ins[0]
     return None
+
+
+def children_destroy(master: Frame):
+    for child in master.winfo_children():
+        child.destroy()
+
+
+def file_create(path: Path, name: str):
+    if path.exists():
+        raise FileExistsError(i18n.t("app.error.file_exists", name=name))
+    else:
+        path.touch()
