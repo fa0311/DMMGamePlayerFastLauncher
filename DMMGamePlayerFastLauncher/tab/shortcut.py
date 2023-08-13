@@ -8,6 +8,7 @@ import customtkinter as ctk
 import i18n
 from component.component import EntryComponent, FilePathComponent, LabelComponent, OptionMenuComponent
 from component.tab_menu import TabMenuComponent
+from component.var import PathVar
 from component.variable_base import VariableBase
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
@@ -20,7 +21,7 @@ from utils.utils import children_destroy, file_create
 @dataclass
 class ShortcutData(VariableBase):
     product_id: StringVar = field(default_factory=StringVar)
-    game_path: StringVar = field(default_factory=StringVar)
+    game_path: PathVar = field(default_factory=PathVar)
     game_args: StringVar = field(default_factory=StringVar)
 
 
@@ -64,10 +65,10 @@ class ShortcutCreate(CTkScrollableFrame):
     def create(self):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.detail.shortcut.add")).pack(anchor=ctk.W)
-        text = i18n.t("app.select", name=i18n.t("app.word.product_id"))
+        text = i18n.t("app.word.select", name=i18n.t("app.word.product_id"))
         OptionMenuComponent(self, text=text, values=self.product_ids, variable=self.data.product_id).create()
 
-        CTkLabel(self, text=i18n.t("app.word.filename")).pack(anchor=ctk.W)
+        LabelComponent(self, text=i18n.t("app.word.filename"), required=True).create()
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
         FilePathComponent(self, text=i18n.t("app.word.game_path"), variable=self.data.game_path).create()
         EntryComponent(self, text=i18n.t("app.word.game_args"), variable=self.data.game_args).create()

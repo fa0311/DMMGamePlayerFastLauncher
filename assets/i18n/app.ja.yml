@@ -3,6 +3,9 @@ ja:
   version: v5.0.0
   language: 日本語
 
+  symbol:
+    required: "*"
+
   word:
     home: ホーム
     shortcut: ショートカット
@@ -43,6 +46,8 @@ ja:
     bug_report: バグ報告
 
   detail:
+    required: 入力必須項目です。
+
     shortcut:
       add: ショートカットの設定ファイルを作成します。
       edit: ショートカットの設定ファイルを編集します。

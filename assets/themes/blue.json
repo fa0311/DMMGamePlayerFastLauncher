@@ -154,5 +154,9 @@
   },
   "MenuComponent": {
     "text_color": ["#000000", "#ffffff"]
+  },
+  "LabelComponent": {
+    "fg_color": ["#F9F9FA", "#343638"],
+    "required_color": ["red", "red"]
   }
 }
