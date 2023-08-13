@@ -5,9 +5,9 @@ from typing import TypeVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent
+from component.component import EntryComponent, OptionMenuComponent
 from component.tab_menu import TabMenuComponent
-from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
+from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
@@ -60,7 +60,7 @@ class AccountImport(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.import")).pack(anchor=ctk.W)
-        EntryComponent(self, text=i18n.t("app.word.filename"), var=self.name).create()
+        EntryComponent(self, text=i18n.t("app.word.filename"), variable=self.name).create()
         CTkButton(self, text=i18n.t("app.word.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
@@ -94,8 +94,8 @@ class AccountExport(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.export")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.word.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
-        CTkOptionMenu(self, values=self.values, variable=self.selected).pack(anchor=ctk.W, fill=ctk.X)
+        text = i18n.t("app.word.select", name=i18n.t("app.word.file"))
+        OptionMenuComponent(self, text=text, values=self.values, variable=self.selected).create()
         CTkButton(self, text=i18n.t("app.word.export"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
@@ -131,8 +131,8 @@ class AccountEdit(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.edit")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.word.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
-        CTkOptionMenu(self, values=self.values, variable=self.filename, command=self.select_callback).pack(anchor=ctk.W, fill=ctk.X)
+        text = i18n.t("app.word.select", name=i18n.t("app.word.file"))
+        OptionMenuComponent(self, text=text, values=self.values, variable=self.filename, command=self.select_callback).create()
         self.body = CTkFrame(self, fg_color=CTkm.theme["CTkToplevel"]["fg_color"], height=0)
         self.body.pack(expand=True, fill=ctk.BOTH)
         return self
@@ -142,14 +142,14 @@ class AccountEdit(CTkScrollableFrame):
         children_destroy(self.body)
         path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         self.body_filename.set(self.filename.get())
-        EntryComponent(self.body, text=i18n.t("app.word.filename"), var=self.body_filename).create()
+        EntryComponent(self.body, text=i18n.t("app.word.filename"), variable=self.body_filename).create()
 
         session = DgpSessionV2()
         session.read_bytes(str(Path(path)))
         for cookie in session.cookies:
             key = f"{cookie.name}{cookie.domain}"
             self.body_var[key] = StringVar(value=cookie.value)
-            EntryComponent(self.body, text=cookie.name, var=self.body_var[key]).create()
+            EntryComponent(self.body, text=cookie.name, variable=self.body_var[key]).create()
         CTkButton(self.body, text=i18n.t("app.word.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
         CTkButton(self.body, text=i18n.t("app.word.delete"), command=self.delete_callback).pack(fill=ctk.X)
 

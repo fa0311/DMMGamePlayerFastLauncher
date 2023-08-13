@@ -18,6 +18,7 @@ class PathConfig:
     I18N = ASSETS.joinpath("i18n")
     ICONS = ASSETS.joinpath("icons")
     TEXT = ASSETS.joinpath("text")
+    THEMES = ASSETS.joinpath("themes")
 
     LICENSE = TEXT.joinpath("LICENSE")
 

@@ -22,7 +22,7 @@ class TabMenuComponent:
         row = self.row
 
         fg_color = CTkm.theme["CTkFrame"]["fg_color"]
-        text_color = None if self.is_dark() else "#000000"
+        text_color = CTkm.theme["MenuComponent"]["text_color"]
         command = lambda: self.callback_wrapper(callback, row=row)  # noqa E731
 
         btn = CTkButton(self.tab_master, text=text, fg_color=fg_color, text_color=text_color, command=command)
@@ -45,7 +45,7 @@ class TabMenuComponent:
                 child.configure(
                     fg_color=CTkm.theme["CTkFrame"]["fg_color"],
                     hover_color=CTkm.theme["CTkButton"]["hover_color"],
-                    text_color=CTkm.theme["CTkButton"]["text_color"] if self.is_dark() else "#000000",
+                    text_color=CTkm.theme["MenuComponent"]["text_color"],
                 )
             child.update()
 

@@ -151,5 +151,8 @@
       "size": 13,
       "weight": "normal"
     }
+  },
+  "MenuComponent": {
+    "text_color": ["#000000", "#ffffff"]
   }
 }

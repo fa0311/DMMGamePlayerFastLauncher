@@ -6,7 +6,7 @@ from tkinter import Frame, StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, FilePathComponent, LabelComponent
+from component.component import EntryComponent, FilePathComponent, LabelComponent, OptionMenuComponent
 from component.tab_menu import TabMenuComponent
 from component.variable_base import VariableBase
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
@@ -64,12 +64,13 @@ class ShortcutCreate(CTkScrollableFrame):
     def create(self):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.detail.shortcut.add")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.product_id"))).pack(anchor=ctk.W)
-        CTkOptionMenu(self, values=self.product_ids, variable=self.data.product_id).pack(fill=ctk.X)
+        text = i18n.t("app.select", name=i18n.t("app.word.product_id"))
+        OptionMenuComponent(self, text=text, values=self.product_ids, variable=self.data.product_id).create()
+
         CTkLabel(self, text=i18n.t("app.word.filename")).pack(anchor=ctk.W)
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
-        FilePathComponent(self, text=i18n.t("app.word.game_path"), var=self.data.game_path).create()
-        EntryComponent(self, text=i18n.t("app.word.game_args"), var=self.data.game_args).create()
+        FilePathComponent(self, text=i18n.t("app.word.game_path"), variable=self.data.game_path).create()
+        EntryComponent(self, text=i18n.t("app.word.game_args"), variable=self.data.game_args).create()
         CTkButton(self, text=i18n.t("app.word.save"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 

@@ -1,10 +1,10 @@
 from pathlib import Path
 from tkinter import Frame, StringVar, filedialog
-from typing import Optional
+from typing import Callable, Optional
 
 import customtkinter as ctk
 import i18n
-from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel
+from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu
 from customtkinter import ThemeManager as CTkm
 
 
@@ -42,19 +42,19 @@ class LabelComponent(CTkFrame):
 
 
 class EntryComponent(CTkFrame):
-    var: StringVar
+    variable: StringVar
     text: str
 
-    def __init__(self, master: Frame, text: str, var: StringVar) -> None:
+    def __init__(self, master: Frame, text: str, variable: StringVar) -> None:
         super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
         self.pack(fill=ctk.X, expand=True)
         self.text = text
-        self.var = var
+        self.variable = variable
 
     def create(self):
         CTkLabel(self, text=self.text).pack(anchor=ctk.W)
 
-        CTkEntry(self, textvariable=self.var).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        CTkEntry(self, textvariable=self.variable).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
         return self
 
 
@@ -71,11 +71,40 @@ class PathComponentBase(EntryComponent):
 
 class FilePathComponent(PathComponentBase):
     def callback(self):
-        path = filedialog.askopenfilename(title=self.text, initialdir=self.var.get())
-        self.var.set(str(Path(path)))
+        path = filedialog.askopenfilename(title=self.text, initialdir=self.variable.get())
+        self.variable.set(str(Path(path)))
 
 
 class DirectoryPathComponent(PathComponentBase):
     def callback(self):
-        path = filedialog.askdirectory(title=self.text, initialdir=self.var.get())
-        self.var.set(str(Path(path)))
+        path = filedialog.askdirectory(title=self.text, initialdir=self.variable.get())
+        if path != "":
+            self.variable.set(str(Path(path)))
+
+
+class OptionMenuComponent(CTkFrame):
+    variable: StringVar
+    text: str
+    values: list[str]
+    command: Optional[Callable[[str], None]]
+
+    def __init__(
+        self,
+        master: Frame,
+        text: str,
+        variable: StringVar,
+        values: list[str],
+        command: Optional[Callable[[str], None]] = None,
+    ):
+        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        self.pack(fill=ctk.X, expand=True)
+        self.text = text
+        self.variable = variable
+        self.values = values
+        self.command = command
+
+    def create(self):
+        CTkLabel(self, text=self.text).pack(anchor=ctk.W)
+
+        CTkOptionMenu(self, values=self.values, variable=self.variable, command=self.command).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        return self

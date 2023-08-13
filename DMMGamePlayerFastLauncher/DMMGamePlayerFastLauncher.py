@@ -4,7 +4,7 @@ import customtkinter as ctk
 import i18n
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTk, CTkFrame
-from static.config import PathConfig
+from static.config import AppConfig, PathConfig
 from static.loder import config_loder
 from tab.account import AccountTab
 from tab.help import HelpTab
@@ -48,23 +48,22 @@ class App(CTk):
         HelpTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
-app = App()
+while True:
+    app = App()
 
-config_loder()
-i18n.load_path.append("assets/i18n")
-i18n.set("locale", "ja")
+    config_loder()
+    i18n.load_path.append(str(PathConfig.I18N))
+    i18n.set("locale", AppConfig.DATA.lang.get())
 
-os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
-os.makedirs(PathConfig.SHORTCUT, exist_ok=True)
+    os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
+    os.makedirs(PathConfig.SHORTCUT, exist_ok=True)
 
+    # ctk.set_default_color_theme("blue")
+    ctk.set_default_color_theme(str(PathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
 
-# ctk.set_default_color_theme("blue")
-ctk.set_default_color_theme("assets/themes/green.json")
+    ctk.set_widget_scaling(AppConfig.DATA.window_scaling.get())
+    ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
 
-
-ctk.set_widget_scaling(1.0)
-ctk.deactivate_automatic_dpi_awareness()
-ctk.set_appearance_mode("dark")
-
-app.create()
-app.mainloop()
+    app.create()
+    app.protocol("WM_DELETE_WINDOW", exit)
+    app.mainloop()
