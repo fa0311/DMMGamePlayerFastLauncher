@@ -10,6 +10,13 @@ class PathConfig:
     APPDATA = Path(os.getenv("APPDATA", default=""))
     DMMGAMEPLAYER = APPDATA.joinpath("dmmgameplayer5")
 
+    ASSETS = Path("assets")
+    I18N = ASSETS.joinpath("i18n")
+    ICONS = ASSETS.joinpath("icons")
+    TEXT = ASSETS.joinpath("text")
+
+    LICENSE = TEXT.joinpath("LICENSE")
+
 
 class UrlConfig:
     CONTRIBUTION = "https://github.com/fa0311/DMMGamePlayerFastLauncher"

@@ -93,7 +93,7 @@ class AccountExport(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.export")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.word.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.selected).pack(anchor=ctk.W, fill=ctk.X)
         CTkButton(self, text=i18n.t("app.word.export"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
@@ -130,7 +130,7 @@ class AccountEdit(CTkScrollableFrame):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.account.edit")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.word.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
         CTkOptionMenu(self, values=self.values, variable=self.filename, command=self.select_callback).pack(anchor=ctk.W, fill=ctk.X)
         self.body = CTkFrame(self, fg_color=CTkm.theme["CTkToplevel"]["fg_color"], height=0)
         self.body.pack(expand=True, fill=ctk.BOTH)

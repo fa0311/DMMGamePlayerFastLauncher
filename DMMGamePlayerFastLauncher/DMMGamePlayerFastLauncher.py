@@ -1,6 +1,7 @@
 import os
 
 import customtkinter as ctk
+import i18n
 from config import PathConfig
 from customtkinter import CTk, CTkFrame
 from lib.component import TabMenuComponent
@@ -10,9 +11,7 @@ from tab.home import HomeTab
 from tab.setting import SettingTab
 from tab.shortcut import ShortcutTab
 
-import i18n
-
-i18n.load_path.append("./i18n")
+i18n.load_path.append("assets/i18n")
 i18n.set("locale", "ja")
 
 os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
@@ -54,8 +53,15 @@ class App(CTk):
         HelpTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
-ctk.set_default_color_theme("dark-blue")
-ctk.set_appearance_mode("dark")
+# ctk.set_default_color_theme("blue")
+# ctk.set_default_color_theme("dark-blue")
+ctk.set_default_color_theme("assets/themes/green.json")
+
+
+# ctk.set_widget_scaling(1.0)
+# ctk.set_window_scaling(5.0)
+ctk.deactivate_automatic_dpi_awareness()
+# ctk.set_appearance_mode("dark")
 app = App()
 app.create()
 app.mainloop()

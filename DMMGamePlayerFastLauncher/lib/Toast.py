@@ -71,10 +71,7 @@ class InfoLabel(CTkFrame):
         self.text = text
 
     def create(self):
-        CTkLabel(
-            self,
-            text=self.text,
-        ).pack(side=ctk.LEFT, padx=10)
+        CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
         return self
 
 
@@ -89,16 +86,8 @@ class ErrorLabel(CTkFrame):
 
     def create(self):
         CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
-        CTkButton(
-            self,
-            text=i18n.t("app.word.details"),
-            command=self.copy,
-            width=0,
-            height=0,
-            fg_color="#ffaaaa",
-            text_color="black",
-            hover_color="white",
-        ).pack(side=ctk.LEFT, padx=10)
+        btn = CTkButton(self, text=i18n.t("app.word.details"), command=self.copy, width=0, height=0, fg_color="#ffaaaa", text_color="black", hover_color="white")
+        btn.pack(side=ctk.LEFT, padx=10)
         return self
 
     def copy(self):

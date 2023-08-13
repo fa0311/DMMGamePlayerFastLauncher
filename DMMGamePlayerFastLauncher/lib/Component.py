@@ -37,8 +37,12 @@ class TabMenuComponent:
     def add(self, text: str, callback):
         row = self.row
 
-        CTkButton(self.tab_master, text=text, fg_color=CTkm.theme["CTkFrame"]["fg_color"], command=lambda: self.callback_wrapper(callback, row=row)).pack(pady=2)
+        fg_color = CTkm.theme["CTkFrame"]["fg_color"]
+        text_color = None if self.is_dark() else "#000000"
+        command = lambda: self.callback_wrapper(callback, row=row)  # noqa E731
 
+        btn = CTkButton(self.tab_master, text=text, fg_color=fg_color, text_color=text_color, command=command)
+        btn.pack(pady=2, padx=4)
         if self.row == 0:
             self.callback_wrapper(callback, row=self.row)
 
@@ -51,32 +55,69 @@ class TabMenuComponent:
                 child.configure(
                     fg_color=CTkm.theme["CTkButton"]["fg_color"],
                     hover_color=CTkm.theme["CTkButton"]["fg_color"],
+                    text_color=CTkm.theme["CTkButton"]["text_color"],
                 )
             else:
                 child.configure(
                     fg_color=CTkm.theme["CTkFrame"]["fg_color"],
                     hover_color=CTkm.theme["CTkButton"]["hover_color"],
+                    text_color=CTkm.theme["CTkButton"]["text_color"] if self.is_dark() else "#000000",
                 )
             child.update()
 
         callback(self.body_master)
 
+    def is_dark(self):
+        return ctk.get_appearance_mode() == "Dark"
 
-class EntryComponent:
-    master: Frame
+
+class LabelComponent(CTkFrame):
+    text: str
+    tooltip: Frame
+    required: bool
+
+    def __init__(self, master: Frame, text: str, tooltip: Optional[str] = None, required: bool = False) -> None:
+        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        self.pack(fill=ctk.X, expand=True)
+        self.text = text
+        self.tooltip = CTkFrame(self.master.master, fg_color=CTkm.theme["CTkFrame"]["fg_color"], corner_radius=0)
+
+        self.required = required
+
+    def create(self):
+        label = CTkLabel(self, text=self.text)
+        label.pack(side=ctk.LEFT)
+        label.bind("<Enter>", self.enter_event)
+        label.bind("<Leave>", self.leave_event)
+        CTkLabel(self, text=i18n.t("*"), text_color="red").pack(side=ctk.LEFT)
+
+        CTkLabel(self.tooltip, text="入力必須項目です。必ず入力してください。", fg_color=CTkm.theme["CTkFrame"]["fg_color"]).pack(padx=5, pady=0)
+
+        return self
+
+    def enter_event(self, event):
+        assert self.tooltip is not None
+        self.tooltip.place(x=0, y=50)
+
+    def leave_event(self, event):
+        assert self.tooltip is not None
+        self.tooltip.place_forget()
+
+
+class EntryComponent(CTkFrame):
     var: StringVar
     text: str
 
     def __init__(self, master: Frame, text: str, var: StringVar) -> None:
-        self.master = CTkFrame(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
-        self.master.pack(fill=ctk.X, expand=True)
+        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.var = var
 
     def create(self):
-        CTkLabel(self.master, text=self.text).pack(anchor=ctk.W)
+        CTkLabel(self, text=self.text).pack(anchor=ctk.W)
 
-        CTkEntry(self.master, textvariable=self.var).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        CTkEntry(self, textvariable=self.var).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
         return self
 
 
@@ -84,7 +125,7 @@ class PathComponentBase(EntryComponent):
     def create(self):
         super().create()
 
-        CTkButton(self.master, text=i18n.t("app.word.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
+        CTkButton(self, text=i18n.t("app.word.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
         return self
 
     def callback(self):

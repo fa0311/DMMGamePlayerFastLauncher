@@ -8,7 +8,7 @@ import customtkinter as ctk
 from config import PathConfig
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
-from lib.component import EntryComponent, FilePathComponent, TabMenuComponent, VariableBase, children_destroy, file_create
+from lib.component import EntryComponent, FilePathComponent, LabelComponent, TabMenuComponent, VariableBase, children_destroy, file_create
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
 
@@ -98,7 +98,8 @@ class ShortcutEdit(ShortcutCreate):
     @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.detail.shortcut.edit")).pack(anchor=ctk.W)
-        CTkLabel(self, text=i18n.t("app.select", name=i18n.t("app.word.file"))).pack(anchor=ctk.W)
+
+        LabelComponent(self, text=i18n.t("app.word.select", name=i18n.t("app.word.file"))).create()
         CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.option_callback).pack(fill=ctk.X)
 
         if self.selected.get() in self.values:

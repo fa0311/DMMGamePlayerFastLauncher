@@ -1,5 +1,5 @@
 # flake8: noqa
-from DMMGamePlayerFastLauncher.tab.account import AccountTab
-from DMMGamePlayerFastLauncher.tab.help import HelpTab
-from DMMGamePlayerFastLauncher.tab.setting import SettingTab
-from DMMGamePlayerFastLauncher.tab.shortcut import ShortcutTab
+from .account import AccountTab
+from .help import HelpTab
+from .setting import SettingTab
+from .shortcut import ShortcutTab

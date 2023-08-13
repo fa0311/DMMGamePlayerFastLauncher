@@ -1,8 +1,8 @@
 import webbrowser
 
 import customtkinter as ctk
-from config import UrlConfig
-from customtkinter import CTkBaseClass, CTkButton, CTkScrollableFrame
+from config import PathConfig, UrlConfig
+from customtkinter import CTkBaseClass, CTkButton, CTkScrollableFrame, CTkTextbox
 from customtkinter import ThemeManager as CTkm
 
 
@@ -14,6 +14,14 @@ class HelpTab(CTkScrollableFrame):
         CTkButton(self, text="開発に協力", command=self.contribution_callback).pack(fill=ctk.X, pady=10)
         CTkButton(self, text="開発者に寄付", command=self.donation_callback).pack(fill=ctk.X, pady=10)
         CTkButton(self, text="バグ報告", command=self.report_callback).pack(fill=ctk.X, pady=10)
+
+        with open(PathConfig.LICENSE, "r", encoding="utf-8") as f:
+            license = f.read()
+
+        box = CTkTextbox(self, width=590, height=400)
+        box.pack(padx=10, pady=(0, 10))
+        box.insert("0.0", license)
+
         return self
 
     def contribution_callback(self):
