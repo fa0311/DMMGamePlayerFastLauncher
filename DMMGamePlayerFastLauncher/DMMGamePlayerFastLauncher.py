@@ -2,20 +2,15 @@ import os
 
 import customtkinter as ctk
 import i18n
-from config import PathConfig
+from component.tab_menu import TabMenuComponent
 from customtkinter import CTk, CTkFrame
-from lib.component import TabMenuComponent
+from static.config import PathConfig
+from static.loder import config_loder
 from tab.account import AccountTab
 from tab.help import HelpTab
 from tab.home import HomeTab
 from tab.setting import SettingTab
 from tab.shortcut import ShortcutTab
-
-i18n.load_path.append("assets/i18n")
-i18n.set("locale", "ja")
-
-os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
-os.makedirs(PathConfig.SHORTCUT, exist_ok=True)
 
 
 class App(CTk):
@@ -53,15 +48,23 @@ class App(CTk):
         HelpTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
+app = App()
+
+config_loder()
+i18n.load_path.append("assets/i18n")
+i18n.set("locale", "ja")
+
+os.makedirs(PathConfig.ACCOUNT, exist_ok=True)
+os.makedirs(PathConfig.SHORTCUT, exist_ok=True)
+
+
 # ctk.set_default_color_theme("blue")
-# ctk.set_default_color_theme("dark-blue")
 ctk.set_default_color_theme("assets/themes/green.json")
 
 
-# ctk.set_widget_scaling(1.0)
-# ctk.set_window_scaling(5.0)
+ctk.set_widget_scaling(1.0)
 ctk.deactivate_automatic_dpi_awareness()
-# ctk.set_appearance_mode("dark")
-app = App()
+ctk.set_appearance_mode("dark")
+
 app.create()
 app.mainloop()

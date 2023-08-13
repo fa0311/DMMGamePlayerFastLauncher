@@ -1,9 +1,9 @@
 import webbrowser
 
 import customtkinter as ctk
-from config import PathConfig, UrlConfig
 from customtkinter import CTkBaseClass, CTkButton, CTkScrollableFrame, CTkTextbox
 from customtkinter import ThemeManager as CTkm
+from static.config import PathConfig, UrlConfig
 
 
 class HelpTab(CTkScrollableFrame):

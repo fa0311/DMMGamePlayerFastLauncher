@@ -5,14 +5,16 @@ from pathlib import Path
 from tkinter import Frame, StringVar
 
 import customtkinter as ctk
-from config import PathConfig
+import i18n
+from component.component import EntryComponent, FilePathComponent, LabelComponent
+from component.tab_menu import TabMenuComponent
+from component.variable_base import VariableBase
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
-from lib.component import EntryComponent, FilePathComponent, LabelComponent, TabMenuComponent, VariableBase, children_destroy, file_create
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
-
-import i18n
+from static.config import PathConfig
+from utils.utils import children_destroy, file_create
 
 
 @dataclass

@@ -4,11 +4,10 @@ from tkinter import Misc, Tk, Toplevel
 from typing import Union
 
 import customtkinter as ctk
-from config import UrlConfig
-from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkTextbox, CTkToplevel
-from lib.component import get_isinstance
-
 import i18n
+from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkTextbox, CTkToplevel
+from static.config import UrlConfig
+from utils.utils import get_isinstance
 
 
 def error_toast(func):

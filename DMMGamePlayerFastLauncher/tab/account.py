@@ -4,14 +4,15 @@ from tkinter import StringVar
 from typing import TypeVar
 
 import customtkinter as ctk
-from config import PathConfig
+import i18n
+from component.component import EntryComponent
+from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from customtkinter import ThemeManager as CTkm
-from lib.component import EntryComponent, TabMenuComponent, children_destroy, file_create
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
-
-import i18n
+from static.config import PathConfig
+from utils.utils import children_destroy, file_create
 
 T = TypeVar("T")
 
