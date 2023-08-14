@@ -61,7 +61,7 @@ class AccountImport(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.account.import_detail")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.account.import_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         EntryComponent(self, text=i18n.t("app.account.filename"), variable=self.name).create()
         CTkButton(self, text=i18n.t("app.account.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
@@ -95,7 +95,7 @@ class AccountExport(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.account.export_detail")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.account.export_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.selected).create()
         CTkButton(self, text=i18n.t("app.account.export"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
@@ -132,7 +132,7 @@ class AccountEdit(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.account.edit_detail")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.account.edit_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
         self.body.pack(expand=True, fill=ctk.BOTH)
         return self
@@ -204,7 +204,7 @@ class AccountLogout(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.account.logout_detail")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.account.logout_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         CTkButton(self, text=i18n.t("app.account.logout"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 

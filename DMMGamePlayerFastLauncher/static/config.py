@@ -17,12 +17,13 @@ class PathConfig:
     ASSETS = Path("assets")
     I18N = ASSETS.joinpath("i18n")
     ICONS = ASSETS.joinpath("icons")
-    TEXT = ASSETS.joinpath("text")
+    LICENSE = ASSETS.joinpath("license").joinpath("LICENSE")
+    SCHTASKS_TEMPLATE = ASSETS.joinpath("schtasks").joinpath("template.xml")
     THEMES = ASSETS.joinpath("themes")
 
-    MAIN_ICON = ICONS.joinpath("DMMGamePlayerFastLauncher.ico")
+    ICON_MAIN = ICONS.joinpath("DMMGamePlayerFastLauncher.ico")
 
-    LICENSE = TEXT.joinpath("LICENSE")
+    SCHTASKS = DATA.joinpath("schtasks")
 
 
 class UrlConfig:
@@ -30,6 +31,12 @@ class UrlConfig:
     RELEASE = "https://api.github.com/repos/fa0311/DMMGamePlayerFastLauncher/releases/latest"
     DONATE = "https://github.com/sponsors/fa0311"
     ISSUE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new"
+
+
+class SchtasksConfig:
+    PATH = "schtasks.exe"
+    FILE = "schtasks_v1_{0}"
+    NAME = "\\Microsoft\\Windows\\DMMGamePlayerFastLauncher\\{0}"
 
 
 class AppConfig:

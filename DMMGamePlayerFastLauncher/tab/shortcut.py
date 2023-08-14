@@ -1,7 +1,5 @@
-import glob
 import json
 from dataclasses import dataclass, field
-from pathlib import Path
 from tkinter import Frame, StringVar
 
 import customtkinter as ctk
@@ -66,8 +64,8 @@ class ShortcutCreate(CTkScrollableFrame):
     @error_toast
     def create(self):
         if not self.winfo_children():
-            CTkLabel(self, text=i18n.t("app.shortcut.add")).pack(anchor=ctk.W)
-        OptionMenuComponent(self, text=i18n.t("app.shortcut.product_id"), values=self.product_ids, variable=self.data.product_id).create()
+            CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
+        OptionMenuComponent(self, text=i18n.t("app.shortcut.product_id", justify=ctk.LEFT), values=self.product_ids, variable=self.data.product_id).create()
 
         LabelComponent(self, text=i18n.t("app.shortcut.filename"), required=True).create()
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
@@ -102,7 +100,7 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.shortcut.edit")).pack(anchor=ctk.W)
+        CTkLabel(self, text=i18n.t("app.shortcut.edit_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
 
         LabelComponent(self, text=i18n.t("app.shortcut.file_select")).create()
         CTkOptionMenu(self, values=self.values, variable=self.selected, command=self.option_callback).pack(fill=ctk.X)

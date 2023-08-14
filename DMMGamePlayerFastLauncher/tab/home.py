@@ -1,6 +1,5 @@
 import i18n
 from customtkinter import CTkBaseClass, CTkFont, CTkFrame, CTkImage, CTkLabel
-from customtkinter import ThemeManager as CTkm
 from lib.toast import ToastController, error_toast
 from PIL import Image
 

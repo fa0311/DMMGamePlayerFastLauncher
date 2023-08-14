@@ -23,7 +23,7 @@ class App(CTk):
         self.title("DMMGamePlayer Fast Launcher")
         self.geometry("900x600")
         self.protocol("WM_DELETE_WINDOW", sys.exit)
-        self.iconbitmap(default=str(PathConfig.MAIN_ICON))
+        self.iconbitmap(default=str(PathConfig.ICON_MAIN))
         self.loder = loder
         self.tab = TabMenuComponent(self)
         loder()

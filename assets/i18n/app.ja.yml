@@ -8,6 +8,7 @@ ja:
     shortcut: ショートカット
     account: アカウント
     setting: 設定
+    uac: UAC
     help: ヘルプ
     create: 作成
     edit: 編集
@@ -24,8 +25,8 @@ ja:
     game_args: ゲームの引数
     save: 保存
 
-    add: ショートカットの設定ファイルを作成します。
-    edit: ショートカットの設定ファイルを編集します。
+    add_detail: ショートカットの設定ファイルを作成します。
+    edit_detail: ショートカットの設定ファイルを編集します。
 
     file_select: ファイルの選択
 
@@ -50,7 +51,7 @@ ja:
     export_error: エクスポートに失敗しました。
     export_success: エクスポートに成功しました。
 
-    edit_detail: アカウント情報を編集します。\nこれは非常に危険な操作です。
+    edit_detail: アカウント情報を編集します。\nこれは非常に高度な操作です。
     save: 保存
     delete: 削除
     save_success: 保存しました。
@@ -68,6 +69,21 @@ ja:
     lang: 言語
     theme: テーマ
     appearance: 外観
+
+    uac_detail: |-
+      ユーザーアカウント制御に関する設定。
+      管理者権限に自動昇格するためのスケジュールを作成します。
+      この設定を有効にすると管理者権限が必要な場合に自動的に昇格します。
+
+    check_schedule: スケジュールの確認
+    set_schedule: スケジュールの作成
+    delete_schedule: スケジュールの削除
+
+    uac_already_elevated: 管理者権限に自動昇格するスケジュールが既に存在します。
+    uac_not_elevated: 管理者権限に自動昇格するスケジュールが存在しません。
+
+    uac_elevated: 管理者権限に自動昇格するスケジュールを作成しました。
+    uac_deleted: 管理者権限に自動昇格するスケジュールを削除しました。
 
   help:
     coop_in_develop: 開発に協力
