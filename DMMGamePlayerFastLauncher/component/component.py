@@ -7,6 +7,7 @@ import i18n
 from component.var import PathVar
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkToplevel
 from customtkinter import ThemeManager as CTkm
+from customtkinter import Variable
 
 
 class LabelComponent(CTkFrame):
@@ -55,55 +56,65 @@ class LabelComponent(CTkFrame):
 
 
 class EntryComponent(CTkFrame):
-    variable: StringVar
+    variable: Variable
     text: str
     required: bool
     tooltip: Optional[str]
     required: bool
+    command: list[tuple[str, Callable[[Variable], None]]]
 
-    def __init__(self, master: Frame, text: str, variable: StringVar, tooltip: Optional[str] = None, required: bool = False) -> None:
+    def __init__(
+        self,
+        master: Frame,
+        text: str,
+        variable: Variable,
+        tooltip: Optional[str] = None,
+        required: bool = False,
+        command: Optional[list[tuple[str, Callable[[Variable], None]]]] = None,
+    ) -> None:
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.variable = variable
         self.tooltip = tooltip
         self.required = required
+        self.command = command or []
 
     def create(self):
         LabelComponent(self, text=self.text, required=self.required, tooltip=self.tooltip).create()
-
         CTkEntry(self, textvariable=self.variable).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+
+        for cmd in self.command:
+            CTkButton(self, text=cmd[0], command=self.call(cmd[1]), width=0).pack(side=ctk.LEFT, padx=2)
         return self
+
+    def call(self, cmd):
+        return lambda: cmd(self.variable)
 
 
 class PathComponentBase(EntryComponent):
     variable: PathVar
 
-    def __init__(self, master: Frame, text: str, variable: PathVar, tooltip: Optional[str] = None, required: bool = False) -> None:
-        super().__init__(master, text, variable, tooltip, required)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.command.append((i18n.t("app.component.reference"), self.reference_callback))
 
-    def create(self):
-        super().create()
-
-        CTkButton(self, text=i18n.t("app.component.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
-        return self
-
-    def callback(self):
+    def reference_callback(self, variable):
         raise NotImplementedError
 
 
 class FilePathComponent(PathComponentBase):
-    def callback(self):
-        path = filedialog.askopenfilename(title=self.text, initialdir=self.variable.get())
+    def reference_callback(self, variable):
+        path = filedialog.askopenfilename(title=self.text, initialdir=variable.get())
         if path != "":
-            self.variable.set_path(Path(path))
+            variable.set_path(Path(path))
 
 
 class DirectoryPathComponent(PathComponentBase):
-    def callback(self):
-        path = filedialog.askdirectory(title=self.text, initialdir=self.variable.get())
+    def reference_callback(self, variable):
+        path = filedialog.askdirectory(title=self.text, initialdir=variable.get())
         if path != "":
-            self.variable.set_path(Path(path))
+            variable.set_path(Path(path))
 
 
 class OptionMenuComponent(CTkFrame):

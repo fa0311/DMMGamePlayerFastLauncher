@@ -45,13 +45,15 @@ class ShortcutCreate(CTkScrollableFrame):
     data: ShortcutData
     filename: StringVar
     product_ids: list[str]
+    dgp_config: dict
 
     def __init__(self, master: Frame):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.data = ShortcutData()
         self.filename = StringVar()
-        self.product_ids = [x["productId"] for x in DgpSessionV2().get_config()["contents"]]
+        self.dgp_config = DgpSessionV2().get_config()
+        self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
 
     @error_toast
     def create(self):
@@ -69,7 +71,7 @@ class ShortcutCreate(CTkScrollableFrame):
 
         LabelComponent(self, text=i18n.t("app.shortcut.filename"), required=True).create()
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
-        FilePathComponent(self, text=i18n.t("app.shortcut.game_path"), variable=self.data.game_path).create()
+        FilePathComponent(self, text=i18n.t("app.shortcut.game_path"), variable=self.data.game_path, command=[(i18n.t("app.shortcut.game_path_auto"), self.auto_callback)]).create()
 
         game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
         EntryComponent(self, text=i18n.t("app.shortcut.game_args"), variable=self.data.game_args, tooltip=game_args_tooltip).create()
@@ -98,6 +100,17 @@ class ShortcutCreate(CTkScrollableFrame):
         Shortcut().create(sorce=sorce, icon=icon)
 
         self.toast.info(i18n.t("app.shortcut.save_success"))
+
+    @error_toast
+    def auto_callback(self, variable):
+        if self.data.product_id.get() == "":
+            raise Exception(i18n.t("app.shortcut.product_id_not_entered"))
+        path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
+        app = path.joinpath(self.data.product_id.get()).with_suffix(".exe")
+        variable.set(app)
+
+        if not app.exists():
+            raise Exception(i18n.t("app.shortcut.error_game_path_auto"))
 
 
 class ShortcutEdit(ShortcutCreate):

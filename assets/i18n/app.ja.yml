@@ -23,6 +23,8 @@ ja:
     filename: ファイル名
 
     game_path: ゲームのファイルパス
+    game_path_auto: 自動検出
+    error_game_path_auto: 自動検出に失敗しました。
     game_args: ゲームの引数
 
     uac_setting: UACの設定
