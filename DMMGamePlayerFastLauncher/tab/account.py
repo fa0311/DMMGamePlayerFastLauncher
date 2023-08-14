@@ -1,4 +1,3 @@
-import glob
 from pathlib import Path
 from tkinter import StringVar
 from typing import TypeVar
@@ -10,7 +9,7 @@ from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
-from static.config import PathConfig
+from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
 
 T = TypeVar("T")
@@ -68,7 +67,7 @@ class AccountImport(CTkScrollableFrame):
 
     @error_toast
     def callback(self):
-        path = PathConfig.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
         if self.name.get() == "":
             raise Exception(i18n.t("app.account.filename_not_entered"))
         if path.exists():
@@ -90,7 +89,7 @@ class AccountExport(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
-        self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
+        self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.selected = StringVar()
 
     @error_toast
@@ -102,7 +101,7 @@ class AccountExport(CTkScrollableFrame):
 
     @error_toast
     def callback(self):
-        path = PathConfig.ACCOUNT.joinpath(self.selected.get()).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT.joinpath(self.selected.get()).with_suffix(".bytes")
         if self.selected.get() == "":
             raise Exception(i18n.t("app.account.file_not_selected"))
         with DgpSessionV2() as session:
@@ -124,7 +123,7 @@ class AccountEdit(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
-        self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
+        self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.filename = StringVar()
         self.body = CTkFrame(self, fg_color="transparent", height=0)
         self.body_var = {}
@@ -140,7 +139,7 @@ class AccountEdit(CTkScrollableFrame):
     @error_toast
     def select_callback(self, value: str):
         children_destroy(self.body)
-        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         self.body_filename.set(self.filename.get())
         EntryComponent(self.body, text=i18n.t("app.account.filename"), variable=self.body_filename).create()
 
@@ -158,8 +157,8 @@ class AccountEdit(CTkScrollableFrame):
         if self.body_filename.get() == "":
             raise Exception(i18n.t("app.account.filename_not_entered"))
 
-        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        body_path = PathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        body_path = DataPathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
 
         def write():
             session = DgpSessionV2()
@@ -187,7 +186,7 @@ class AccountEdit(CTkScrollableFrame):
 
     @error_toast
     def delete_callback(self):
-        path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         path.unlink()
         self.values.remove(self.filename.get())
         self.filename.set("")

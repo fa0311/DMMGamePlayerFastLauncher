@@ -1,6 +1,6 @@
 from pathlib import Path
 from tkinter import Frame, Misc, StringVar, filedialog
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 import customtkinter as ctk
 import i18n
@@ -12,29 +12,32 @@ from customtkinter import ThemeManager as CTkm
 class LabelComponent(CTkFrame):
     text: str
     frame: CTkFrame
-    tooltip: list[str]
+    tooltip: Optional[str]
     required: bool
 
-    def __init__(self, master: Misc, text: str, tooltip: Optional[list[str]] = None, required: bool = False) -> None:
+    def __init__(self, master: Misc, text: str, tooltip: Optional[str] = None, required: bool = False) -> None:
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
-        self.tooltip = tooltip or []
-        self.frame = CTkFrame(self.master.master, fg_color=CTkm.theme["LabelComponent"]["fg_color"])
+        self.tooltip = tooltip
+        self.frame = CTkFrame(self.winfo_toplevel(), fg_color=CTkm.theme["LabelComponent"]["fg_color"])
         self.required = required
         if self.required:
-            self.tooltip.append(i18n.t("app.component.required"))
+            if self.tooltip:
+                self.tooltip += i18n.t("app.component.required")
+            else:
+                self.tooltip = i18n.t("app.component.required")
 
     def create(self):
         label = CTkLabel(self, text=self.text)
         label.pack(side=ctk.LEFT)
-        if len(self.tooltip):
+        if self.tooltip is not None:
             label.bind("<Enter>", self.enter_event)
             label.bind("<Leave>", self.leave_event)
-            CTkLabel(self.frame, text="\n".join(self.tooltip), fg_color=CTkm.theme["LabelComponent"]["fg_color"]).pack(padx=5, pady=0)
+            CTkLabel(self.frame, text=self.tooltip, fg_color=CTkm.theme["LabelComponent"]["fg_color"], justify=ctk.LEFT).pack(padx=5, pady=0)
 
         if self.required:
-            CTkLabel(self, text=i18n.t("app.component.required_symbol"), text_color=CTkm.theme["LabelComponent"]["required_color"]).pack(side=ctk.LEFT)
+            CTkLabel(self, text=i18n.t("app.component.required_symbol"), text_color=CTkm.theme["LabelComponent"]["required_color"], justify=ctk.LEFT).pack(side=ctk.LEFT)
 
         return self
 
@@ -46,20 +49,24 @@ class LabelComponent(CTkFrame):
         assert self.tooltip is not None
         self.frame.place_forget()
 
+    def destroy(self):
+        self.frame.destroy()
+        return super().destroy()
+
 
 class EntryComponent(CTkFrame):
     variable: StringVar
     text: str
     required: bool
-    tooltip: list[str]
+    tooltip: Optional[str]
     required: bool
 
-    def __init__(self, master: Frame, text: str, variable: StringVar, tooltip: Optional[list[str]] = None, required: bool = False) -> None:
+    def __init__(self, master: Frame, text: str, variable: StringVar, tooltip: Optional[str] = None, required: bool = False) -> None:
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.variable = variable
-        self.tooltip = tooltip or []
+        self.tooltip = tooltip
         self.required = required
 
     def create(self):
@@ -72,7 +79,7 @@ class EntryComponent(CTkFrame):
 class PathComponentBase(EntryComponent):
     variable: PathVar
 
-    def __init__(self, master: Frame, text: str, variable: PathVar, tooltip: Optional[list[str]] = None, required: bool = False) -> None:
+    def __init__(self, master: Frame, text: str, variable: PathVar, tooltip: Optional[str] = None, required: bool = False) -> None:
         super().__init__(master, text, variable, tooltip, required)
 
     def create(self):
@@ -104,19 +111,58 @@ class OptionMenuComponent(CTkFrame):
     text: str
     values: list[str]
     command: Optional[Callable[[str], None]]
+    tooltip: Optional[str]
 
-    def __init__(self, master: Frame, text: str, variable: StringVar, values: list[str], command: Optional[Callable[[str], None]] = None):
+    def __init__(self, master: Frame, text: str, variable: StringVar, values: list[str], command: Optional[Callable[[str], None]] = None, tooltip: Optional[str] = None):
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.variable = variable
         self.values = values
         self.command = command
+        self.tooltip = tooltip
 
     def create(self):
-        LabelComponent(self, text=self.text, required=True).create()
+        required = self.variable.get() not in self.values
+        LabelComponent(self, text=self.text, tooltip=self.tooltip, required=required).create()
         CTkOptionMenu(self, values=self.values, variable=self.variable, command=self.command).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
         return self
+
+
+class OptionMenuTupleComponent(CTkFrame):
+    variable: StringVar
+    shadow_variable: StringVar
+    text: str
+    values: list[tuple[Any, str]]
+    command: Optional[Callable[[str], None]]
+    tooltip: Optional[str]
+
+    def __init__(
+        self, master: Frame, text: str, variable: StringVar, values: list[tuple[Any, str]], command: Optional[Callable[[str], None]] = None, tooltip: Optional[str] = None
+    ):
+        super().__init__(master, fg_color="transparent")
+        self.pack(fill=ctk.X, expand=True)
+        self.text = text
+        self.variable = variable
+        default = [x[1] for x in values if x[0] == variable.get()]
+        self.shadow_variable = StringVar(value=default[0] if len(default) else None)
+        self.values = values
+        self.command = command
+        self.tooltip = tooltip
+
+    def create(self):
+        required = self.shadow_variable.get() not in [x[1] for x in self.values]
+        LabelComponent(self, text=self.text, tooltip=self.tooltip, required=required).create()
+        values = [x[1] for x in self.values]
+
+        CTkOptionMenu(self, values=values, variable=self.shadow_variable, command=self.callback).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        return self
+
+    def callback(self, text: str):
+        var = [x[0] for x in self.values if x[1] == text][0]
+        self.variable.set(var)
+        if self.command is not None:
+            self.command(var)
 
 
 class PaddingComponent(CTkFrame):

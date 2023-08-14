@@ -1,26 +1,18 @@
 import json
-from dataclasses import dataclass, field
+from pathlib import Path
 from tkinter import Frame, StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, FilePathComponent, LabelComponent, OptionMenuComponent
+from component.component import EntryComponent, FilePathComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent
 from component.tab_menu import TabMenuComponent
-from component.var import PathVar
-from component.variable_base import VariableBase
 from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
+from lib.process_manager import Shortcut
 from lib.toast import ToastController, error_toast
-from static.config import PathConfig
+from models.shortcut_data import ShortcutData
+from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
-
-
-@dataclass
-class ShortcutData(VariableBase):
-    product_id: StringVar = field(default_factory=StringVar)
-    game_path: PathVar = field(default_factory=PathVar)
-    game_args: StringVar = field(default_factory=StringVar)
-
 
 # ===== Shortcut Sub Menu =====
 
@@ -63,14 +55,28 @@ class ShortcutCreate(CTkScrollableFrame):
 
     @error_toast
     def create(self):
+        uac_values: list[tuple[str, str]] = [
+            ("uac_usual", i18n.t("app.shortcut.uac_usual")),
+            ("uac_always", i18n.t("app.shortcut.uac_always")),
+            ("uac_auto", i18n.t("app.shortcut.uac_auto")),
+            ("uac_disabled", i18n.t("app.shortcut.uac_disabled")),
+        ]
+
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
-        OptionMenuComponent(self, text=i18n.t("app.shortcut.product_id", justify=ctk.LEFT), values=self.product_ids, variable=self.data.product_id).create()
+
+        OptionMenuComponent(self, text=i18n.t("app.shortcut.product_id"), values=self.product_ids, variable=self.data.product_id).create()
 
         LabelComponent(self, text=i18n.t("app.shortcut.filename"), required=True).create()
         CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
         FilePathComponent(self, text=i18n.t("app.shortcut.game_path"), variable=self.data.game_path).create()
-        EntryComponent(self, text=i18n.t("app.shortcut.game_args"), variable=self.data.game_args).create()
+
+        game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
+        EntryComponent(self, text=i18n.t("app.shortcut.game_args"), variable=self.data.game_args, tooltip=game_args_tooltip).create()
+
+        uac_tooltip = i18n.t("app.shortcut.uac_tooltip")
+        OptionMenuTupleComponent(self, text=i18n.t("app.shortcut.uac_setting"), values=uac_values, variable=self.data.uac_mode, tooltip=uac_tooltip).create()
+
         CTkButton(self, text=i18n.t("app.shortcut.save"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
@@ -81,11 +87,16 @@ class ShortcutCreate(CTkScrollableFrame):
         if self.filename.get() == "":
             raise Exception(i18n.t("app.shortcut.filename_not_entered"))
 
-        path = PathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         if not exists:
             file_create(path, name=i18n.t("app.shortcut.filename"))
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
+
+        sorce = Path.home().joinpath("Desktop").joinpath(self.filename.get()).with_suffix(".lnk")
+        icon = Path(self.data.game_path.get())
+        Shortcut().create(sorce=sorce, icon=icon)
+
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
 
@@ -95,7 +106,7 @@ class ShortcutEdit(ShortcutCreate):
 
     def __init__(self, master: Frame):
         super().__init__(master)
-        self.values = [x.stem for x in PathConfig.SHORTCUT.iterdir() if x.suffix == ".json"]
+        self.values = [x.stem for x in DataPathConfig.SHORTCUT.iterdir() if x.suffix == ".json"]
         self.selected = StringVar()
 
     @error_toast
@@ -115,8 +126,8 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def callback(self):
-        path = PathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
-        selected = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         if path == selected:
             super().callback(exists=True)
         else:
@@ -129,7 +140,7 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def delete_callback(self):
-        path = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         path.unlink()
         self.values.remove(self.selected.get())
         self.selected.set("")
@@ -142,6 +153,6 @@ class ShortcutEdit(ShortcutCreate):
 
     @error_toast
     def read(self) -> ShortcutData:
-        path = PathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        path = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             return ShortcutData.from_dict(json.load(f))

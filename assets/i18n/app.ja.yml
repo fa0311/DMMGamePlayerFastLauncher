@@ -21,8 +21,26 @@ ja:
   shortcut:
     product_id: "product_idの選択"
     filename: ファイル名
+
     game_path: ゲームのファイルパス
     game_args: ゲームの引数
+
+    uac_setting: UACの設定
+    uac_usual: 通常
+    uac_always: 常に管理者権限で実行
+    uac_auto: 管理者権限が必要な場合に自動的に昇格
+    uac_disabled: 管理者権限に昇格しない
+
+    uac_tooltip: |-
+      `uac_always` と `uac_auto` を利用するには、
+      `設定` タブの `UAC` でスケジュールを作成する必要があります。
+      aaaa
+
+    game_args_tooltip: |-
+      ゲームに渡す引数を指定します。
+      Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
+      ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
+
     save: 保存
 
     add_detail: ショートカットの設定ファイルを作成します。

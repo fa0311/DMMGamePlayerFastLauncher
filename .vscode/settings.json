@@ -16,7 +16,7 @@
     "**/__pycache__": true,
     "**/build": true,
     "**/dist": true,
-    "**/data": true,
+    // "**/data": true,
     "**/*.spec": true,
     "**/.venv": true
   }

@@ -5,7 +5,7 @@ import customtkinter as ctk
 import i18n
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTk, CTkFrame
-from static.config import PathConfig
+from static.config import AssetsPathConfig
 from tab.account import AccountTab
 from tab.help import HelpTab
 from tab.home import HomeTab
@@ -23,7 +23,7 @@ class App(CTk):
         self.title("DMMGamePlayer Fast Launcher")
         self.geometry("900x600")
         self.protocol("WM_DELETE_WINDOW", sys.exit)
-        self.iconbitmap(default=str(PathConfig.ICON_MAIN))
+        self.iconbitmap(default=str(AssetsPathConfig.ICON_MAIN))
         self.loder = loder
         self.tab = TabMenuComponent(self)
         loder()

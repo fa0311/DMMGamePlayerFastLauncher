@@ -3,12 +3,12 @@ from tkinter import DoubleVar, StringVar
 
 from component.var import PathVar
 from models.setting_data import SettingData
-from static.config import AppConfig, PathConfig
+from static.config import AppConfig, DataPathConfig, PathConfig
 
 
 def config_loder():
-    if PathConfig.APP_CONFIG.exists():
-        with open(PathConfig.APP_CONFIG, "r", encoding="utf-8") as f:
+    if DataPathConfig.APP_CONFIG.exists():
+        with open(DataPathConfig.APP_CONFIG, "r", encoding="utf-8") as f:
             AppConfig.DATA = SettingData.from_dict(json.load(f))
     else:
         AppConfig.DATA = SettingData(

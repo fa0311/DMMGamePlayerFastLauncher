@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 
 import win32security
-from static.config import PathConfig, SchtasksConfig
+from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig
 
 
 class ProcessManager:
@@ -16,6 +16,11 @@ class ProcessManager:
     @staticmethod
     def run(args: list[str]) -> subprocess.Popen[bytes]:
         return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    @staticmethod
+    def run_ps(args: str) -> int:
+        args = args.replace('"', '\\"').replace("\n", "").replace("\r", "")
+        return subprocess.call(f'powershell -Command "{args}"', shell=True)
 
 
 def get_sid() -> str:
@@ -38,7 +43,7 @@ class Schtasks:
         return ProcessManager.run(run_args).wait() == 0
 
     def set(self) -> None:
-        with open(PathConfig.SCHTASKS_TEMPLATE, "r") as f:
+        with open(AssetsPathConfig.SCHTASKS, "r") as f:
             template = f.read()
 
         template = template.replace(r"{{UID}}", self.file)
@@ -46,7 +51,7 @@ class Schtasks:
         template = template.replace(r"{{COMMAND}}", str(Path(__file__).absolute()))
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
 
-        xml_path = PathConfig.SCHTASKS.joinpath(self.file).with_suffix(".xml")
+        xml_path = DataPathConfig.SCHTASKS.joinpath(self.file).with_suffix(".xml")
         with open(xml_path, "w") as f:
             f.write(template)
         create_args = [SchtasksConfig.PATH, "/create", "/xml", str(xml_path.absolute()), "/tn", self.name]
@@ -56,3 +61,16 @@ class Schtasks:
     def delete(self) -> None:
         delete_args = [SchtasksConfig.PATH, "/delete", "/tn", self.name, "/f"]
         ProcessManager.admin_run(delete_args)
+
+
+class Shortcut:
+    def create(self, sorce: Path, icon: Path):
+        with open(AssetsPathConfig.SHORTCUT, "r") as f:
+            template = f.read()
+
+        template = template.replace(r"{{SORCE}}", str(sorce.absolute()))
+        template = template.replace(r"{{TARGET}}", str(Path(__file__).absolute()))
+        template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
+
+        ProcessManager.run_ps(template)
+        # template = template.replace(r"{{ICON}}", str(AssetsPathConfig.ICON.absolute()))
