@@ -5,7 +5,7 @@ from typing import Callable, Optional
 import customtkinter as ctk
 import i18n
 from component.var import PathVar
-from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu
+from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkToplevel
 from customtkinter import ThemeManager as CTkm
 
 
@@ -16,14 +16,14 @@ class LabelComponent(CTkFrame):
     required: bool
 
     def __init__(self, master: Misc, text: str, tooltip: Optional[list[str]] = None, required: bool = False) -> None:
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.tooltip = tooltip or []
         self.frame = CTkFrame(self.master.master, fg_color=CTkm.theme["LabelComponent"]["fg_color"])
         self.required = required
         if self.required:
-            self.tooltip.append(i18n.t("app.detail.required"))
+            self.tooltip.append(i18n.t("app.component.required"))
 
     def create(self):
         label = CTkLabel(self, text=self.text)
@@ -34,7 +34,7 @@ class LabelComponent(CTkFrame):
             CTkLabel(self.frame, text="\n".join(self.tooltip), fg_color=CTkm.theme["LabelComponent"]["fg_color"]).pack(padx=5, pady=0)
 
         if self.required:
-            CTkLabel(self, text=i18n.t("app.symbol.required"), text_color=CTkm.theme["LabelComponent"]["required_color"]).pack(side=ctk.LEFT)
+            CTkLabel(self, text=i18n.t("app.component.required_symbol"), text_color=CTkm.theme["LabelComponent"]["required_color"]).pack(side=ctk.LEFT)
 
         return self
 
@@ -55,7 +55,7 @@ class EntryComponent(CTkFrame):
     required: bool
 
     def __init__(self, master: Frame, text: str, variable: StringVar, tooltip: Optional[list[str]] = None, required: bool = False) -> None:
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.variable = variable
@@ -78,7 +78,7 @@ class PathComponentBase(EntryComponent):
     def create(self):
         super().create()
 
-        CTkButton(self, text=i18n.t("app.word.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
+        CTkButton(self, text=i18n.t("app.component.reference"), command=self.callback, width=0).pack(side=ctk.LEFT, padx=2)
         return self
 
     def callback(self):
@@ -106,7 +106,7 @@ class OptionMenuComponent(CTkFrame):
     command: Optional[Callable[[str], None]]
 
     def __init__(self, master: Frame, text: str, variable: StringVar, values: list[str], command: Optional[Callable[[str], None]] = None):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
         self.text = text
         self.variable = variable
@@ -115,6 +115,45 @@ class OptionMenuComponent(CTkFrame):
 
     def create(self):
         LabelComponent(self, text=self.text, required=True).create()
-
         CTkOptionMenu(self, values=self.values, variable=self.variable, command=self.command).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
         return self
+
+
+class PaddingComponent(CTkFrame):
+    def __init__(self, master: Frame, width: int = 0, height: int = 0):
+        super().__init__(master, fg_color="transparent")
+        self.pack(fill=ctk.X, expand=True)
+        self.width = width
+        self.height = height
+
+    def create(self):
+        CTkBaseClass(self, width=self.width, height=self.height).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        return self
+
+
+class ConfirmWindow(CTkToplevel):
+    command: Callable
+    text: str
+
+    def __init__(self, master: Frame, command: Callable, text: str):
+        super().__init__(master)
+        self.geometry("300x100")
+        self.command = command
+        self.text = text
+
+    def create(self):
+        # ccenter
+        CTkLabel(self, text=self.text).pack(side=ctk.TOP, fill=ctk.X)
+        CTkButton(self, text=i18n.t("app.component.yes"), command=self.yes).pack(side=ctk.LEFT, fill=ctk.X, expand=True, padx=10)
+        CTkButton(self, text=i18n.t("app.component.no"), command=self.no).pack(side=ctk.LEFT, fill=ctk.X, expand=True, padx=10)
+
+    def yes(self):
+        try:
+            self.command()
+        except Exception:
+            self.destroy()
+            raise
+        self.destroy()
+
+    def no(self):
+        self.destroy()

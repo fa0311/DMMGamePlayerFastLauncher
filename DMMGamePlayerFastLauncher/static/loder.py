@@ -13,8 +13,8 @@ def config_loder():
     else:
         AppConfig.DATA = SettingData(
             lang=StringVar(value="ja"),
-            theme=StringVar(value="green"),
-            appearance_mode=StringVar(value="system"),
+            theme=StringVar(value="blue"),
+            appearance_mode=StringVar(value="dark"),
             window_scaling=DoubleVar(value=1.0),
             dmm_game_player_folder=PathVar(value=PathConfig.DEFAULT_DMM_GAME_PLAYER_FOLDER),
         )

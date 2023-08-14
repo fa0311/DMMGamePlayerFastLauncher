@@ -9,12 +9,12 @@ class HomeTab(CTkFrame):
     toast: ToastController
 
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
     @error_toast
     def create(self):
-        frame = CTkFrame(self, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        frame = CTkFrame(self, fg_color="transparent")
         frame.pack(anchor="center", expand=1)
 
         image = CTkImage(light_image=Image.open("assets/icons/DMMGamePlayerFastLauncher.png"), size=(240, 240))

@@ -3,68 +3,91 @@ ja:
   version: v5.0.0
   language: 日本語
 
-  symbol:
-    required: "*"
-
-  word:
+  tab:
     home: ホーム
     shortcut: ショートカット
     account: アカウント
     setting: 設定
     help: ヘルプ
-
+    create: 作成
+    edit: 編集
     import: インポート
     export: エクスポート
     logout: ログアウト
 
-    create: 作成
-    edit: 編集
-    delete: 削除
-    add: 追加
-    details: 詳細
+  # === 中身 ===
 
-    report: 報告
-
-    reference: 参照
-    save: 保存
-    cancel: キャンセル
-    login: ログイン
-
-    product_id: product_id
-
-    file: ファイル
+  shortcut:
+    product_id: "product_idの選択"
     filename: ファイル名
     game_path: ゲームのファイルパス
     game_args: ゲームの引数
+    save: 保存
 
-    select: "%{name}の選択"
-    copy_to_clipboard: "クリップボードにコピー"
+    add: ショートカットの設定ファイルを作成します。
+    edit: ショートカットの設定ファイルを編集します。
 
+    file_select: ファイルの選択
+
+    product_id_not_entered: product_idが入力されていません。
+    filename_not_entered: ファイル名が入力されていません。
+    save_success: 保存しました。
+    delete: 削除
+
+  account:
+    import_detail: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
+    import: インポート
+    filename: ファイル名
+    filename_not_entered: ファイル名が入力されていません。
+    filename_already_exists: そのファイル名は既に存在します。
+    import_error: インポートに失敗しました。
+    import_success: インポートに成功しました。
+
+    export_detail: アカウント情報をFastLauncherからDMMGamePlayerにエクスポートします。
+    export: エクスポート
+    file_select: ファイルの選択
+    file_not_selected: ファイルが選択されていません。
+    export_error: エクスポートに失敗しました。
+    export_success: エクスポートに成功しました。
+
+    edit_detail: アカウント情報を編集します。\nこれは非常に危険な操作です。
+    save: 保存
+    delete: 削除
+    save_success: 保存しました。
+
+    logout_detail: DMMGamePlayerにログインしているアカウントからログアウトします。
+    logout: ログアウト
+    logout_success: ログアウトしました。
+
+  setting:
+    save: 保存
+    reset_all_settings: 全ての設定をリセット
+    confirm_reset: 本当に全ての設定をリセットしますか？
+    save_success: 設定を保存しました。
+    dmm_game_player_folder: DMMGamePlayerのフォルダ
+    lang: 言語
+    theme: テーマ
+    appearance: 外観
+
+  help:
     coop_in_develop: 開発に協力
     donations_to_developer: 開発者に寄付
-
     bug_report: バグ報告
 
-  detail:
+  # === 汎用 ===
+
+  component:
     required: 入力必須項目です。
+    required_symbol: "*"
+    reference: 参照
 
-    shortcut:
-      add: ショートカットの設定ファイルを作成します。
-      edit: ショートカットの設定ファイルを編集します。
-    account:
-      import: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
-      export: アカウント情報をFastLauncherからDMMGamePlayerにエクスポートします。
-      logout: DMMGamePlayerにログインしているアカウントからログアウトします。
+    "yes": はい
+    "no": いいえ
 
-    setting:
-      # DMMGamePlayerのフォルダ
-      dmm_game_player_folder: DMMGamePlayerのフォルダ
+  toast:
+    report: 報告
+    copy_to_clipboard: "クリップボードにコピー"
+    details: 詳細
 
-  message:
-    success: "%{name}に成功しました"
-    failure: "%{name}に失敗しました"
-
-  error:
-    already_exists: "%{name}が既に存在します"
-    not_exists: "%{name}が存在しません"
-    not_entered: "%{name}が入力されていません"
+  utils:
+    file_exists: そのファイルは既に存在します。

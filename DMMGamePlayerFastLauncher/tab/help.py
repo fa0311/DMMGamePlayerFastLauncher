@@ -1,19 +1,19 @@
 import webbrowser
 
 import customtkinter as ctk
+import i18n
 from customtkinter import CTkBaseClass, CTkButton, CTkScrollableFrame, CTkTextbox
-from customtkinter import ThemeManager as CTkm
 from static.config import PathConfig, UrlConfig
 
 
 class HelpTab(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
 
     def create(self):
-        CTkButton(self, text="開発に協力", command=self.contribution_callback).pack(fill=ctk.X, pady=10)
-        CTkButton(self, text="開発者に寄付", command=self.donation_callback).pack(fill=ctk.X, pady=10)
-        CTkButton(self, text="バグ報告", command=self.report_callback).pack(fill=ctk.X, pady=10)
+        CTkButton(self, text=i18n.t("app.help.coop_in_develop"), command=self.contribution_callback).pack(fill=ctk.X, pady=10)
+        CTkButton(self, text=i18n.t("app.help.donations_to_developer"), command=self.donation_callback).pack(fill=ctk.X, pady=10)
+        CTkButton(self, text=i18n.t("app.help.bug_report"), command=self.report_callback).pack(fill=ctk.X, pady=10)
 
         with open(PathConfig.LICENSE, "r", encoding="utf-8") as f:
             license = f.read()

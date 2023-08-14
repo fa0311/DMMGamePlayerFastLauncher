@@ -20,6 +20,8 @@ class PathConfig:
     TEXT = ASSETS.joinpath("text")
     THEMES = ASSETS.joinpath("themes")
 
+    MAIN_ICON = ICONS.joinpath("DMMGamePlayerFastLauncher.ico")
+
     LICENSE = TEXT.joinpath("LICENSE")
 
 

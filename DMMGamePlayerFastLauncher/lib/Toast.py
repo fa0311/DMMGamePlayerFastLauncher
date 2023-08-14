@@ -85,7 +85,7 @@ class ErrorLabel(CTkFrame):
 
     def create(self):
         CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
-        btn = CTkButton(self, text=i18n.t("app.word.details"), command=self.copy, width=0, height=0, fg_color="#ffaaaa", text_color="black", hover_color="white")
+        btn = CTkButton(self, text=i18n.t("app.toast.details"), command=self.copy, width=0, height=0, fg_color="#ffaaaa", text_color="black", hover_color="white")
         btn.pack(side=ctk.LEFT, padx=10)
         return self
 
@@ -113,9 +113,9 @@ class ErrorWindow(CTkToplevel):
         frame = CTkFrame(self)
         frame.pack(fill=ctk.BOTH, padx=10, pady=(0, 10))
 
-        CTkButton(frame, text=i18n.t("app.copy_to_clipboard"), command=lambda: self.clipboard(box)).pack(side=ctk.LEFT, expand=True)
+        CTkButton(frame, text=i18n.t("app.toast.copy_to_clipboard"), command=lambda: self.clipboard(box)).pack(side=ctk.LEFT, expand=True)
 
-        CTkButton(frame, text=i18n.t("app.word.report"), command=lambda: self.report()).pack(side=ctk.LEFT, expand=True)
+        CTkButton(frame, text=i18n.t("app.toast.report"), command=lambda: self.report()).pack(side=ctk.LEFT, expand=True)
         return self
 
     def clipboard(self, box: CTkTextbox):

@@ -8,7 +8,6 @@ import i18n
 from component.component import EntryComponent, OptionMenuComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
-from customtkinter import ThemeManager as CTkm
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
 from static.config import PathConfig
@@ -21,15 +20,18 @@ T = TypeVar("T")
 
 
 class AccountTab(CTkFrame):
+    tab: TabMenuComponent
+
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
+        self.tab = TabMenuComponent(self)
 
     def create(self):
-        tab = TabMenuComponent(self)
-        tab.add(text=i18n.t("app.word.import"), callback=self.import_callback)
-        tab.add(text=i18n.t("app.word.export"), callback=self.export_callback)
-        tab.add(text=i18n.t("app.word.edit"), callback=self.edit_callback)
-        tab.add(text=i18n.t("app.word.logout"), callback=self.logout_callback)
+        self.tab.create()
+        self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
+        self.tab.add(text=i18n.t("app.tab.export"), callback=self.export_callback)
+        self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
+        self.tab.add(text=i18n.t("app.tab.logout"), callback=self.logout_callback)
         return self
 
     def import_callback(self, master: CTkBaseClass):
@@ -53,31 +55,31 @@ class AccountImport(CTkScrollableFrame):
     name: StringVar
 
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.name = StringVar()
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.detail.account.import")).pack(anchor=ctk.W)
-        EntryComponent(self, text=i18n.t("app.word.filename"), variable=self.name).create()
-        CTkButton(self, text=i18n.t("app.word.import"), command=self.callback).pack(fill=ctk.X, pady=10)
+        CTkLabel(self, text=i18n.t("app.account.import_detail")).pack(anchor=ctk.W)
+        EntryComponent(self, text=i18n.t("app.account.filename"), variable=self.name).create()
+        CTkButton(self, text=i18n.t("app.account.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
     @error_toast
     def callback(self):
         path = PathConfig.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
         if self.name.get() == "":
-            raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
+            raise Exception(i18n.t("app.account.filename_not_entered"))
         if path.exists():
-            raise Exception(i18n.t("app.error.already_exists", name=i18n.t("app.word.filename")))
+            raise Exception(i18n.t("app.account.filename_already_exists"))
 
         with DgpSessionV2() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.error.not_exists", name="login_secure_id"))
+                raise Exception(i18n.t("app.account.import_error"))
             session.write_bytes(str(path))
-            self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.import")))
+            self.toast.info(i18n.t("app.account.import_success"))
 
 
 class AccountExport(CTkScrollableFrame):
@@ -86,30 +88,29 @@ class AccountExport(CTkScrollableFrame):
     selected: StringVar
 
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
         self.selected = StringVar()
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.detail.account.export")).pack(anchor=ctk.W)
-        text = i18n.t("app.word.select", name=i18n.t("app.word.file"))
-        OptionMenuComponent(self, text=text, values=self.values, variable=self.selected).create()
-        CTkButton(self, text=i18n.t("app.word.export"), command=self.callback).pack(fill=ctk.X, pady=10)
+        CTkLabel(self, text=i18n.t("app.account.export_detail")).pack(anchor=ctk.W)
+        OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.selected).create()
+        CTkButton(self, text=i18n.t("app.account.export"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
     @error_toast
     def callback(self):
         path = PathConfig.ACCOUNT.joinpath(self.selected.get()).with_suffix(".bytes")
         if self.selected.get() == "":
-            raise Exception(i18n.t("app.error.not_selected", name=i18n.t("app.word.file")))
+            raise Exception(i18n.t("app.account.file_not_selected"))
         with DgpSessionV2() as session:
             session.read_bytes(str(Path(path)))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.export.error", name="login_secure_id"))
+                raise Exception(i18n.t("app.account.export_error"))
             session.write()
-            self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.export")))
+            self.toast.info(i18n.t("app.account.export_success"))
 
 
 class AccountEdit(CTkScrollableFrame):
@@ -121,19 +122,18 @@ class AccountEdit(CTkScrollableFrame):
     body_filename: StringVar
 
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.values = [Path(x).stem for x in glob.glob(str(PathConfig.ACCOUNT.joinpath("*.bytes")))]
         self.filename = StringVar()
+        self.body = CTkFrame(self, fg_color="transparent", height=0)
         self.body_var = {}
         self.body_filename = StringVar()
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.detail.account.edit")).pack(anchor=ctk.W)
-        text = i18n.t("app.word.select", name=i18n.t("app.word.file"))
-        OptionMenuComponent(self, text=text, values=self.values, variable=self.filename, command=self.select_callback).create()
-        self.body = CTkFrame(self, fg_color=CTkm.theme["CTkToplevel"]["fg_color"], height=0)
+        CTkLabel(self, text=i18n.t("app.account.edit_detail")).pack(anchor=ctk.W)
+        OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
         self.body.pack(expand=True, fill=ctk.BOTH)
         return self
 
@@ -142,7 +142,7 @@ class AccountEdit(CTkScrollableFrame):
         children_destroy(self.body)
         path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         self.body_filename.set(self.filename.get())
-        EntryComponent(self.body, text=i18n.t("app.word.filename"), variable=self.body_filename).create()
+        EntryComponent(self.body, text=i18n.t("app.account.filename"), variable=self.body_filename).create()
 
         session = DgpSessionV2()
         session.read_bytes(str(Path(path)))
@@ -150,13 +150,13 @@ class AccountEdit(CTkScrollableFrame):
             key = f"{cookie.name}{cookie.domain}"
             self.body_var[key] = StringVar(value=cookie.value)
             EntryComponent(self.body, text=cookie.name, variable=self.body_var[key]).create()
-        CTkButton(self.body, text=i18n.t("app.word.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
-        CTkButton(self.body, text=i18n.t("app.word.delete"), command=self.delete_callback).pack(fill=ctk.X)
+        CTkButton(self.body, text=i18n.t("app.account.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
+        CTkButton(self.body, text=i18n.t("app.account.delete"), command=self.delete_callback).pack(fill=ctk.X)
 
     @error_toast
     def save_callback(self):
         if self.body_filename.get() == "":
-            raise Exception(i18n.t("app.error.not_entered", name=i18n.t("app.word.filename")))
+            raise Exception(i18n.t("app.account.filename_not_entered"))
 
         path = PathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         body_path = PathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
@@ -173,7 +173,7 @@ class AccountEdit(CTkScrollableFrame):
         if path == body_path:
             write()
         else:
-            file_create(body_path, name=i18n.t("app.word.filename"))
+            file_create(body_path, name=i18n.t("app.account.filename"))
             write()
             path.unlink()
             self.values.remove(self.filename.get())
@@ -183,7 +183,7 @@ class AccountEdit(CTkScrollableFrame):
             self.create()
             self.select_callback("_")
 
-        self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.save")))
+        self.toast.info(i18n.t("app.account.save_success"))
 
     @error_toast
     def delete_callback(self):
@@ -199,13 +199,13 @@ class AccountLogout(CTkScrollableFrame):
     toast: ToastController
 
     def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color=CTkm.theme["CTkToplevel"]["fg_color"])
+        super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
     @error_toast
     def create(self):
-        CTkLabel(self, text=i18n.t("app.detail.account.logout")).pack(anchor=ctk.W)
-        CTkButton(self, text=i18n.t("app.word.logout"), command=self.callback).pack(fill=ctk.X, pady=10)
+        CTkLabel(self, text=i18n.t("app.account.logout_detail")).pack(anchor=ctk.W)
+        CTkButton(self, text=i18n.t("app.account.logout"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
     @error_toast
@@ -214,4 +214,4 @@ class AccountLogout(CTkScrollableFrame):
             session.read()
             session.cookies.clear()
             session.write()
-            self.toast.info(i18n.t("app.message.success", name=i18n.t("app.word.logout")))
+            self.toast.info(i18n.t("app.account.logout_success"))

@@ -3,7 +3,7 @@ pip freeze > requirements.txt
 python .\tools\build.py
 
 
-pyinstaller DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.py --noconsole --onefile --add-data ".venv\Lib\site-packages\customtkinter\;customtkinter"
+pyinstaller DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.py --noconsole --onefile --add-data ".venv\Lib\site-packages\customtkinter\;customtkinter" --icon assets\icons\DMMGamePlayerFastLauncher.ico
 
 # pyinstaller DMMGamePlayerProductIdChecker.py --onefile
 # pyinstaller Task.py --onefile --noconsole

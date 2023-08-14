@@ -1,5 +1,5 @@
 {
-  "flake8.args": ["--ignore=E501"],
+  "flake8.args": ["--ignore=E501,E731"],
   "markdownlint.config": {
     "MD033": false
   },
@@ -10,5 +10,14 @@
   "black-formatter.args": ["--line-length=180"],
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/data": true,
+    "**/*.spec": true,
+    "**/.venv": true
   }
 }

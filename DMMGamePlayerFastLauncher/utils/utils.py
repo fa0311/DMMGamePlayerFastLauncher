@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Frame
+from tkinter import Misc
 from typing import Optional, TypeVar
 
 import i18n
@@ -18,13 +18,13 @@ def get_isinstance(obj, cls: type[T]) -> Optional[T]:
     return None
 
 
-def children_destroy(master: Frame):
+def children_destroy(master: Misc):
     for child in master.winfo_children():
         child.destroy()
 
 
 def file_create(path: Path, name: str):
     if path.exists():
-        raise FileExistsError(i18n.t("app.error.file_exists", name=name))
+        raise FileExistsError(i18n.t("app.utils.file_exists", name=name))
     else:
         path.touch()
