@@ -169,11 +169,17 @@ class DgpSession:
             for cookie in json.loads(contents):
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
 
-    def get(self, url: str) -> requests.Response:
-        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY)
+    def get(self, url: str, **kwargs) -> requests.Response:
+        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
 
-    def post(self, url: str) -> requests.Response:
-        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY)
+    def post(self, url: str, **kwargs) -> requests.Response:
+        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
+
+    def get_dgp(self, url: str, **kwargs) -> requests.Response:
+        return self.session.get(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
+
+    def post_dgp(self, url: str, **kwargs) -> requests.Response:
+        return self.session.post(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
 
     def lunch(self, url: str, product_id: str) -> requests.Response:
         json = {"product_id": product_id}

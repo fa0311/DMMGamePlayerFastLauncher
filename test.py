@@ -16,18 +16,31 @@ session.get(login_url)
 
 
 launch_url = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
-response = session.lunch(launch_url, "umamusume").json()
+response = session.lunch(launch_url, "priconner").json()
+
+session.write()
+session.close()
+
+data = session.post_dgp(
+    "https://apidgp-gameplayer.games.dmm.com/getCookie", json={"url": "https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/7.6.0/data/*"}
+).json()
 
 
-print(response)
-data = session.get("https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/28105").json()
+signed = {
+    "Policy": data["policy"],
+    "Signature": data["signature"],
+    "Key-Pair-Id": data["key"],
+}
+
+
+data = session.get("https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/28102").json()
 
 domain = data["data"]["domain"]
 
 
-base_path = Path(__file__).parent.joinpath("uma")
+base_path = Path(__file__).parent.joinpath("priconner")
 for file in data["data"]["file_list"]:
-    data = session.get(domain + "/" + file["path"])
+    data = session.get(domain + "/" + file["path"], params=signed)
 
     path = base_path.joinpath(file["local_path"][1:])
 
