@@ -1,4 +1,5 @@
 import json
+import os
 from tkinter import StringVar
 
 import customtkinter as ctk
@@ -23,6 +24,7 @@ class SettingTab(CTkFrame):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
         self.tab.add(text=i18n.t("app.tab.uac"), callback=self.uac_callback)
+        self.tab.add(text=i18n.t("app.tab.other"), callback=self.other_callback)
         return self
 
     def edit_callback(self, master: CTkBaseClass):
@@ -30,6 +32,9 @@ class SettingTab(CTkFrame):
 
     def uac_callback(self, master: CTkBaseClass):
         SettingUacTab(master).create().pack(expand=True, fill=ctk.BOTH)
+
+    def other_callback(self, master: CTkBaseClass):
+        SettingOtherTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
 class SettingEditTab(CTkScrollableFrame):
@@ -116,3 +121,21 @@ class SettingUacTab(CTkScrollableFrame):
     def delete_callback(self):
         Schtasks().delete()
         self.toast.info(i18n.t("app.setting.uac_deleted"))
+
+
+class SettingOtherTab(CTkScrollableFrame):
+    toast: ToastController
+
+    def __init__(self, master: CTkBaseClass):
+        super().__init__(master, fg_color="transparent")
+        self.toast = ToastController(self)
+
+    @error_toast
+    def create(self):
+        CTkLabel(self, text=i18n.t("app.setting.other_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
+        CTkButton(self, text=i18n.t("app.setting.open_save_folder"), command=self.open_folder_callback).pack(fill=ctk.X, pady=10)
+        return self
+
+    @error_toast
+    def open_folder_callback(self):
+        os.startfile(DataPathConfig.DATA)

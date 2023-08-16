@@ -13,8 +13,7 @@
       "justMyCode": false,
       "env": {
         "ENV": "DEVELOP"
-      },
-      "args": ["umamusume", "--non-bypass-uac"]
+      }
     }
   ]
 }

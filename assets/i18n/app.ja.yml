@@ -9,6 +9,7 @@ ja:
     account: アカウント
     setting: 設定
     uac: UAC
+    other: その他
     help: ヘルプ
     create: 作成
     edit: 編集
@@ -19,13 +20,21 @@ ja:
   # === 中身 ===
 
   shortcut:
-    product_id: "product_idの選択"
     filename: ファイル名
+    filename_tooltip: "このショートカットに任意の名前を付けてください"
 
-    game_path: ゲームのファイルパス
-    game_path_auto: 自動検出
-    error_game_path_auto: 自動検出に失敗しました。
+    product_id: "product_idの選択"
+    product_id_tooltip: "product_idとはDMMがゲームを識別する際に使用するIDです。"
+
+    account_path: "アカウントの選択"
+    account_path_tooltip: |-
+      `アカウント` タブで作成したアカウントを選択してください。
+
     game_args: ゲームの引数
+    game_args_tooltip: |-
+      ゲームに渡す引数を指定します。
+      Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
+      ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
 
     uac_setting: UACの設定
     uac_usual: 通常
@@ -36,12 +45,6 @@ ja:
     uac_tooltip: |-
       `uac_always` と `uac_auto` を利用するには、
       `設定` タブの `UAC` でスケジュールを作成する必要があります。
-      aaaa
-
-    game_args_tooltip: |-
-      ゲームに渡す引数を指定します。
-      Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
-      ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
 
     save: 保存
 
@@ -104,6 +107,9 @@ ja:
 
     uac_elevated: 管理者権限に自動昇格するスケジュールを作成しました。
     uac_deleted: 管理者権限に自動昇格するスケジュールを削除しました。
+
+    other_detail: このツールの設定をテキストエディタで編集します。
+    open_save_folder: 設定ファイルを開く
 
   help:
     coop_in_develop: 開発に協力

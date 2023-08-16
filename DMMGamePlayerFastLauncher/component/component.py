@@ -25,7 +25,7 @@ class LabelComponent(CTkFrame):
         self.required = required
         if self.required:
             if self.tooltip:
-                self.tooltip += i18n.t("app.component.required")
+                self.tooltip = i18n.t("app.component.required") + "\n" + self.tooltip
             else:
                 self.tooltip = i18n.t("app.component.required")
 

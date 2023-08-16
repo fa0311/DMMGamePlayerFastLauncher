@@ -1,7 +1,9 @@
 import ctypes
 import os
 import subprocess
+import sys
 from pathlib import Path
+from typing import Optional
 
 import win32security
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig
@@ -46,9 +48,17 @@ class Schtasks:
         with open(AssetsPathConfig.SCHTASKS, "r") as f:
             template = f.read()
 
+        if os.environ.get("ENV") == "DEVELOP":
+            command = Path(sys.executable)
+            args = [str(Path(sys.argv[0]).absolute())]
+        else:
+            command = Path(sys.argv[0])
+            args = []
+
         template = template.replace(r"{{UID}}", self.file)
         template = template.replace(r"{{SID}}", get_sid())
-        template = template.replace(r"{{COMMAND}}", str(Path(__file__).absolute()))
+        template = template.replace(r"{{COMMAND}}", str(command.absolute()))
+        template = template.replace(r"{{ARGUMENTS}}", " ".join(f"{x}" for x in args))
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
 
         xml_path = DataPathConfig.SCHTASKS.joinpath(self.file).with_suffix(".xml")
@@ -64,13 +74,27 @@ class Schtasks:
 
 
 class Shortcut:
-    def create(self, sorce: Path, icon: Path):
+    def create(self, sorce: Path, args: list[str], icon: Optional[Path] = None):
         with open(AssetsPathConfig.SHORTCUT, "r") as f:
             template = f.read()
+        if icon is None:
+            icon = Path(__file__)
+
+        if os.environ.get("ENV") == "DEVELOP":
+            args.insert(0, str(Path(__file__).absolute()))
+            target = Path(sys.executable)
+        else:
+            target = Path(__file__)
+
+        # import inspect
+
+        # for x in inspect.stack():
+        #     print(x.filename)
 
         template = template.replace(r"{{SORCE}}", str(sorce.absolute()))
-        template = template.replace(r"{{TARGET}}", str(Path(__file__).absolute()))
+        template = template.replace(r"{{TARGET}}", str(target.absolute()))
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
+        template = template.replace(r"{{ICON_LOCATION}}", str(icon.absolute()))
+        template = template.replace(r"{{ARGUMENTS}}", " ".join(f"{x}" for x in args))
 
         ProcessManager.run_ps(template)
-        # template = template.replace(r"{{ICON}}", str(AssetsPathConfig.ICON.absolute()))

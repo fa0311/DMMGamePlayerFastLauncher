@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
 from tkinter import Frame, StringVar
+from typing import Optional
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, FilePathComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent
+from component.component import EntryComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent
 from component.tab_menu import TabMenuComponent
-from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
+from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.process_manager import Shortcut
 from lib.toast import ToastController, error_toast
@@ -46,6 +47,7 @@ class ShortcutCreate(CTkScrollableFrame):
     filename: StringVar
     product_ids: list[str]
     dgp_config: dict
+    account_name_list: list[str]
 
     def __init__(self, master: Frame):
         super().__init__(master, fg_color="transparent")
@@ -54,6 +56,7 @@ class ShortcutCreate(CTkScrollableFrame):
         self.filename = StringVar()
         self.dgp_config = DgpSessionV2().get_config()
         self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
+        self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
 
     @error_toast
     def create(self):
@@ -67,14 +70,14 @@ class ShortcutCreate(CTkScrollableFrame):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
 
-        OptionMenuComponent(self, text=i18n.t("app.shortcut.product_id"), values=self.product_ids, variable=self.data.product_id).create()
-
-        LabelComponent(self, text=i18n.t("app.shortcut.filename"), required=True).create()
-        CTkEntry(self, textvariable=self.filename).pack(fill=ctk.X)
-        FilePathComponent(self, text=i18n.t("app.shortcut.game_path"), variable=self.data.game_path, command=[(i18n.t("app.shortcut.game_path_auto"), self.auto_callback)]).create()
+        EntryComponent(self, text=i18n.t("app.shortcut.filename"), tooltip=i18n.t("app.shortcut.filename_tooltip"), required=True, variable=self.filename).create()
+        text = i18n.t("app.shortcut.product_id")
+        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.product_id_tooltip"), values=self.product_ids, variable=self.data.product_id).create()
+        text = i18n.t("app.shortcut.account_path")
+        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.data.account_path).create()
 
         game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
-        EntryComponent(self, text=i18n.t("app.shortcut.game_args"), variable=self.data.game_args, tooltip=game_args_tooltip).create()
+        EntryComponent(self, text=i18n.t("app.shortcut.game_args"), tooltip=game_args_tooltip, variable=self.data.game_args).create()
 
         uac_tooltip = i18n.t("app.shortcut.uac_tooltip")
         OptionMenuTupleComponent(self, text=i18n.t("app.shortcut.uac_setting"), values=uac_values, variable=self.data.uac_mode, tooltip=uac_tooltip).create()
@@ -96,21 +99,17 @@ class ShortcutCreate(CTkScrollableFrame):
             f.write(json.dumps(self.data.to_dict()))
 
         sorce = Path.home().joinpath("Desktop").joinpath(self.filename.get()).with_suffix(".lnk")
-        icon = Path(self.data.game_path.get())
-        Shortcut().create(sorce=sorce, icon=icon)
+        args = [self.filename.get()]
+        icon = self.get_game_path()
+        Shortcut().create(sorce=sorce, args=args, icon=icon)
 
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
-    @error_toast
-    def auto_callback(self, variable):
-        if self.data.product_id.get() == "":
-            raise Exception(i18n.t("app.shortcut.product_id_not_entered"))
+    def get_game_path(self) -> Optional[Path]:
         path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
         app = path.joinpath(self.data.product_id.get()).with_suffix(".exe")
-        variable.set(app)
-
-        if not app.exists():
-            raise Exception(i18n.t("app.shortcut.error_game_path_auto"))
+        if app.exists():
+            return app
 
 
 class ShortcutEdit(ShortcutCreate):
