@@ -37,7 +37,8 @@
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>{{COMMAND}} {{ARGUMENTS}}</Command>
+      <Command>{{COMMAND}}</Command>
+      <Arguments>{{ARGUMENTS}}</Arguments>
       <WorkingDirectory>{{WORKING_DIRECTORY}}</WorkingDirectory>
     </Exec>
   </Actions>

@@ -36,13 +36,14 @@ class Schtasks:
     file: str
     name: str
 
-    def __init__(self) -> None:
-        self.file = SchtasksConfig.FILE.format(os.getlogin())
+    def __init__(self, args: str) -> None:
+        self.file = SchtasksConfig.FILE.format(os.getlogin(), args)
         self.name = SchtasksConfig.NAME.format(self.file)
+        self.args = args
 
     def check(self) -> bool:
-        run_args = [SchtasksConfig.PATH, "/run", "/tn", self.name]
-        return ProcessManager.run(run_args).wait() == 0
+        xml_path = DataPathConfig.SCHTASKS.joinpath(self.file).with_suffix(".xml")
+        return not xml_path.exists()
 
     def set(self) -> None:
         with open(AssetsPathConfig.SCHTASKS, "r") as f:
@@ -50,10 +51,10 @@ class Schtasks:
 
         if os.environ.get("ENV") == "DEVELOP":
             command = Path(sys.executable)
-            args = [str(Path(sys.argv[0]).absolute())]
+            args = [str(Path(sys.argv[0]).absolute()), self.args]
         else:
             command = Path(sys.argv[0])
-            args = []
+            args = [self.args]
 
         template = template.replace(r"{{UID}}", self.file)
         template = template.replace(r"{{SID}}", get_sid())
@@ -80,19 +81,8 @@ class Shortcut:
         if icon is None:
             icon = Path(__file__)
 
-        if os.environ.get("ENV") == "DEVELOP":
-            args.insert(0, str(Path(__file__).absolute()))
-            target = Path(sys.executable)
-        else:
-            target = Path(__file__)
-
-        # import inspect
-
-        # for x in inspect.stack():
-        #     print(x.filename)
-
         template = template.replace(r"{{SORCE}}", str(sorce.absolute()))
-        template = template.replace(r"{{TARGET}}", str(target.absolute()))
+        template = template.replace(r"{{TARGET}}", SchtasksConfig.PATH)
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
         template = template.replace(r"{{ICON_LOCATION}}", str(icon.absolute()))
         template = template.replace(r"{{ARGUMENTS}}", " ".join(f"{x}" for x in args))

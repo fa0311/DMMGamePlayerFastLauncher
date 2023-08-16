@@ -22,7 +22,8 @@ session.write()
 session.close()
 
 data = session.post_dgp(
-    "https://apidgp-gameplayer.games.dmm.com/getCookie", json={"url": "https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/7.6.0/data/*"}
+    "https://apidgp-gameplayer.games.dmm.com/getCookie",
+    json={"url": "https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/7.6.0/data/*"},
 ).json()
 
 

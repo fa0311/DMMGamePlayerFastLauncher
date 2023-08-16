@@ -40,7 +40,7 @@ class UrlConfig:
 
 class SchtasksConfig:
     PATH = "schtasks.exe"
-    FILE = "schtasks_v1_{0}"
+    FILE = "schtasks_v1_{0}_{1}"
     NAME = "\\Microsoft\\Windows\\DMMGamePlayerFastLauncher\\{0}"
 
 

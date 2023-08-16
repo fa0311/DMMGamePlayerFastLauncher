@@ -1,15 +1,14 @@
 import json
 from pathlib import Path
 from tkinter import Frame, StringVar
-from typing import Optional
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent
+from component.component import EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
-from lib.process_manager import Shortcut
+from lib.process_manager import Schtasks, Shortcut
 from lib.toast import ToastController, error_toast
 from models.shortcut_data import ShortcutData
 from static.config import DataPathConfig
@@ -60,13 +59,6 @@ class ShortcutCreate(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        uac_values: list[tuple[str, str]] = [
-            ("uac_usual", i18n.t("app.shortcut.uac_usual")),
-            ("uac_always", i18n.t("app.shortcut.uac_always")),
-            ("uac_auto", i18n.t("app.shortcut.uac_auto")),
-            ("uac_disabled", i18n.t("app.shortcut.uac_disabled")),
-        ]
-
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
 
@@ -78,11 +70,11 @@ class ShortcutCreate(CTkScrollableFrame):
 
         game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
         EntryComponent(self, text=i18n.t("app.shortcut.game_args"), tooltip=game_args_tooltip, variable=self.data.game_args).create()
+        PaddingComponent(self, height=5).create()
 
-        uac_tooltip = i18n.t("app.shortcut.uac_tooltip")
-        OptionMenuTupleComponent(self, text=i18n.t("app.shortcut.uac_setting"), values=uac_values, variable=self.data.uac_mode, tooltip=uac_tooltip).create()
-
-        CTkButton(self, text=i18n.t("app.shortcut.save"), command=self.callback).pack(fill=ctk.X, pady=10)
+        CTkButton(self, text=i18n.t("app.shortcut.create_bypass_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.shortcut.create_hortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.callback).pack(fill=ctk.X, pady=5)
         return self
 
     @error_toast
@@ -98,18 +90,28 @@ class ShortcutCreate(CTkScrollableFrame):
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
 
-        sorce = Path.home().joinpath("Desktop").joinpath(self.filename.get()).with_suffix(".lnk")
-        args = [self.filename.get()]
-        icon = self.get_game_path()
+        task = Schtasks(self.filename.get())
+        if task.check():
+            task.set()
+
+        name, icon = self.get_game_info()
+        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, args=args, icon=icon)
 
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
-    def get_game_path(self) -> Optional[Path]:
-        path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
-        app = path.joinpath(self.data.product_id.get()).with_suffix(".exe")
-        if app.exists():
-            return app
+    def get_game_info(self) -> tuple[str, Path]:
+        game_path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
+        path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
+        session = DgpSessionV2().read_cookies(path)
+        data = session.lunch(self.data.product_id.get()).json()["data"]
+
+        title = data["title"].replace("/", "").replace("\\", "")
+        title = title.replace(":", "").replace("*", "").replace("?", "")
+        title = title.replace('"', "").replace("<", "").replace(">", "").replace("|", "")
+
+        return title, game_path.joinpath(data["exec_file_name"])
 
 
 class ShortcutEdit(ShortcutCreate):
@@ -132,7 +134,7 @@ class ShortcutEdit(ShortcutCreate):
             self.data = self.read()
             super().create()
             self.filename.set(self.selected.get())
-            CTkButton(self, text=i18n.t("app.shortcut.delete"), command=self.delete_callback).pack(fill=ctk.X)
+            CTkButton(self, text=i18n.t("app.shortcut.delete"), command=self.delete_callback).pack(fill=ctk.X, pady=5)
 
         return self
 

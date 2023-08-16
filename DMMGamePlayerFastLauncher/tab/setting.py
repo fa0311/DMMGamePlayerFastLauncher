@@ -7,7 +7,6 @@ import i18n
 from component.component import ConfirmWindow, DirectoryPathComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
-from lib.process_manager import Schtasks
 from lib.toast import ToastController, error_toast
 from models.setting_data import SettingData
 from static.config import AppConfig, AssetsPathConfig, DataPathConfig
@@ -23,15 +22,11 @@ class SettingTab(CTkFrame):
     def create(self):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
-        self.tab.add(text=i18n.t("app.tab.uac"), callback=self.uac_callback)
         self.tab.add(text=i18n.t("app.tab.other"), callback=self.other_callback)
         return self
 
     def edit_callback(self, master: CTkBaseClass):
         SettingEditTab(master).create().pack(expand=True, fill=ctk.BOTH)
-
-    def uac_callback(self, master: CTkBaseClass):
-        SettingUacTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
     def other_callback(self, master: CTkBaseClass):
         SettingOtherTab(master).create().pack(expand=True, fill=ctk.BOTH)
@@ -88,39 +83,6 @@ class SettingEditTab(CTkScrollableFrame):
     def delete_callback(self):
         DataPathConfig.APP_CONFIG.unlink()
         self.reload_callback()
-
-
-class SettingUacTab(CTkScrollableFrame):
-    toast: ToastController
-
-    def __init__(self, master: CTkBaseClass):
-        super().__init__(master, fg_color="transparent")
-        self.toast = ToastController(self)
-
-    @error_toast
-    def create(self):
-        CTkLabel(self, text=i18n.t("app.setting.uac_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
-        CTkButton(self, text=i18n.t("app.setting.check_schedule"), command=self.check_callback).pack(fill=ctk.X, pady=10)
-        CTkButton(self, text=i18n.t("app.setting.set_schedule"), command=self.elevation_callback).pack(fill=ctk.X, pady=10)
-        CTkButton(self, text=i18n.t("app.setting.delete_schedule"), command=self.delete_callback).pack(fill=ctk.X, pady=10)
-        return self
-
-    @error_toast
-    def check_callback(self):
-        if Schtasks().check():
-            self.toast.info(i18n.t("app.setting.uac_already_elevated"))
-        else:
-            self.toast.info(i18n.t("app.setting.uac_not_elevated"))
-
-    @error_toast
-    def elevation_callback(self):
-        Schtasks().set()
-        self.toast.info(i18n.t("app.setting.uac_elevated"))
-
-    @error_toast
-    def delete_callback(self):
-        Schtasks().delete()
-        self.toast.info(i18n.t("app.setting.uac_deleted"))
 
 
 class SettingOtherTab(CTkScrollableFrame):

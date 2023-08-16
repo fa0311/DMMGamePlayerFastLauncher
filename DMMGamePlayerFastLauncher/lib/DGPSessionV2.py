@@ -10,6 +10,7 @@ import re
 import sqlite3
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlparse
 
 import requests
 import requests.cookies
@@ -20,13 +21,30 @@ from Crypto.Cipher import AES
 urllib3.disable_warnings()
 
 
+class DgpSessionUtils:
+    @staticmethod
+    def gen_rand_hex():
+        return hashlib.sha256(str(random.random()).encode()).hexdigest()
+
+    @staticmethod
+    def gen_rand_address():
+        hex = DgpSessionUtils.gen_rand_hex()
+        address = ""
+        for x in range(12):
+            address += hex[x]
+            if x % 2 == 1:
+                address += ":"
+        return address[:-1]
+
+
 class DgpSessionV2:
     DGP5_PATH: Path
     HEADERS: dict[str, str]
     PROXY: Optional[dict[str, str]]
     DGP5_HEADERS: dict[str, str]
     DGP5_LAUNCH_PARAMS: dict[str, str]
-    DATA_DESCR = "DMMGamePlayerFastLauncher"
+    DATA_DESCR: str
+    LAUNCH_URL: str
     db: sqlite3.Connection
     session: requests.Session
     cookies: requests.cookies.RequestsCookieJar
@@ -34,35 +52,39 @@ class DgpSessionV2:
         "domain": ".dmm.com",
         "path": "/",
     }
-    logger: logging.Logger = logging.getLogger(__qualname__)
+    DGP5_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
+
+    PROXY: Optional[dict[str, str]] = None
+    HEADERS = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
+    }
+    DGP5_HEADERS = {
+        "Host": "apidgp-gameplayer.games.dmm.com",
+        "Connection": "keep-alive",
+        "User-Agent": "DMMGamePlayer5-Win/17.1.2 Electron/17.1.2",
+        "Client-App": "DMMGamePlayer5",
+        "Client-version": "17.1.2",
+    }
+    DGP5_LAUNCH_PARAMS = {
+        "game_type": "GCL",
+        "game_os": "win",
+        "launch_type": "LIB",
+        "mac_address": DgpSessionUtils.gen_rand_address(),
+        "hdd_serial": DgpSessionUtils.gen_rand_hex(),
+        "motherboard": DgpSessionUtils.gen_rand_hex(),
+        "user_os": "win",
+    }
+    DATA_DESCR = "DMMGamePlayerFastLauncher"
+    LAUNCH_URL = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
 
     def __init__(self, https_proxy_uri: Optional[str] = None):
-        self.DGP5_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
-
-        self.PROXY = None if https_proxy_uri is None else {"https": https_proxy_uri}
-        self.HEADERS = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "Upgrade-Insecure-Requests": "1",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
-        }
-        self.DGP5_HEADERS = {
-            "Host": "apidgp-gameplayer.games.dmm.com",
-            "Connection": "keep-alive",
-            "User-Agent": "DMMGamePlayer5-Win/17.1.2 Electron/17.1.2",
-            "Client-App": "DMMGamePlayer5",
-            "Client-version": "17.1.2",
-        }
-        self.DGP5_LAUNCH_PARAMS = {
-            "game_type": "GCL",
-            "game_os": "win",
-            "launch_type": "LIB",
-            "mac_address": self.gen_rand_address(),
-            "hdd_serial": self.gen_rand_hex(),
-            "motherboard": self.gen_rand_hex(),
-            "user_os": "win",
-        }
         self.session = requests.session()
         self.cookies = self.session.cookies
+
+        if https_proxy_uri:
+            self.PROXY = None if https_proxy_uri is None else {"https": https_proxy_uri}
 
     def __enter__(self):
         self.db = sqlite3.connect(self.DGP5_PATH.joinpath("Network", "Cookies"))
@@ -70,18 +92,6 @@ class DgpSessionV2:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.db.close()
-
-    def gen_rand_hex(self):
-        return hashlib.sha256(str(random.random()).encode()).hexdigest()
-
-    def gen_rand_address(self):
-        hex = self.gen_rand_hex()
-        address = ""
-        for x in range(12):
-            address += hex[x]
-            if x % 2 == 1:
-                address += ":"
-        return address[:-1]
 
     def write(self):
         aes_key = self.get_aes_key()
@@ -97,15 +107,7 @@ class DgpSessionV2:
                     (memoryview(data), cookie_row[3]),
                 )
             except:
-                self.logger.warning(
-                    "\n".join(
-                        [
-                            f"Failed to encrypt {cookie_row[3]}",
-                            "dumps: " + self.dump(cookie_row[5], mask=True),
-                        ]
-                    ),
-                    exc_info=True,
-                )
+                pass
         self.db.commit()
 
     def read(self):
@@ -124,15 +126,7 @@ class DgpSessionV2:
                 }
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
             except:
-                self.logger.warning(
-                    "\n".join(
-                        [
-                            f"Failed to decrypt {cookie_row[3]}",
-                            "dumps: " + self.dump(cookie_row[5], mask=True),
-                        ]
-                    ),
-                    exc_info=True,
-                )
+                pass
 
     def write_bytes(self, file: str):
         contents = []
@@ -173,16 +167,43 @@ class DgpSessionV2:
     def post(self, url: str) -> requests.Response:
         return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY)
 
-    def lunch(self, url: str, product_id: str) -> requests.Response:
+    def lunch(self, product_id: str) -> requests.Response:
+        # {
+        #     "result_code": 100,
+        #     "data": {
+        #         "product_id": "priconner",
+        #         "title": "プリンセスコネクト！Re:Dive",
+        #         "exec_file_name": "PrincessConnectReDive.exe",
+        #         "install_dir": "priconner",
+        #         "file_list_url": "/gameplayer/filelist/28102",
+        #         "is_administrator": True,
+        #         "file_check_type": "FILELIST",
+        #         "total_size": 150183072,
+        #         "latest_version": "7.6.0",
+        #         "execute_args": "/viewer_id=0000 /onetime_token=xxxx",
+        #         "conversion_url": None,
+        #     },
+        #     "error": None,
+        # }
         json = {"product_id": product_id}
         json.update(self.DGP5_LAUNCH_PARAMS)
         return self.session.post(
-            url,
+            self.LAUNCH_URL,
             headers=self.DGP5_HEADERS,
             proxies=self.PROXY,
             json=json,
             verify=False,
         )
+
+    def login(self):
+        response = self.session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
+        url = response.json()["data"]["url"]
+        token = urlparse(url).path.split("path=")[-1]
+        try:
+            self.session.get(url)
+            self.session.get(f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false")
+        except:
+            pass
 
     def get_config(self):
         with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "r", encoding="utf-8") as f:
@@ -207,31 +228,10 @@ class DgpSessionV2:
     def join_encrypted_data(self, v10: bytes, nonce: bytes, data: bytes, mac: bytes) -> bytes:
         return v10 + nonce + data + mac
 
-    def dump(self, value, mask: bool) -> str:
-        response = {}
-        data = "{}"
-        try:
-            response.update({"type": str(type(value))})
-            data = json.dumps(response)
-        except:
-            pass
-        try:
-            if mask:
-                response.update({"str": str(value[:5])})
-            else:
-                response.update({"str": str(value)})
-            data = json.dumps(response)
-        except:
-            pass
-        try:
-            response.update({"len": len(value)})
-            data = json.dumps(response)
-        except:
-            pass
-        return data
-
-
-def extract_next_data(html):
-    pattern = '<script id="__NEXT_DATA__" type="application/json">(.+?)</script>'
-    data = json.loads(re.findall(pattern, html)[0])
-    return data
+    @staticmethod
+    def read_cookies(path: Path) -> "DgpSessionV2":
+        session = DgpSessionV2()
+        session.read_bytes(str(path))
+        session.login()
+        session.write_bytes(str(path))
+        return session
