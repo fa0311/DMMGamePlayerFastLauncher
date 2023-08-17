@@ -1,12 +1,6 @@
-import os
 from pathlib import Path
 
 from models.setting_data import SettingData
-
-
-class PathConfig:
-    APPDATA = Path(os.getenv("APPDATA", default=""))
-    DEFAULT_DMM_GAME_PLAYER_FOLDER = APPDATA.joinpath("dmmgameplayer5")
 
 
 class DataPathConfig:

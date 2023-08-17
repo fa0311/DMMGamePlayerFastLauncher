@@ -49,7 +49,8 @@ class SettingEditTab(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_folder"), variable=self.data.dmm_game_player_folder).create()
+        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_program_folder"), variable=self.data.dmm_game_player_program_folder).create()
+        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_data_folder"), variable=self.data.dmm_game_player_data_folder).create()
         OptionMenuTupleComponent(self, text=i18n.t("app.setting.lang"), values=self.lang, variable=self.data.lang).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.theme"), values=self.theme, variable=self.data.theme).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.appearance"), values=["light", "dark", "system"], variable=self.data.appearance_mode).create()

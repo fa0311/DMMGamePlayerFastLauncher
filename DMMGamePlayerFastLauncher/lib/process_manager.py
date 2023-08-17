@@ -17,6 +17,7 @@ class ProcessManager:
 
     @staticmethod
     def run(args: list[str]) -> subprocess.Popen[bytes]:
+        print(args)
         return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     @staticmethod

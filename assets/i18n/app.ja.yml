@@ -88,7 +88,7 @@ ja:
     reset_all_settings: 全ての設定をリセット
     confirm_reset: 本当に全ての設定をリセットしますか？
     save_success: 設定を保存しました。
-    dmm_game_player_folder: DMMGamePlayerのフォルダ
+    dmm_game_player_data_folder: DMMGamePlayerのデータフォルダ
     lang: 言語
     theme: テーマ
     appearance: 外観
