@@ -28,22 +28,14 @@ class AccountTab(CTkFrame):
     def create(self):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
-        # self.tab.add(text=i18n.t("app.tab.export"), callback=self.export_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
-        # self.tab.add(text=i18n.t("app.tab.logout"), callback=self.logout_callback)
         return self
 
     def import_callback(self, master: CTkBaseClass):
         AccountImport(master).create().pack(expand=True, fill=ctk.BOTH)
 
-    # def export_callback(self, master: CTkBaseClass):
-    #     AccountExport(master).create().pack(expand=True, fill=ctk.BOTH)
-
     def edit_callback(self, master: CTkBaseClass):
         AccountEdit(master).create().pack(expand=True, fill=ctk.BOTH)
-
-    # def logout_callback(self, master: CTkBaseClass):
-    #     AccountLogout(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
 # ===== Account Body =====

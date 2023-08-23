@@ -222,7 +222,6 @@ class ConfirmWindow(CTkToplevel):
         self.text = text
 
     def create(self):
-        # ccenter
         CTkLabel(self, text=self.text).pack(side=ctk.TOP, fill=ctk.X)
         CTkButton(self, text=i18n.t("app.component.yes"), command=self.yes).pack(side=ctk.LEFT, fill=ctk.X, expand=True, padx=10)
         CTkButton(self, text=i18n.t("app.component.no"), command=self.no).pack(side=ctk.LEFT, fill=ctk.X, expand=True, padx=10)
