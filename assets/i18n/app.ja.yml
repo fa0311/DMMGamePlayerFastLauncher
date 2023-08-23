@@ -8,11 +8,11 @@ ja:
     shortcut: ショートカット
     account: アカウント
     setting: 設定
-    uac: UAC
     other: その他
     help: ヘルプ
     create: 作成
     edit: 編集
+    launch_create: ランチャー作成
     import: インポート
     export: エクスポート
     logout: ログアウト
@@ -36,17 +36,9 @@ ja:
       Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
       ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
 
-    uac_setting: UACの設定
-    uac_usual: 通常
-    uac_always: 常に管理者権限で実行
-    uac_auto: 管理者権限が必要な場合に自動的に昇格
-    uac_disabled: 管理者権限に昇格しない
-
-    uac_tooltip: |-
-      `uac_always` と `uac_auto` を利用するには、
-      `設定` タブの `UAC` でスケジュールを作成する必要があります。
-
-    save: 保存
+    create_bypass_shortcut_and_save: UAC自動昇格ショートカットを作成して保存
+    create_shortcut_and_save: ショートカットを作成して保存
+    save_only: 保存のみ
 
     add_detail: ショートカットの設定ファイルを作成します。
     edit_detail: ショートカットの設定ファイルを編集します。
@@ -55,6 +47,7 @@ ja:
 
     product_id_not_entered: product_idが入力されていません。
     filename_not_entered: ファイル名が入力されていません。
+    file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除
 
@@ -67,46 +60,23 @@ ja:
     import_error: インポートに失敗しました。
     import_success: インポートに成功しました。
 
-    export_detail: アカウント情報をFastLauncherからDMMGamePlayerにエクスポートします。
-    export: エクスポート
     file_select: ファイルの選択
-    file_not_selected: ファイルが選択されていません。
-    export_error: エクスポートに失敗しました。
-    export_success: エクスポートに成功しました。
 
     edit_detail: アカウント情報を編集します。\nこれは非常に高度な操作です。
     save: 保存
     delete: 削除
     save_success: 保存しました。
 
-    logout_detail: DMMGamePlayerにログインしているアカウントからログアウトします。
-    logout: ログアウト
-    logout_success: ログアウトしました。
-
   setting:
     save: 保存
     reset_all_settings: 全ての設定をリセット
     confirm_reset: 本当に全ての設定をリセットしますか？
     save_success: 設定を保存しました。
+    dmm_game_player_program_folder: DMMGamePlayerのプログラムフォルダ
     dmm_game_player_data_folder: DMMGamePlayerのデータフォルダ
     lang: 言語
     theme: テーマ
     appearance: 外観
-
-    uac_detail: |-
-      ユーザーアカウント制御に関する設定。
-      管理者権限に自動昇格するためのスケジュールを作成します。
-      この設定を有効にすると管理者権限が必要な場合に自動的に昇格します。
-
-    check_schedule: スケジュールの確認
-    set_schedule: スケジュールの作成
-    delete_schedule: スケジュールの削除
-
-    uac_already_elevated: 管理者権限に自動昇格するスケジュールが既に存在します。
-    uac_not_elevated: 管理者権限に自動昇格するスケジュールが存在しません。
-
-    uac_elevated: 管理者権限に自動昇格するスケジュールを作成しました。
-    uac_deleted: 管理者権限に自動昇格するスケジュールを削除しました。
 
     other_detail: このツールの設定をテキストエディタで編集します。
     open_save_folder: 設定ファイルを開く
@@ -115,6 +85,10 @@ ja:
     coop_in_develop: 開発に協力
     donations_to_developer: 開発者に寄付
     bug_report: バグ報告
+
+  launch:
+    export_error: エクスポートに失敗しました。
+    import_error: インポートに失敗しました。
 
   # === 汎用 ===
 

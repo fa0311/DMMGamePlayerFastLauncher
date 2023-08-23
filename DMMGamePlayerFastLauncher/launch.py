@@ -77,7 +77,7 @@ class LanchLauncher(CTk):
         with DgpSessionV2() as session:
             session.read_bytes(str(path))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.account.export_error"))
+                raise Exception(i18n.t("app.launch.export_error"))
             session.write()
 
         dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
@@ -91,7 +91,7 @@ class LanchLauncher(CTk):
         with DgpSessionV2() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.account.import_error"))
+                raise Exception(i18n.t("app.launch.import_error"))
             session.write_bytes(str(path))
 
             session.cookies.clear()

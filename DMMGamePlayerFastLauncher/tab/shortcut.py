@@ -206,15 +206,15 @@ class AccountShortcutCreate(CTkScrollableFrame):
 
     @error_toast
     def create(self):
-        text = i18n.t("app.account.account_path")
-        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.account.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
-        CTkButton(self, text=i18n.t("app.account.create_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
+        text = i18n.t("app.shortcut.account_path")
+        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
+        CTkButton(self, text=i18n.t("app.shortcut.create_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
         return self
 
     @error_toast
     def callback(self):
         if self.account_path.get() == "":
-            raise Exception(i18n.t("app.account.file_not_selected"))
+            raise Exception(i18n.t("app.shortcut.file_not_selected"))
 
         name = self.account_path.get()
         sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
