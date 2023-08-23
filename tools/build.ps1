@@ -7,11 +7,11 @@ pyinstaller DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.py --noconsole -
 
 # pyinstaller DMMGamePlayerProductIdChecker.py --onefile
 # pyinstaller Task.py --onefile --noconsole
-New-Item "Z:\Project\python\DMMGamePlayerFastLauncher\windows\tools" -ItemType Directory -Force
+New-Item "windows\tools" -ItemType Directory -Force
 
-# Copy-Item -Path "Z:\Project\python\DMMGamePlayerFastLauncher\dist\DMMGamePlayerProductIdChecker.exe" -Destination "Z:\Project\Python\DMMGamePlayerFastLauncher\windows\tools" -Force
-# Copy-Item -Path "Z:\Project\Python\DMMGamePlayerFastLauncher\dist\Task.exe" -Destination "Z:\Project\Python\DMMGamePlayerFastLauncher\windows\tools" -Force
+# Copy-Item -Path "dist\DMMGamePlayerProductIdChecker.exe" -Destination "windows\tools" -Force
+# Copy-Item -Path "dist\Task.exe" -Destination "windows\tools" -Force
 
 
-Copy-Item -Path "Z:\Project\python\DMMGamePlayerFastLauncher\assets" -Destination "Z:\Project\python\DMMGamePlayerFastLauncher\windows" -Force -Recurse
-Start-Process "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Z:\Project\Python\DMMGamePlayerFastLauncher\setup.iss"
+Copy-Item -Path "assets" -Destination "windows" -Force -Recurse
+Start-Process "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "setup.iss"

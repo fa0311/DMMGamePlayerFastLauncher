@@ -13,5 +13,5 @@ for file in ("./../DMMGamePlayerFastLauncher/LICENSE", *glob.glob(".venv/**/*[Ll
             output += delimiter + path.parent.name.center(80) + delimiter + f.read()
 
 
-with open("assets/text/LICENSE", "w") as f:
+with open("assets/license/LICENSE", "w") as f:
     f.write(output)
