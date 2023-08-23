@@ -21,12 +21,15 @@ ja:
 
   shortcut:
     filename: ファイル名
-    filename_tooltip: "このショートカットに任意の名前を付けてください"
+    filename_tooltip: |-
+      このショートカットに任意の名前を付けてください。
+      英数字と半角記号のみ推奨です。
 
-    product_id: "product_idの選択"
-    product_id_tooltip: "product_idとはDMMがゲームを識別する際に使用するIDです。"
+    product_id: product_idの選択
+    product_id_tooltip: |-
+      product_idとはDMMがゲームを識別する際に使用するIDです。
 
-    account_path: "アカウントの選択"
+    account_path: アカウントの選択
     account_path_tooltip: |-
       `アカウント` タブで作成したアカウントを選択してください。
 
@@ -62,10 +65,14 @@ ja:
 
     file_select: ファイルの選択
 
-    edit_detail: アカウント情報を編集します。\nこれは非常に高度な操作です。
+    edit_detail: -|
+      アカウント情報を編集します。
+      これは非常に高度な操作です。
     save: 保存
     delete: 削除
     save_success: 保存しました。
+    account_create_detail: -|
+      ランチャーを起動するショートカットを作成します。
 
   setting:
     save: 保存

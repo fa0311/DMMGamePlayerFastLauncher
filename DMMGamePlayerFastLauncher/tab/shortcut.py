@@ -206,8 +206,9 @@ class AccountShortcutCreate(CTkScrollableFrame):
 
     @error_toast
     def create(self):
+        CTkLabel(self, text=i18n.t("app.shortcut.account_create_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         text = i18n.t("app.shortcut.account_path")
-        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
+        OptionMenuComponent(self, text=text, values=self.account_name_list, variable=self.account_path).create()
         CTkButton(self, text=i18n.t("app.shortcut.create_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
         return self
 
