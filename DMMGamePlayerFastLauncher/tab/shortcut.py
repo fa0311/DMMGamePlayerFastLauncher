@@ -77,13 +77,12 @@ class ShortcutCreate(CTkScrollableFrame):
         EntryComponent(self, text=i18n.t("app.shortcut.game_args"), tooltip=game_args_tooltip, variable=self.data.game_args).create()
         PaddingComponent(self, height=5).create()
 
-        CTkButton(self, text=i18n.t("app.shortcut.create_bypass_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
-        CTkButton(self, text=i18n.t("app.shortcut.create_hortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
-        CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.shortcut.create_bypass_shortcut_and_save"), command=self.bypass_callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.shortcut.create_shortcut_and_save"), command=self.save_callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.save_only_callback).pack(fill=ctk.X, pady=5)
         return self
 
-    @error_toast
-    def callback(self, exists=False):
+    def save(self, exists=False):
         if self.data.product_id.get() == "":
             raise Exception(i18n.t("app.shortcut.product_id_not_entered"))
         if self.filename.get() == "":
@@ -95,6 +94,9 @@ class ShortcutCreate(CTkScrollableFrame):
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
 
+    @error_toast
+    def bypass_callback(self):
+        self.save()
         task = Schtasks(self.filename.get())
         if task.check():
             task.set()
@@ -104,6 +106,20 @@ class ShortcutCreate(CTkScrollableFrame):
         args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
 
+        self.toast.info(i18n.t("app.shortcut.save_success"))
+
+    @error_toast
+    def save_callback(self):
+        self.save()
+        name, icon = self.get_game_info()
+        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        args = [self.filename.get()]
+        Shortcut().create(sorce=sorce, args=args, icon=icon)
+        self.toast.info(i18n.t("app.shortcut.save_success"))
+
+    @error_toast
+    def save_only_callback(self):
+        self.save()
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
     def get_game_info(self) -> tuple[str, Path]:
@@ -143,14 +159,13 @@ class ShortcutEdit(ShortcutCreate):
 
         return self
 
-    @error_toast
-    def callback(self):
+    def save(self):
         path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         if path == selected:
-            super().callback(exists=True)
+            super().save(exists=True)
         else:
-            super().callback()
+            super().save()
             selected.unlink()
             self.values.remove(self.selected.get())
             self.values.append(self.filename.get())
@@ -164,6 +179,7 @@ class ShortcutEdit(ShortcutCreate):
         self.values.remove(self.selected.get())
         self.selected.set("")
         self.option_callback("_")
+        self.toast.info(i18n.t("app.shortcut.save_success"))
 
     @error_toast
     def option_callback(self, _: str):
@@ -192,7 +208,7 @@ class AccountShortcutCreate(CTkScrollableFrame):
     def create(self):
         text = i18n.t("app.account.account_path")
         OptionMenuComponent(self, text=text, tooltip=i18n.t("app.account.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
-        CTkButton(self, text=i18n.t("app.account.save_only"), command=self.callback).pack(fill=ctk.X, pady=5)
+        CTkButton(self, text=i18n.t("app.account.create_shortcut_and_save"), command=self.callback).pack(fill=ctk.X, pady=5)
         return self
 
     @error_toast
@@ -200,11 +216,9 @@ class AccountShortcutCreate(CTkScrollableFrame):
         if self.account_path.get() == "":
             raise Exception(i18n.t("app.account.file_not_selected"))
 
-        # path = DataPathConfig.ACCOUNT.joinpath(self.account_path.get()).with_suffix(".bytes")
-
         name = self.account_path.get()
         sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
-        args = [self.account_path.get(), "--type", "launcher"]
+        args = [name, "--type", "launcher"]
         Shortcut().create(sorce=sorce, args=args)
 
         self.toast.info(i18n.t("app.shortcut.save_success"))

@@ -84,7 +84,7 @@ class Shortcut:
         with open(AssetsPathConfig.SHORTCUT, "r") as f:
             template = f.read()
         if icon is None:
-            icon = Path(__file__)
+            icon = Path(sys.argv[0])
         if args is None:
             args = []
 
