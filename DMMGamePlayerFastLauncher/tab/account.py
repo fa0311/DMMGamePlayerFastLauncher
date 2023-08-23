@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Frame, StringVar
+from tkinter import StringVar
 from typing import TypeVar
 
 import customtkinter as ctk
@@ -8,9 +8,8 @@ from component.component import EntryComponent, OptionMenuComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
-from lib.process_manager import ProcessManager
 from lib.toast import ToastController, error_toast
-from static.config import AppConfig, DataPathConfig
+from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
 
 T = TypeVar("T")
@@ -31,7 +30,6 @@ class AccountTab(CTkFrame):
         self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
         # self.tab.add(text=i18n.t("app.tab.export"), callback=self.export_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
-        self.tab.add(text=i18n.t("app.tab.launch"), callback=self.launch_callback)
         # self.tab.add(text=i18n.t("app.tab.logout"), callback=self.logout_callback)
         return self
 
@@ -43,9 +41,6 @@ class AccountTab(CTkFrame):
 
     def edit_callback(self, master: CTkBaseClass):
         AccountEdit(master).create().pack(expand=True, fill=ctk.BOTH)
-
-    def launch_callback(self, master: CTkBaseClass):
-        AccountLauncher(master).create().pack(expand=True, fill=ctk.BOTH)
 
     # def logout_callback(self, master: CTkBaseClass):
     #     AccountLogout(master).create().pack(expand=True, fill=ctk.BOTH)
@@ -86,49 +81,6 @@ class AccountImport(CTkScrollableFrame):
             session.cookies.clear()
             session.write()
             self.toast.info(i18n.t("app.account.import_success"))
-
-
-class AccountLauncher(CTkScrollableFrame):
-    toast: ToastController
-    account_name_list: list[str]
-    account_path: StringVar
-
-    def __init__(self, master: Frame):
-        super().__init__(master, fg_color="transparent")
-        self.toast = ToastController(self)
-        self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
-        self.account_path = StringVar()
-
-    @error_toast
-    def create(self):
-        text = i18n.t("app.account.account_path")
-        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.account.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
-        CTkButton(self, text=i18n.t("app.account.save_only"), command=self.callback).pack(fill=ctk.X, pady=5)
-        return self
-
-    @error_toast
-    def callback(self):
-        if self.account_path.get() == "":
-            raise Exception(i18n.t("app.account.file_not_selected"))
-
-        path = DataPathConfig.ACCOUNT.joinpath(self.account_path.get()).with_suffix(".bytes")
-        with DgpSessionV2() as session:
-            session.read_bytes(str(Path(path)))
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.account.export_error"))
-            session.write()
-
-        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
-        ProcessManager().run([str(dgp)]).wait()
-
-        with DgpSessionV2() as session:
-            session.read()
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.account.import_error"))
-            session.write_bytes(str(path))
-
-            session.cookies.clear()
-            session.write()
 
 
 class AccountEdit(CTkScrollableFrame):

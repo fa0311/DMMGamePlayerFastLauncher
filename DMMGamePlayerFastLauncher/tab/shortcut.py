@@ -12,6 +12,7 @@ from lib.process_manager import Schtasks, Shortcut
 from lib.toast import ToastController, error_toast
 from models.shortcut_data import ShortcutData
 from static.config import DataPathConfig
+from static.env import Env
 from utils.utils import children_destroy, file_create
 
 # ===== Shortcut Sub Menu =====
@@ -28,6 +29,7 @@ class ShortcutTab(CTkFrame):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.create"), callback=self.create_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
+        self.tab.add(text=i18n.t("app.tab.launch_create"), callback=self.launch_create_callback)
         return self
 
     def create_callback(self, master: CTkBaseClass):
@@ -35,6 +37,9 @@ class ShortcutTab(CTkFrame):
 
     def edit_callback(self, master: CTkBaseClass):
         ShortcutEdit(master).create().pack(expand=True, fill=ctk.BOTH)
+
+    def launch_create_callback(self, master: CTkBaseClass):
+        AccountShortcutCreate(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
 # ===== Shortcut Body =====
@@ -97,7 +102,7 @@ class ShortcutCreate(CTkScrollableFrame):
         name, icon = self.get_game_info()
         sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
         args = ["/run", "/tn", task.name]
-        Shortcut().create(sorce=sorce, args=args, icon=icon)
+        Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
 
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
@@ -170,3 +175,36 @@ class ShortcutEdit(ShortcutCreate):
         path = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             return ShortcutData.from_dict(json.load(f))
+
+
+class AccountShortcutCreate(CTkScrollableFrame):
+    toast: ToastController
+    account_name_list: list[str]
+    account_path: StringVar
+
+    def __init__(self, master: Frame):
+        super().__init__(master, fg_color="transparent")
+        self.toast = ToastController(self)
+        self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_path = StringVar()
+
+    @error_toast
+    def create(self):
+        text = i18n.t("app.account.account_path")
+        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.account.account_path_tooltip"), values=self.account_name_list, variable=self.account_path).create()
+        CTkButton(self, text=i18n.t("app.account.save_only"), command=self.callback).pack(fill=ctk.X, pady=5)
+        return self
+
+    @error_toast
+    def callback(self):
+        if self.account_path.get() == "":
+            raise Exception(i18n.t("app.account.file_not_selected"))
+
+        # path = DataPathConfig.ACCOUNT.joinpath(self.account_path.get()).with_suffix(".bytes")
+
+        name = self.account_path.get()
+        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        args = [self.account_path.get(), "--type", "launcher"]
+        Shortcut().create(sorce=sorce, args=args)
+
+        self.toast.info(i18n.t("app.shortcut.save_success"))
