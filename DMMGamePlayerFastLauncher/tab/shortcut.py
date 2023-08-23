@@ -62,7 +62,6 @@ class ShortcutCreate(CTkScrollableFrame):
         self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
         self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
 
-    @error_toast
     def create(self):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
@@ -146,7 +145,6 @@ class ShortcutEdit(ShortcutCreate):
         self.values = [x.stem for x in DataPathConfig.SHORTCUT.iterdir() if x.suffix == ".json"]
         self.selected = StringVar()
 
-    @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.shortcut.edit_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
 
@@ -188,7 +186,6 @@ class ShortcutEdit(ShortcutCreate):
         children_destroy(self)
         self.create()
 
-    @error_toast
     def read(self) -> ShortcutData:
         path = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
@@ -206,7 +203,6 @@ class AccountShortcutCreate(CTkScrollableFrame):
         self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.account_path = StringVar()
 
-    @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.shortcut.account_create_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         text = i18n.t("app.shortcut.account_path")

@@ -47,7 +47,6 @@ class SettingEditTab(CTkScrollableFrame):
 
         self.theme = [x.stem for x in AssetsPathConfig.THEMES.iterdir()]
 
-    @error_toast
     def create(self):
         DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_program_folder"), variable=self.data.dmm_game_player_program_folder).create()
         DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_data_folder"), variable=self.data.dmm_game_player_data_folder).create()
@@ -76,7 +75,7 @@ class SettingEditTab(CTkScrollableFrame):
 
         app = self.winfo_toplevel()
         assert isinstance(app, App)
-        app.loder()
+        app.loder(app)
         app.create()
         self.toast.info(i18n.t("app.setting.save_success"))
 
@@ -93,7 +92,6 @@ class SettingOtherTab(CTkScrollableFrame):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
-    @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.setting.other_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         CTkButton(self, text=i18n.t("app.setting.open_save_folder"), command=self.open_folder_callback).pack(fill=ctk.X, pady=10)

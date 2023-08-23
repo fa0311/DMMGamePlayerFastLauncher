@@ -3,7 +3,7 @@ import webbrowser
 import customtkinter as ctk
 import i18n
 from customtkinter import CTkBaseClass, CTkButton, CTkScrollableFrame, CTkTextbox
-from lib.toast import ToastController, error_toast
+from lib.toast import ToastController
 from static.config import AssetsPathConfig, UrlConfig
 
 
@@ -14,7 +14,6 @@ class HelpTab(CTkScrollableFrame):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
-    @error_toast
     def create(self):
         CTkButton(self, text=i18n.t("app.help.coop_in_develop"), command=self.contribution_callback).pack(fill=ctk.X, pady=10)
         CTkButton(self, text=i18n.t("app.help.donations_to_developer"), command=self.donation_callback).pack(fill=ctk.X, pady=10)
@@ -29,14 +28,11 @@ class HelpTab(CTkScrollableFrame):
 
         return self
 
-    @error_toast
     def contribution_callback(self):
         webbrowser.open(UrlConfig.CONTRIBUTION)
 
-    @error_toast
     def donation_callback(self):
         webbrowser.open(UrlConfig.DONATE)
 
-    @error_toast
     def report_callback(self):
         webbrowser.open(UrlConfig.ISSUE)

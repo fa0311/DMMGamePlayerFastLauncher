@@ -1,6 +1,6 @@
 import i18n
 from customtkinter import CTkBaseClass, CTkFont, CTkFrame, CTkImage, CTkLabel
-from lib.toast import ToastController, error_toast
+from lib.toast import ToastController
 from PIL import Image
 from static.config import AssetsPathConfig
 
@@ -12,7 +12,6 @@ class HomeTab(CTkFrame):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
-    @error_toast
     def create(self):
         frame = CTkFrame(self, fg_color="transparent")
         frame.pack(anchor="center", expand=1)

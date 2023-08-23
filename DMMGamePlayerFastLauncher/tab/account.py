@@ -50,7 +50,6 @@ class AccountImport(CTkScrollableFrame):
         self.toast = ToastController(self)
         self.name = StringVar()
 
-    @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.import_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         EntryComponent(self, text=i18n.t("app.account.filename"), variable=self.name).create()
@@ -92,7 +91,6 @@ class AccountEdit(CTkScrollableFrame):
         self.body_var = {}
         self.body_filename = StringVar()
 
-    @error_toast
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.edit_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
