@@ -158,5 +158,10 @@
   "LabelComponent": {
     "fg_color": ["#F9F9FA", "#343638"],
     "required_color": ["red", "red"]
+  },
+  "CheckBoxComponent": {
+    "checkbox_width": 16,
+    "checkbox_height": 16,
+    "border_width": 2
   }
 }

@@ -10,5 +10,5 @@ class VariableBase:
 
     @classmethod
     def from_dict(cls, obj: dict[str, str]):
-        item = [(k, v(value=obj[k])) if isinstance(v, type(Variable)) else (k, v) for k, v in cls.__annotations__.items()]
+        item = [(k, v(value=obj.get(k))) for k, v in cls.__annotations__.items()]
         return cls(**dict(item))

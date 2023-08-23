@@ -39,6 +39,8 @@ ja:
       Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
       ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
 
+    auto_update: 起動時にゲームの自動更新
+
     create_bypass_shortcut_and_save: UAC自動昇格ショートカットを作成して保存
     create_shortcut_and_save: ショートカットを作成して保存
     save_only: 保存のみ

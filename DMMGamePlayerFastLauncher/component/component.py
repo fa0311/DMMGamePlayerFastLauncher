@@ -5,7 +5,7 @@ from typing import Any, Callable, Optional
 import customtkinter as ctk
 import i18n
 from component.var import PathVar
-from customtkinter import CTkBaseClass, CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkToplevel
+from customtkinter import CTkBaseClass, CTkButton, CTkCheckBox, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkToplevel
 from customtkinter import ThemeManager as CTkm
 from customtkinter import Variable
 
@@ -53,6 +53,29 @@ class LabelComponent(CTkFrame):
     def destroy(self):
         self.frame.destroy()
         return super().destroy()
+
+
+class CheckBoxComponent(CTkFrame):
+    variable: Variable
+    text: str
+
+    def __init__(self, master: Frame, text: str, variable: Variable):
+        super().__init__(master, fg_color="transparent")
+        self.pack(fill=ctk.X, expand=True)
+        self.text = text
+        self.variable = variable
+
+    def create(self):
+        CTkCheckBox(
+            self,
+            height=40,
+            checkbox_width=CTkm.theme["CheckBoxComponent"]["checkbox_width"],
+            checkbox_height=CTkm.theme["CheckBoxComponent"]["checkbox_height"],
+            border_width=CTkm.theme["CheckBoxComponent"]["border_width"],
+            text=i18n.t("app.shortcut.auto_update"),
+            variable=self.variable,
+        ).pack(fill=ctk.X)
+        return self
 
 
 class EntryComponent(CTkFrame):

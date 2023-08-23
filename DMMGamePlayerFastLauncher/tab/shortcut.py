@@ -4,7 +4,7 @@ from tkinter import Frame, StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
+from component.component import CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
@@ -75,8 +75,10 @@ class ShortcutCreate(CTkScrollableFrame):
 
         game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
         EntryComponent(self, text=i18n.t("app.shortcut.game_args"), tooltip=game_args_tooltip, variable=self.data.game_args).create()
-        PaddingComponent(self, height=5).create()
 
+        CheckBoxComponent(self, text=i18n.t("app.shortcut.auto_update"), variable=self.data.auto_update).create()
+
+        PaddingComponent(self, height=5).create()
         CTkButton(self, text=i18n.t("app.shortcut.create_bypass_shortcut_and_save"), command=self.bypass_callback).pack(fill=ctk.X, pady=5)
         CTkButton(self, text=i18n.t("app.shortcut.create_shortcut_and_save"), command=self.save_callback).pack(fill=ctk.X, pady=5)
         CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.save_only_callback).pack(fill=ctk.X, pady=5)

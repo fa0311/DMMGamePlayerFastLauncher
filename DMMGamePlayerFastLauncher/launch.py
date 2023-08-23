@@ -9,7 +9,7 @@ from customtkinter import CTk
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.process_manager import ProcessManager
 from lib.toast import ErrorWindow
-from models.shortcut_data import ShortcutDataRaw
+from models.shortcut_data import ShortcutData
 from static.config import AppConfig, DataPathConfig
 
 
@@ -31,13 +31,13 @@ class GameLauncher(CTk):
             ErrorWindow(self.master, str(e), traceback.format_exc()).create()
 
     def launch(self, id: str):
-        shortcut_path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
-        with open(shortcut_path, "r") as f:
-            data = ShortcutDataRaw(**json.load(f))
+        path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
+        with open(path, "r", encoding="utf-8") as f:
+            data = ShortcutData.from_dict(json.load(f))
 
-        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path).with_suffix(".bytes")
+        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
         session = DgpSessionV2.read_cookies(account_path)
-        response = session.lunch(data.product_id).json()
+        response = session.lunch(data.product_id.get()).json()
         dgp_config = DgpSessionV2().get_config()
 
         if response["result_code"] == 100:
