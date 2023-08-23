@@ -161,11 +161,17 @@ class DgpSessionV2:
             for cookie in json.loads(contents):
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
 
-    def get(self, url: str) -> requests.Response:
-        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY)
+    def get(self, url: str, **kwargs) -> requests.Response:
+        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
 
-    def post(self, url: str) -> requests.Response:
-        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY)
+    def post(self, url: str, **kwargs) -> requests.Response:
+        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
+
+    def get_dgp(self, url: str, **kwargs) -> requests.Response:
+        return self.session.get(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
+
+    def post_dgp(self, url: str, **kwargs) -> requests.Response:
+        return self.session.post(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
 
     def lunch(self, product_id: str) -> requests.Response:
         # {
@@ -187,28 +193,47 @@ class DgpSessionV2:
         # }
         json = {"product_id": product_id}
         json.update(self.DGP5_LAUNCH_PARAMS)
-        return self.session.post(
-            self.LAUNCH_URL,
-            headers=self.DGP5_HEADERS,
-            proxies=self.PROXY,
-            json=json,
-            verify=False,
-        )
+        return self.post_dgp(self.LAUNCH_URL, json=json, verify=False)
 
     def login(self):
-        response = self.session.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
+        response = self.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
         url = response.json()["data"]["url"]
         token = urlparse(url).path.split("path=")[-1]
         try:
-            self.session.get(url)
-            self.session.get(f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false")
+            self.get(url)
+            self.get(f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false")
         except:
             pass
+
+    def download(self, version: str, filelist_url: str, output: Path):
+        signed_url = f"https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/{version}/data/*"
+        token = self.post_dgp("https://apidgp-gameplayer.games.dmm.com/getCookie", json={"url": signed_url}).json()
+        signed = {
+            "Policy": token["policy"],
+            "Signature": token["signature"],
+            "Key-Pair-Id": token["key"],
+        }
+        url = f"https://apidgp-gameplayer.games.dmm.com{filelist_url}"
+        data = self.get_dgp(url).json()
+        size = sum([file["size"] for file in data["data"]["file_list"]])
+        downloaded = 0
+        for file in data["data"]["file_list"]:
+            content = self.get(data["data"]["domain"] + "/" + file["path"], params=signed).content
+            downloaded += file["size"]
+            yield downloaded / size, file
+            path = output.joinpath(file["local_path"][1:])
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "wb") as f:
+                f.write(content)
 
     def get_config(self):
         with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "r", encoding="utf-8") as f:
             config = f.read()
         return json.loads(config)
+
+    def set_config(self, config):
+        with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "w", encoding="utf-8") as f:
+            f.write(json.dumps(config, indent=4))
 
     def get_aes_key(self):
         with open(self.DGP5_PATH.joinpath("Local State"), "r", encoding="utf-8") as f:

@@ -23,7 +23,7 @@ session.close()
 
 data = session.post_dgp(
     "https://apidgp-gameplayer.games.dmm.com/getCookie",
-    json={"url": "https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/7.6.0/data/*"},
+    json={"url": "https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/7.6.2/data/*"},
 ).json()
 
 
@@ -34,10 +34,9 @@ signed = {
 }
 
 
-data = session.get("https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/28102").json()
+data = session.get("https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/28160").json()
 
 domain = data["data"]["domain"]
-
 
 base_path = Path(__file__).parent.joinpath("priconner")
 for file in data["data"]["file_list"]:

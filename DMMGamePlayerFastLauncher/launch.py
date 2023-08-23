@@ -1,16 +1,20 @@
 import json
+import logging
 import traceback
 from pathlib import Path
 from typing import Callable
 
 import i18n
+from component.component import CTkProgressWindow
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTk
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.process_manager import ProcessManager
+from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
 from models.shortcut_data import ShortcutData
 from static.config import AppConfig, DataPathConfig
+from static.env import Env
 
 
 class GameLauncher(CTk):
@@ -21,14 +25,19 @@ class GameLauncher(CTk):
         super().__init__()
 
         self.title("DMMGamePlayer Fast Launcher")
-        self.geometry("900x600")
-        loder()
+        self.geometry("600x300")
+        self.withdraw()
+        loder(self)
 
-    def create(self, id: str):
+    @threading_wrapper
+    def thread(self, id: str):
         try:
             self.launch(id)
+            self.quit()
         except Exception as e:
-            ErrorWindow(self.master, str(e), traceback.format_exc()).create()
+            if not Env.DEVELOP:
+                ErrorWindow(self, str(e), traceback.format_exc()).create()
+            raise
 
     def launch(self, id: str):
         path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
@@ -38,21 +47,37 @@ class GameLauncher(CTk):
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
         session = DgpSessionV2.read_cookies(account_path)
         response = session.lunch(data.product_id.get()).json()
-        dgp_config = DgpSessionV2().get_config()
+        dgp_config = session.get_config()
+        game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
 
-        if response["result_code"] == 100:
-            dmm_args = response["data"]["execute_args"].split(" ")
+        if not Env.DEVELOP:
+            if response["data"]["is_administrator"] and not ProcessManager.admin_check():
+                raise Exception(i18n.t("app.launch.admin_error"))
 
-            game_file = Path([x["detail"]["path"] for x in dgp_config["contents"] if x["productId"] == data.product_id][0])
-            game_path = game_file.joinpath(response["data"]["exec_file_name"])
+        if response["result_code"] != 100:
+            raise Exception(response["error"])
 
-            process = ProcessManager.run([str(game_path)] + dmm_args)
-            assert process.stdout is not None
-            for line in process.stdout:
-                text = line.decode("utf-8").strip()
-                print(text)  # GameLog
+        game_file = Path(game["detail"]["path"])
+        game_path = game_file.joinpath(response["data"]["exec_file_name"])
 
-            # if response["data"]["is_administrator"]:
+        if response["data"]["latest_version"] != game["detail"]["version"]:
+            if data.auto_update.get():
+                download = session.download(response["data"]["latest_version"], response["data"]["file_list_url"], game_path.parent)
+                box = CTkProgressWindow(self).create()
+                for progress, file in download:
+                    logging.info(file["local_path"])
+                    box.set(progress)
+                box.destroy()
+                game["detail"]["version"] = response["data"]["latest_version"]
+                session.set_config(dgp_config)
+
+        dmm_args = response["data"]["execute_args"].split(" ")
+        process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
+
+        assert process.stdout is not None
+        for line in process.stdout:
+            text = line.decode("utf-8").strip()
+            logging.info(text)
 
 
 class LanchLauncher(CTk):
@@ -63,14 +88,19 @@ class LanchLauncher(CTk):
         super().__init__()
 
         self.title("DMMGamePlayer Fast Launcher")
-        self.geometry("900x600")
-        loder()
+        self.geometry("600x300")
+        self.withdraw()
+        loder(self)
 
-    def create(self, id: str):
+    @threading_wrapper
+    def thread(self, id: str):
         try:
             self.launch(id)
+            self.quit()
         except Exception as e:
-            ErrorWindow(self.master, str(e), traceback.format_exc()).create()
+            if not Env.DEVELOP:
+                ErrorWindow(self, str(e), traceback.format_exc()).create()
+            raise
 
     def launch(self, id: str):
         path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")

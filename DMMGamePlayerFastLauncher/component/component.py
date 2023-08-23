@@ -5,7 +5,7 @@ from typing import Any, Callable, Optional
 import customtkinter as ctk
 import i18n
 from component.var import PathVar
-from customtkinter import CTkBaseClass, CTkButton, CTkCheckBox, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkToplevel
+from customtkinter import CTkBaseClass, CTkButton, CTkCheckBox, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkProgressBar, CTkToplevel
 from customtkinter import ThemeManager as CTkm
 from customtkinter import Variable
 
@@ -236,3 +236,30 @@ class ConfirmWindow(CTkToplevel):
 
     def no(self):
         self.destroy()
+
+
+class CTkProgressWindow(CTkToplevel):
+    progress: CTkProgressBar
+    now: int
+    max: int
+
+    def __init__(self, master: Misc, now: int = 0, max: int = 1):
+        super().__init__(master)
+        self.geometry("300x100")
+        self.progress = CTkProgressBar(self, width=300)
+        self.now = now
+        self.max = max
+
+    def create(self):
+        CTkLabel(self, text=i18n.t("app.component.download")).pack(side=ctk.TOP, fill=ctk.X, expand=True, padx=10, pady=10)
+        self.progress.pack(expand=True, fill="x", padx=10, pady=10)
+        self.progress.set(self.now / self.max)
+        return self
+
+    def add(self, value: int):
+        self.now += value
+        self.progress.set(self.now / self.max)
+
+    def set(self, value: int):
+        self.now = value
+        self.progress.set(self.now / self.max)

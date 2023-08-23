@@ -26,7 +26,7 @@ class App(CTk):
         self.iconbitmap(default=str(AssetsPathConfig.ICON_MAIN))
         self.loder = loder
         self.tab = TabMenuComponent(self)
-        loder()
+        loder(self)
 
     def create(self):
         self.tab.create()

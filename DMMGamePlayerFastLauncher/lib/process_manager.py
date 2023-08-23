@@ -18,6 +18,13 @@ class ProcessManager:
         return ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join(args[1:]), None, 1)
 
     @staticmethod
+    def admin_check() -> bool:
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin()
+        except Exception:
+            return False
+
+    @staticmethod
     def run(args: list[str]) -> subprocess.Popen[bytes]:
         print(args)
         return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

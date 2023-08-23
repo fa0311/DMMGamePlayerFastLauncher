@@ -104,13 +104,27 @@ class ErrorWindow(CTkToplevel):
         self.geometry("600x300")
 
     def create(self):
+        ErrorFrame(self, self.text, self.trace).create().pack(fill=ctk.BOTH, padx=10, pady=10, expand=True)
+        return self
+
+
+class ErrorFrame(CTkFrame):
+    text: str
+    trace: str
+
+    def __init__(self, master, text: str, trace: str):
+        super().__init__(master, fg_color="transparent")
+        self.text = text
+        self.trace = trace
+
+    def create(self):
         CTkLabel(self, text=self.text).pack(pady=10)
 
-        box = CTkTextbox(self)
+        box = CTkTextbox(self, height=30)
         box.pack(fill=ctk.BOTH, padx=10, pady=(0, 10), expand=True)
         box.insert("0.0", self.trace)
 
-        frame = CTkFrame(self)
+        frame = CTkFrame(self, fg_color="transparent")
         frame.pack(fill=ctk.BOTH, padx=10, pady=(0, 10))
 
         CTkButton(frame, text=i18n.t("app.toast.copy_to_clipboard"), command=lambda: self.clipboard(box)).pack(side=ctk.LEFT, expand=True)
@@ -125,3 +139,14 @@ class ErrorWindow(CTkToplevel):
 
     def report(self):
         webbrowser.open(UrlConfig.ISSUE)
+
+
+# class LogWindow(CTkToplevel):
+#     def __init__(self, master):
+#         super().__init__(master)
+#         self.geometry("600x300")
+
+#     def create(self):
+#         self.box = CTkTextbox(self, height=30)
+#         self.box.pack(fill=ctk.BOTH, padx=10, pady=10, expand=True)
+#         return self

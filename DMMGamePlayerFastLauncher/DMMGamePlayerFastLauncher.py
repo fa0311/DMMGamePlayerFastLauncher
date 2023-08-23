@@ -1,18 +1,26 @@
 import argparse
+import logging
 import os
 
 import customtkinter as ctk
 import i18n
 from app import App
+from component.logger import TkinkerHandler, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
 from static.config import AppConfig, AssetsPathConfig, DataPathConfig
 from static.loder import config_loder
 
 
-def loder():
+def loder(master: LanchLauncher):
     config_loder()
     i18n.load_path.append(str(AssetsPathConfig.I18N))
     i18n.set("locale", AppConfig.DATA.lang.get())
+
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+
+    handler = TkinkerHandler(TkinkerLogger(master)).create()
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
+    logging.basicConfig(level=logging.DEBUG, handlers=[handler])
 
     os.makedirs(DataPathConfig.ACCOUNT, exist_ok=True)
     os.makedirs(DataPathConfig.SHORTCUT, exist_ok=True)
@@ -47,9 +55,13 @@ if id is None:
     App(loder).create().mainloop()
 
 elif type == "launcher":
-    LanchLauncher(loder).create(id)
+    lanch = LanchLauncher(loder)
+    lanch.thread(id)
+    lanch.mainloop()
 
 elif type == "game":
-    GameLauncher(loder).create(id)
+    lanch = GameLauncher(loder)
+    lanch.thread(id)
+    lanch.mainloop()
 else:
     print("Unknown type")

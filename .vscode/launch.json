@@ -15,6 +15,19 @@
         "ENV": "DEVELOP"
       }
     },
+    ,
+    {
+      "name": "GameLauncher",
+      "type": "python",
+      "request": "launch",
+      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": ["a"],
+      "env": {
+        "ENV": "DEVELOP"
+      }
+    },
     {
       "name": "LaunchLauncher",
       "type": "python",
