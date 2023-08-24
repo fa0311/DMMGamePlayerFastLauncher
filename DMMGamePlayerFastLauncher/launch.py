@@ -50,12 +50,12 @@ class GameLauncher(CTk):
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
 
+        if response["result_code"] != 100:
+            raise Exception(response["error"])
+
         if not Env.DEVELOP:
             if response["data"]["is_administrator"] and not ProcessManager.admin_check():
                 raise Exception(i18n.t("app.launch.admin_error"))
-
-        if response["result_code"] != 100:
-            raise Exception(response["error"])
 
         game_file = Path(game["detail"]["path"])
         game_path = game_file.joinpath(response["data"]["exec_file_name"])
