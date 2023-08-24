@@ -57,7 +57,7 @@ ja:
     delete: 削除
 
   account:
-    import_detail: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
+    import_detail: DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
     filename_tooltip: |-
       このアカウントに任意の名前を付けてください。
       英数字と半角記号のみ推奨です。
