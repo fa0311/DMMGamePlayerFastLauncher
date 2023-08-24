@@ -139,14 +139,3 @@ class ErrorFrame(CTkFrame):
 
     def report(self):
         webbrowser.open(UrlConfig.ISSUE)
-
-
-# class LogWindow(CTkToplevel):
-#     def __init__(self, master):
-#         super().__init__(master)
-#         self.geometry("600x300")
-
-#     def create(self):
-#         self.box = CTkTextbox(self, height=30)
-#         self.box.pack(fill=ctk.BOTH, padx=10, pady=10, expand=True)
-#         return self
