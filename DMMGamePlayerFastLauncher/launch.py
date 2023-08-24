@@ -76,7 +76,8 @@ class GameLauncher(CTk):
                 game["detail"]["version"] = response["data"]["latest_version"]
                 session.set_config(dgp_config)
 
-        dmm_args = response["data"]["execute_args"].split(" ")
+        dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
+
         process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
 
         assert process.stdout is not None

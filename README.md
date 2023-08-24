@@ -25,24 +25,9 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 ## 使い方
 
-`%AppData%\DMMGamePlayerFastLauncher\tools` にある `DMMGamePlayerProductIdChecker.exe` を実行する  
-起動したいゲームの `product_id` をメモする
+`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe` を起動する
 
-![screenshot1](docs/img/DMMGamePlayerProductIdChecker1.png)
-
-エクスプローラーやデスクトップで右クリックし**新規作成**、**ショートカットの作成**を選択  
-**項目の場所を入力して下さい**に**DMMGamePlayerFastLauncher のパス**と `product_id` を入力
-
-例:  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume`  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner`
-
-**ショートカットの名前**は何でも良い
-
-あとはショートカットをダブルクリックして実行するだけ
-
-[細かいオプション](/docs/README-advance.md#引数)  
-[ヘルプ](/docs/README-advance.md#ヘルプ)
+[詳しい使い方](/docs/README-advance.md)
 
 ## アップデート通知を受け取る
 
