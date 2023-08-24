@@ -22,24 +22,9 @@ Run and set up
 
 ## Using
 
-Run `DMMGamePlayerProductIdChecker.exe` in `%AppData%\DMMGamePlayerFastLauncher\tools`  
-Note down the `product_id` of the game you want to activate
+Start `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe`.
 
-![screenshot1](docs/img/DMMGamePlayerProductIdChecker1.png)
-
-Right-click in Explorer or on the desktop and select **New**, **Shortcut**  
-Enter the **DMMGamePlayerFastLauncher path** and `product_id` in **Type the location of the item**
-
-Examples:  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe umamusume`  
-`%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe priconner`
-
-**Type a name for this shortcut** can be anything
-
-Then just double-click the shortcut to run it
-
-[Option](/docs/README-advance.md#引数)  
-[Help](/docs/README-advance.md#ヘルプ)
+[Detailed instructions](/docs/README-advance.md)
 
 ## Receive update notifications
 

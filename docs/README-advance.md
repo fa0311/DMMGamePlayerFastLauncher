@@ -21,6 +21,12 @@
 
 ## 技術的な話
 
+DMMGamePlayer は複数に同時にログインすることができません。例えば DMMGamePlayer と DMMGamePlayerFastLauncher で同時にログインすることはできません。
+この問題を回避するために DMMGamePlayerFastLauncher は DMMGamePlayer に一切依存せずにゲームを起動します。
+DMMGamePlayerFastLauncherでログインしているため DMMGamePlayer を起動する場合は少し細工をしてあげる必要があります。DMMGamePlayerFastLauncher から DMMGamePlayer を起動することで自動的に細工をしてくれます。
+
+---
+
 DMMGamePlayer はだいたいこのような流れで動作しています。
 DMMGamePlayerFastLauncher もこの流れに似ています。独自のDatabaseを持っているため DMMGamePlayer に一切依存せずにゲームを起動します。
 
