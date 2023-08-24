@@ -1,15 +1,11 @@
-# flake8: noqa
-
 import base64
 import hashlib
 import json
 import logging
 import os
 import random
-import re
 import sqlite3
 from pathlib import Path
-from typing import Optional
 from urllib.parse import urlparse
 
 import requests
@@ -40,7 +36,6 @@ class DgpSessionUtils:
 class DgpSessionV2:
     DGP5_PATH: Path
     HEADERS: dict[str, str]
-    PROXY: Optional[dict[str, str]]
     DGP5_HEADERS: dict[str, str]
     DGP5_LAUNCH_PARAMS: dict[str, str]
     DATA_DESCR: str
@@ -54,7 +49,7 @@ class DgpSessionV2:
     }
     DGP5_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
 
-    PROXY: Optional[dict[str, str]] = None
+    PROXY: dict[str, str] = {}
     HEADERS = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Upgrade-Insecure-Requests": "1",
@@ -79,12 +74,9 @@ class DgpSessionV2:
     DATA_DESCR = "DMMGamePlayerFastLauncher"
     LAUNCH_URL = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
 
-    def __init__(self, https_proxy_uri: Optional[str] = None):
+    def __init__(self):
         self.session = requests.session()
         self.cookies = self.session.cookies
-
-        if https_proxy_uri:
-            self.PROXY = None if https_proxy_uri is None else {"https": https_proxy_uri}
 
     def __enter__(self):
         self.db = sqlite3.connect(self.DGP5_PATH.joinpath("Network", "Cookies"))
@@ -106,8 +98,8 @@ class DgpSessionV2:
                     "update cookies set encrypted_value = ? where name = ?",
                     (memoryview(data), cookie_row[3]),
                 )
-            except:
-                pass
+            except Exception as e:
+                logging.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
         self.db.commit()
 
     def read(self):
@@ -125,8 +117,8 @@ class DgpSessionV2:
                     "secure": cookie_row[8],
                 }
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
-            except:
-                pass
+            except Exception as e:
+                logging.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
 
     def write_bytes(self, file: str):
         contents = []
@@ -174,23 +166,6 @@ class DgpSessionV2:
         return self.session.post(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
 
     def lunch(self, product_id: str) -> requests.Response:
-        # {
-        #     "result_code": 100,
-        #     "data": {
-        #         "product_id": "priconner",
-        #         "title": "プリンセスコネクト！Re:Dive",
-        #         "exec_file_name": "PrincessConnectReDive.exe",
-        #         "install_dir": "priconner",
-        #         "file_list_url": "/gameplayer/filelist/28102",
-        #         "is_administrator": True,
-        #         "file_check_type": "FILELIST",
-        #         "total_size": 150183072,
-        #         "latest_version": "7.6.0",
-        #         "execute_args": "/viewer_id=0000 /onetime_token=xxxx",
-        #         "conversion_url": None,
-        #     },
-        #     "error": None,
-        # }
         json = {"product_id": product_id}
         json.update(self.DGP5_LAUNCH_PARAMS)
         return self.post_dgp(self.LAUNCH_URL, json=json, verify=False)
@@ -202,7 +177,7 @@ class DgpSessionV2:
         try:
             self.get(url)
             self.get(f"https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false")
-        except:
+        except Exception:
             pass
 
     def download(self, version: str, filelist_url: str, output: Path):

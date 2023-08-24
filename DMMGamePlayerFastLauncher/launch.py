@@ -116,7 +116,7 @@ class LanchLauncher(CTk):
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
-            print(text)
+            logging.info(text)
 
         with DgpSessionV2() as session:
             session.read()

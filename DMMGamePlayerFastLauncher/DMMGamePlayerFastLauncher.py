@@ -64,4 +64,4 @@ elif type == "game":
     lanch.thread(id)
     lanch.mainloop()
 else:
-    print("Unknown type")
+    raise Exception("type error")

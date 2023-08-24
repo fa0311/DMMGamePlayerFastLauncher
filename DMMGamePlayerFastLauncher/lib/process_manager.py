@@ -1,4 +1,5 @@
 import ctypes
+import logging
 import os
 import subprocess
 import sys
@@ -14,7 +15,7 @@ class ProcessManager:
     @staticmethod
     def admin_run(args: list[str]) -> int:
         args = [f'"{arg}"' for arg in args]
-        print(args)
+        logging.info(args)
         return ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join(args[1:]), None, 1)
 
     @staticmethod
@@ -26,14 +27,14 @@ class ProcessManager:
 
     @staticmethod
     def run(args: list[str]) -> subprocess.Popen[bytes]:
-        print(args)
+        logging.info(args)
         return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     @staticmethod
     def run_ps(args: str) -> int:
+        logging.info(args)
         args = args.replace('"', '\\"').replace("\n", "").replace("\r", "")
         text = f'powershell -Command "{args}"'
-        print(text)
         return subprocess.call(text, shell=True)
 
 
