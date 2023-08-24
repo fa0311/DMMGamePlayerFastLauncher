@@ -15,8 +15,6 @@ ja:
     launch_create: ランチャー作成
     import: インポート
 
-  # === 中身 ===
-
   shortcut:
     filename: ファイル名
     filename_tooltip: |-
@@ -60,6 +58,10 @@ ja:
 
   account:
     import_detail: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
+    filename_tooltip: |-
+      このアカウントに任意の名前を付けてください。
+      英数字と半角記号のみ推奨です。
+
     import: インポート
     filename: ファイル名
     filename_not_entered: ファイル名が入力されていません。
@@ -106,8 +108,6 @@ ja:
     import_error: インポートに失敗しました。
 
     admin_error: 管理者権限が必要です。
-
-  # === 汎用 ===
 
   component:
     required: 入力必須項目です。

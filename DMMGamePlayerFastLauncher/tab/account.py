@@ -52,7 +52,8 @@ class AccountImport(CTkScrollableFrame):
 
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.import_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
-        EntryComponent(self, text=i18n.t("app.account.filename"), variable=self.name).create()
+        filename_tooltip = i18n.t("app.account.filename_tooltip")
+        EntryComponent(self, text=i18n.t("app.account.filename"), tooltip=filename_tooltip, required=True, variable=self.name).create()
         CTkButton(self, text=i18n.t("app.account.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
