@@ -5,3 +5,11 @@ __pycache__
 *.exe
 *.bytes
 /.venv
+
+
+
+/data
+
+/windows/assets
+
+assets/text/LICENSE

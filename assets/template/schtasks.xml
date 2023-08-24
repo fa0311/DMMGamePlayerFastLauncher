@@ -38,6 +38,7 @@
   <Actions Context="Author">
     <Exec>
       <Command>{{COMMAND}}</Command>
+      <Arguments>{{ARGUMENTS}}</Arguments>
       <WorkingDirectory>{{WORKING_DIRECTORY}}</WorkingDirectory>
     </Exec>
   </Actions>

@@ -8,13 +8,36 @@
       "name": "DMMGamePlayerFastLauncher",
       "type": "python",
       "request": "launch",
-      "program": "DMMGamePlayerFastLauncher.py",
+      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
-      "justMyCode": true,
+      "justMyCode": false,
       "env": {
         "ENV": "DEVELOP"
-      },
-      "args": ["umamusume", "--non-bypass-uac"]
+      }
+    },
+    {
+      "name": "GameLauncher",
+      "type": "python",
+      "request": "launch",
+      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": ["aa"],
+      "env": {
+        "ENV": "DEVELOP"
+      }
+    },
+    {
+      "name": "LaunchLauncher",
+      "type": "python",
+      "request": "launch",
+      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": ["a", "--type", "launcher"],
+      "env": {
+        "ENV": "DEVELOP"
+      }
     }
   ]
 }
