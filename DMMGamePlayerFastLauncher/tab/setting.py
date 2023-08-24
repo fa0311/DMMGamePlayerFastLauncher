@@ -4,7 +4,8 @@ from tkinter import StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import ConfirmWindow, DirectoryPathComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
+from component.component import CheckBoxComponent, ConfirmWindow, DirectoryPathComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
+from component.slider import CTkFloatSlider
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.toast import ToastController, error_toast
@@ -54,7 +55,14 @@ class SettingEditTab(CTkScrollableFrame):
         OptionMenuComponent(self, text=i18n.t("app.setting.theme"), values=self.theme, variable=self.data.theme).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.appearance"), values=["light", "dark", "system"], variable=self.data.appearance_mode).create()
 
-        PaddingComponent(self, height=10).create()
+        PaddingComponent(self, height=5).create()
+        CTkLabel(self, text=i18n.t("app.setting.window_scaling")).pack(anchor=ctk.W)
+        CTkFloatSlider(self, from_=0.75, to=1.25, variable=self.data.window_scaling).pack(fill=ctk.X)
+
+        PaddingComponent(self, height=5).create()
+        CheckBoxComponent(self, text=i18n.t("app.setting.debug_window"), variable=self.data.debug_window).create()
+
+        PaddingComponent(self, height=5).create()
         CTkButton(self, text=i18n.t("app.setting.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
 
         command = lambda: ConfirmWindow(self, command=self.delete_callback, text=i18n.t("app.setting.confirm_reset")).create()

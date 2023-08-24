@@ -14,8 +14,6 @@ ja:
     edit: 編集
     launch_create: ランチャー作成
     import: インポート
-    export: エクスポート
-    logout: ログアウト
 
   # === 中身 ===
 
@@ -28,6 +26,10 @@ ja:
     product_id: product_idの選択
     product_id_tooltip: |-
       product_idとはDMMがゲームを識別する際に使用するIDです。
+
+    account_create_detail: |-
+      ランチャーを起動するためのショートカットを作成します。
+      `アカウント` タブで作成したアカウントを選択してください。
 
     account_path: アカウントの選択
     account_path_tooltip: |-
@@ -67,14 +69,12 @@ ja:
 
     file_select: ファイルの選択
 
-    edit_detail: -|
+    edit_detail: |-
       アカウント情報を編集します。
       これは非常に高度な操作です。
     save: 保存
     delete: 削除
     save_success: 保存しました。
-    account_create_detail: -|
-      ランチャーを起動するショートカットを作成します。
 
   setting:
     save: 保存
@@ -86,6 +86,9 @@ ja:
     lang: 言語
     theme: テーマ
     appearance: 外観
+
+    window_scaling: ウィンドウの拡大率
+    debug_window: デバッグウィンドウ
 
     other_detail: このツールの設定をテキストエディタで編集します。
     open_save_folder: 設定ファイルを開く
@@ -99,6 +102,8 @@ ja:
     export_error: エクスポートに失敗しました。
     import_error: インポートに失敗しました。
 
+    admin_error: 管理者権限が必要です。
+
   # === 汎用 ===
 
   component:
@@ -108,6 +113,8 @@ ja:
 
     "yes": はい
     "no": いいえ
+
+    download: ダウンロード
 
   toast:
     report: 報告

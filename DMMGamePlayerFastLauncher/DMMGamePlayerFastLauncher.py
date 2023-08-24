@@ -18,9 +18,10 @@ def loder(master: LanchLauncher):
 
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
-    handler = TkinkerHandler(TkinkerLogger(master)).create()
-    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
-    logging.basicConfig(level=logging.DEBUG, handlers=[handler])
+    if AppConfig.DATA.debug_window.get() and logging.getLogger().hasHandlers() is False:
+        handler = TkinkerHandler(TkinkerLogger(master)).create()
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
+        logging.basicConfig(level=logging.DEBUG, handlers=[handler])
 
     os.makedirs(DataPathConfig.ACCOUNT, exist_ok=True)
     os.makedirs(DataPathConfig.SHORTCUT, exist_ok=True)

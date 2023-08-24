@@ -72,7 +72,7 @@ class CheckBoxComponent(CTkFrame):
             checkbox_width=CTkm.theme["CheckBoxComponent"]["checkbox_width"],
             checkbox_height=CTkm.theme["CheckBoxComponent"]["checkbox_height"],
             border_width=CTkm.theme["CheckBoxComponent"]["border_width"],
-            text=i18n.t("app.shortcut.auto_update"),
+            text=self.text,
             variable=self.variable,
         ).pack(fill=ctk.X)
         return self
