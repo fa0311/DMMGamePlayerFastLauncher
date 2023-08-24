@@ -1,4 +1,5 @@
 import base64
+import concurrent.futures
 import hashlib
 import json
 import logging
@@ -49,7 +50,6 @@ class DgpSessionV2:
     }
     DGP5_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
 
-    PROXY: dict[str, str] = {}
     HEADERS = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Upgrade-Insecure-Requests": "1",
@@ -154,16 +154,16 @@ class DgpSessionV2:
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
 
     def get(self, url: str, **kwargs) -> requests.Response:
-        return self.session.get(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
+        return self.session.get(url, headers=self.HEADERS, **kwargs)
 
     def post(self, url: str, **kwargs) -> requests.Response:
-        return self.session.post(url, headers=self.HEADERS, proxies=self.PROXY, **kwargs)
+        return self.session.post(url, headers=self.HEADERS, **kwargs)
 
     def get_dgp(self, url: str, **kwargs) -> requests.Response:
-        return self.session.get(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
+        return self.session.get(url, headers=self.DGP5_HEADERS, **kwargs)
 
     def post_dgp(self, url: str, **kwargs) -> requests.Response:
-        return self.session.post(url, headers=self.DGP5_HEADERS, proxies=self.PROXY, **kwargs)
+        return self.session.post(url, headers=self.DGP5_HEADERS, **kwargs)
 
     def lunch(self, product_id: str) -> requests.Response:
         json = {"product_id": product_id}
@@ -180,8 +180,8 @@ class DgpSessionV2:
         except Exception:
             pass
 
-    def download(self, version: str, filelist_url: str, output: Path):
-        signed_url = f"https://cdn-gameplayer.games.dmm.com/product/priconner/priconner/content/win/{version}/data/*"
+    def download(self, filelist_url: str, output: Path):
+        signed_url = "https://cdn-gameplayer.games.dmm.com/product/*"
         token = self.post_dgp("https://apidgp-gameplayer.games.dmm.com/getCookie", json={"url": signed_url}).json()
         signed = {
             "Policy": token["policy"],
@@ -190,16 +190,24 @@ class DgpSessionV2:
         }
         url = f"https://apidgp-gameplayer.games.dmm.com{filelist_url}"
         data = self.get_dgp(url).json()
-        size = sum([file["size"] for file in data["data"]["file_list"]])
-        downloaded = 0
-        for file in data["data"]["file_list"]:
+
+        def download_save(file: dict):
             content = self.get(data["data"]["domain"] + "/" + file["path"], params=signed).content
-            downloaded += file["size"]
-            yield downloaded / size, file
             path = output.joinpath(file["local_path"][1:])
             path.parent.mkdir(parents=True, exist_ok=True)
             with open(path, "wb") as f:
                 f.write(content)
+            return file["size"], file
+
+        size = sum([x["size"] for x in data["data"]["file_list"]])
+        download_size = 0
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+            tasks = [pool.submit(lambda x: download_save(x), x) for x in data["data"]["file_list"]]
+            for task in concurrent.futures.as_completed(tasks):
+                res = task.result()
+                download_size += res[0]
+                yield download_size / size, res[1]
 
     def get_config(self):
         with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "r", encoding="utf-8") as f:

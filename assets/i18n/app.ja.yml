@@ -87,6 +87,9 @@ ja:
     theme: テーマ
     appearance: 外観
 
+    proxy_http: HTTPプロキシ
+    proxy_https: HTTPSプロキシ
+
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウ
 

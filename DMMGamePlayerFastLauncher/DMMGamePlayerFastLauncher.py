@@ -18,10 +18,15 @@ def loder(master: LanchLauncher):
 
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
-    if AppConfig.DATA.debug_window.get() and logging.getLogger().hasHandlers() is False:
+    if AppConfig.DATA.debug_window.get() and logging.getLogger().hasHandlers():
         handler = TkinkerHandler(TkinkerLogger(master)).create()
         handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
         logging.basicConfig(level=logging.DEBUG, handlers=[handler])
+
+    if AppConfig.DATA.proxy_http.get() != "":
+        os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
+    if AppConfig.DATA.proxy_https.get() != "":
+        os.environ["HTTPS_PROXY"] = AppConfig.DATA.proxy_https.get()
 
     os.makedirs(DataPathConfig.ACCOUNT, exist_ok=True)
     os.makedirs(DataPathConfig.SHORTCUT, exist_ok=True)

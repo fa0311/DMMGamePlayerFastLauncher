@@ -4,7 +4,7 @@ from tkinter import StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import CheckBoxComponent, ConfirmWindow, DirectoryPathComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
+from component.component import CheckBoxComponent, ConfirmWindow, DirectoryPathComponent, EntryComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.slider import CTkFloatSlider
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
@@ -49,11 +49,14 @@ class SettingEditTab(CTkScrollableFrame):
         self.theme = [x.stem for x in AssetsPathConfig.THEMES.iterdir()]
 
     def create(self):
-        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_program_folder"), variable=self.data.dmm_game_player_program_folder).create()
-        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_data_folder"), variable=self.data.dmm_game_player_data_folder).create()
+        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_program_folder"), variable=self.data.dmm_game_player_program_folder, required=True).create()
+        DirectoryPathComponent(self, text=i18n.t("app.setting.dmm_game_player_data_folder"), variable=self.data.dmm_game_player_data_folder, required=True).create()
         OptionMenuTupleComponent(self, text=i18n.t("app.setting.lang"), values=self.lang, variable=self.data.lang).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.theme"), values=self.theme, variable=self.data.theme).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.appearance"), values=["light", "dark", "system"], variable=self.data.appearance_mode).create()
+
+        EntryComponent(self, text=i18n.t("app.setting.proxy_http"), variable=self.data.proxy_http).create()
+        EntryComponent(self, text=i18n.t("app.setting.proxy_https"), variable=self.data.proxy_https).create()
 
         PaddingComponent(self, height=5).create()
         CTkLabel(self, text=i18n.t("app.setting.window_scaling")).pack(anchor=ctk.W)

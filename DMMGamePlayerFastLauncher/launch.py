@@ -62,7 +62,7 @@ class GameLauncher(CTk):
 
         if response["data"]["latest_version"] != game["detail"]["version"]:
             if data.auto_update.get():
-                download = session.download(response["data"]["latest_version"], response["data"]["file_list_url"], game_path.parent)
+                download = session.download(response["data"]["file_list_url"], game_path.parent)
                 box = CTkProgressWindow(self).create()
                 for progress, file in download:
                     logging.info(file["local_path"])
