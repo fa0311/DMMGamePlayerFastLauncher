@@ -247,6 +247,11 @@ class CTkProgressWindow(CTkToplevel):
         super().__init__(master)
         self.geometry("300x100")
         self.progress = CTkProgressBar(self, width=300)
+
+        self.deiconify()
+        self.lift()
+        self.focus_force()
+
         self.now = now
         self.max = max
 

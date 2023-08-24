@@ -102,6 +102,7 @@ class ErrorWindow(CTkToplevel):
         self.text = text
         self.trace = trace
         self.geometry("600x300")
+        self.deiconify()
         self.lift()
         self.focus_force()
 
