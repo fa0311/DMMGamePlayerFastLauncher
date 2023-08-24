@@ -127,8 +127,12 @@ class ShortcutCreate(CTkScrollableFrame):
         game_path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
         path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
         session = DgpSessionV2().read_cookies(path)
-        data = session.lunch(self.data.product_id.get()).json()["data"]
+        response = session.lunch(self.data.product_id.get()).json()
 
+        if response["result_code"] != 100:
+            raise Exception(response["error"])
+
+        data = response["data"]
         title = data["title"].replace("/", "").replace("\\", "")
         title = title.replace(":", "").replace("*", "").replace("?", "")
         title = title.replace('"', "").replace("<", "").replace(">", "").replace("|", "")

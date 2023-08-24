@@ -97,11 +97,16 @@ class ErrorWindow(CTkToplevel):
     text: str
     trace: str
 
-    def __init__(self, master, text: str, trace: str):
+    def __init__(self, master, text: str, trace: str, quit: bool = False):
         super().__init__(master)
         self.text = text
         self.trace = trace
         self.geometry("600x300")
+        self.lift()
+        self.focus_force()
+
+        if quit:
+            self.protocol("WM_DELETE_WINDOW", self.quit)
 
     def create(self):
         ErrorFrame(self, self.text, self.trace).create().pack(fill=ctk.BOTH, padx=10, pady=10, expand=True)

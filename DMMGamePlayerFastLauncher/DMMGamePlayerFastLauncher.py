@@ -16,9 +16,7 @@ def loder(master: LanchLauncher):
     i18n.load_path.append(str(AssetsPathConfig.I18N))
     i18n.set("locale", AppConfig.DATA.lang.get())
 
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-
-    if AppConfig.DATA.debug_window.get() and logging.getLogger().hasHandlers():
+    if AppConfig.DATA.debug_window.get() and not logging.getLogger().hasHandlers():
         handler = TkinkerHandler(TkinkerLogger(master)).create()
         handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
         logging.basicConfig(level=logging.DEBUG, handlers=[handler])
@@ -61,12 +59,12 @@ if id is None:
     App(loder).create().mainloop()
 
 elif type == "launcher":
-    lanch = LanchLauncher(loder)
+    lanch = LanchLauncher(loder).create()
     lanch.thread(id)
     lanch.mainloop()
 
 elif type == "game":
-    lanch = GameLauncher(loder)
+    lanch = GameLauncher(loder).create()
     lanch.thread(id)
     lanch.mainloop()
 else:

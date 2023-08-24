@@ -4,9 +4,9 @@ import traceback
 from pathlib import Path
 from typing import Callable
 
+import customtkinter as ctk
 import i18n
 from component.component import CTkProgressWindow
-from component.tab_menu import TabMenuComponent
 from customtkinter import CTk
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.process_manager import ProcessManager
@@ -15,19 +15,23 @@ from lib.toast import ErrorWindow
 from models.shortcut_data import ShortcutData
 from static.config import AppConfig, DataPathConfig
 from static.env import Env
+from tab.home import HomeTab
 
 
 class GameLauncher(CTk):
     loder: Callable
-    tab: TabMenuComponent
 
     def __init__(self, loder):
         super().__init__()
 
         self.title("DMMGamePlayer Fast Launcher")
-        self.geometry("600x300")
+        self.geometry("900x600")
         self.withdraw()
         loder(self)
+
+    def create(self):
+        HomeTab(self).create().pack(expand=True, fill=ctk.BOTH)
+        return self
 
     @threading_wrapper
     def thread(self, id: str):
@@ -36,7 +40,8 @@ class GameLauncher(CTk):
             self.quit()
         except Exception as e:
             if not Env.DEVELOP:
-                ErrorWindow(self, str(e), traceback.format_exc()).create()
+                self.iconify()
+                ErrorWindow(self, str(e), traceback.format_exc(), quit=True).create()
             raise
 
     def launch(self, id: str):
@@ -82,15 +87,18 @@ class GameLauncher(CTk):
 
 class LanchLauncher(CTk):
     loder: Callable
-    tab: TabMenuComponent
 
     def __init__(self, loder):
         super().__init__()
 
         self.title("DMMGamePlayer Fast Launcher")
-        self.geometry("600x300")
+        self.geometry("900x600")
         self.withdraw()
         loder(self)
+
+    def create(self):
+        HomeTab(self).create().pack(expand=True, fill=ctk.BOTH)
+        return self
 
     @threading_wrapper
     def thread(self, id: str):
@@ -99,7 +107,8 @@ class LanchLauncher(CTk):
             self.quit()
         except Exception as e:
             if not Env.DEVELOP:
-                ErrorWindow(self, str(e), traceback.format_exc()).create()
+                self.iconify()
+                ErrorWindow(self, str(e), traceback.format_exc(), quit=True).create()
             raise
 
     def launch(self, id: str):

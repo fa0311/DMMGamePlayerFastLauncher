@@ -1,5 +1,7 @@
+from tkinter import Misc
+
 import i18n
-from customtkinter import CTkBaseClass, CTkFont, CTkFrame, CTkImage, CTkLabel
+from customtkinter import CTkFont, CTkFrame, CTkImage, CTkLabel
 from lib.toast import ToastController
 from PIL import Image
 from static.config import AssetsPathConfig
@@ -8,7 +10,7 @@ from static.config import AssetsPathConfig
 class HomeTab(CTkFrame):
     toast: ToastController
 
-    def __init__(self, master: CTkBaseClass):
+    def __init__(self, master: Misc):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
 
