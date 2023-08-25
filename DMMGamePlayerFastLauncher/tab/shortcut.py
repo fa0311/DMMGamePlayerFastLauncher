@@ -101,8 +101,11 @@ class ShortcutCreate(CTkScrollableFrame):
         task = Schtasks(self.filename.get())
         if task.check():
             task.set()
-
-        name, icon = self.get_game_info()
+        try:
+            name, icon = self.get_game_info()
+        except Exception:
+            name, icon = self.filename.get(), None
+            self.toast.error(i18n.t("app.shortcut.game_info_error"))
         sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
         args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
