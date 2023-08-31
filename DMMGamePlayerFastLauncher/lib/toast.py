@@ -1,3 +1,4 @@
+import logging
 import traceback
 import webbrowser
 from tkinter import Misc, Tk, Toplevel
@@ -17,6 +18,7 @@ def error_toast(func):
             return func(self, *arg, **kwargs)
         except Exception as e:
             self.toast.error(str(e))
+            logging.error(traceback.format_exc())
             raise
 
     return _wrapper

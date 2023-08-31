@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 
+import coloredlogs
 import customtkinter as ctk
 import i18n
 from app import App
@@ -9,6 +10,7 @@ from component.logger import TkinkerHandler, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
 from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig
+from static.env import Env
 from static.loder import config_loder
 
 
@@ -19,8 +21,11 @@ def loder(master: LanchLauncher):
 
     if AppConfig.DATA.debug_window.get() and not logging.getLogger().hasHandlers():
         handler = TkinkerHandler(TkinkerLogger(master)).create()
-        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
+        handler.setFormatter(coloredlogs.ColoredFormatter("[%(levelname)s] [%(asctime)s] %(message)s"))
         logging.basicConfig(level=logging.DEBUG, handlers=[handler])
+
+        logging.debug(Env.dump())
+        logging.debug(AppConfig.DATA.to_dict())
 
     if AppConfig.DATA.proxy_http.get() != "":
         os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
@@ -38,6 +43,8 @@ def loder(master: LanchLauncher):
         ctk.set_widget_scaling(AppConfig.DATA.window_scaling.get())
     except Exception:
         pass
+
+    logging.info("loder success")
 
 
 argpar = argparse.ArgumentParser(
