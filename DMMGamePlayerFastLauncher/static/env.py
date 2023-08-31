@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
 
+from windows_pathlib import WindowsPathlib
+
 
 class Env:
     DEVELOP: bool = os.environ.get("ENV") == "DEVELOP"
     APPDATA: Path = Path(os.getenv("APPDATA", default=""))
     PROGURAM_FILES: Path = Path(os.getenv("PROGRAMFILES", default=""))
+    DESKTOP: Path = WindowsPathlib.desktop()
+
     DEFAULT_DMM_GAME_PLAYER_PROGURAM_FOLDER: Path = PROGURAM_FILES.joinpath("DMMGamePlayer")
     DEFAULT_DMM_GAME_PLAYER_DATA_FOLDER: Path = APPDATA.joinpath("dmmgameplayer5")
 
