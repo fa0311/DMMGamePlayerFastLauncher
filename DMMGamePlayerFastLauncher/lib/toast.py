@@ -1,7 +1,7 @@
 import traceback
 import webbrowser
 from tkinter import Misc, Tk, Toplevel
-from typing import Union
+from typing import Callable, Union
 
 import customtkinter as ctk
 import i18n
@@ -42,6 +42,10 @@ class ToastController(CTkFrame):
         widget = InfoLabel(self.instance.master, text=text).create()
         self.instance.show(widget)
 
+    def command_info(self, text: str, command: Callable):
+        widget = CommandInfoLabel(self.instance.master, text=text, command=command).create()
+        self.instance.show(widget)
+
     def error(self, text: str):
         widget = ErrorLabel(self.instance.master, text=text).create()
         self.instance.show(widget)
@@ -49,7 +53,7 @@ class ToastController(CTkFrame):
     def show(self, widget: "CTkBaseClass"):
         self.toast_list.append(widget)
         self.update_state()
-        self.after(5000, self.hide)
+        self.after(8000, self.hide)
 
     def update_state(self):
         for key, x in enumerate(reversed(self.toast_list)):
@@ -63,7 +67,6 @@ class ToastController(CTkFrame):
 
 class InfoLabel(CTkFrame):
     text: str
-    trace: str
 
     def __init__(self, master: Union[Tk, Toplevel], text: str) -> None:
         super().__init__(master, corner_radius=10)
@@ -71,6 +74,22 @@ class InfoLabel(CTkFrame):
 
     def create(self):
         CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
+        return self
+
+
+class CommandInfoLabel(CTkFrame):
+    text: str
+    command: Callable
+
+    def __init__(self, master: Union[Tk, Toplevel], text: str, command: Callable) -> None:
+        super().__init__(master, corner_radius=10)
+        self.text = text
+        self.command = command
+
+    def create(self):
+        CTkLabel(self, text=self.text).pack(side=ctk.LEFT, padx=10)
+        btn = CTkButton(self, text=i18n.t("app.toast.details"), command=self.command, width=0, height=0)
+        btn.pack(side=ctk.LEFT, padx=10)
         return self
 
 

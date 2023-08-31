@@ -7,7 +7,8 @@ import i18n
 from app import App
 from component.logger import TkinkerHandler, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
-from static.config import AppConfig, AssetsPathConfig, DataPathConfig
+from models.setting_data import AppConfig
+from static.config import AssetsPathConfig, DataPathConfig
 from static.loder import config_loder
 
 

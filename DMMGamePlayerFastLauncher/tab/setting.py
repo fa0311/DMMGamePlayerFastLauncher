@@ -1,6 +1,5 @@
 import json
 import os
-from tkinter import StringVar
 
 import customtkinter as ctk
 import i18n
@@ -9,8 +8,8 @@ from component.slider import CTkFloatSlider
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.toast import ToastController, error_toast
-from models.setting_data import SettingData
-from static.config import AppConfig, AssetsPathConfig, DataPathConfig
+from models.setting_data import AppConfig, SettingData
+from static.config import AssetsPathConfig, DataPathConfig
 
 
 class SettingTab(CTkFrame):
