@@ -2,16 +2,17 @@ import argparse
 import logging
 import os
 
-import coloredlogs
 import customtkinter as ctk
 import i18n
 from app import App
-from component.logger import TkinkerHandler, TkinkerLogger
+from coloredlogs import ColoredFormatter
+from component.logger import StyleScheme, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
 from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig
 from static.env import Env
 from static.loder import config_loder
+from tkinter_colored_logging_handlers import LoggingHandler
 
 
 def loder(master: LanchLauncher):
@@ -20,8 +21,8 @@ def loder(master: LanchLauncher):
     i18n.set("locale", AppConfig.DATA.lang.get())
 
     if AppConfig.DATA.debug_window.get() and not logging.getLogger().hasHandlers():
-        handler = TkinkerHandler(TkinkerLogger(master)).create()
-        handler.setFormatter(coloredlogs.ColoredFormatter("[%(levelname)s] [%(asctime)s] %(message)s"))
+        handler = LoggingHandler(TkinkerLogger(master).create().box, scheme=StyleScheme)
+        handler.setFormatter(ColoredFormatter("[%(levelname)s] [%(asctime)s] %(message)s"))
         logging.basicConfig(level=logging.DEBUG, handlers=[handler])
 
         logging.debug(Env.dump())
@@ -44,7 +45,7 @@ def loder(master: LanchLauncher):
     except Exception:
         pass
 
-    logging.info("loder success")
+    logging.debug("loder success")
 
 
 argpar = argparse.ArgumentParser(
