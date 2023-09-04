@@ -223,7 +223,7 @@ class AccountShortcutCreate(CTkScrollableFrame):
             raise Exception(i18n.t("app.shortcut.file_not_selected"))
 
         name = self.account_path.get()
-        sorce = Env.DESKTOP.joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = [name, "--type", "launcher"]
         Shortcut().create(sorce=sorce, args=args)
 
