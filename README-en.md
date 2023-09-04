@@ -26,12 +26,15 @@ Start `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe`.
 
 [Detailed instructions](/docs/README-advance.md)
 
-## Receive update notifications
+## Contribute
 
-Notify me when there are updates to this tool
+### Translations
 
-![screenshot1](docs/img/subscribe1.png)
-![screenshot1](docs/img/subscribe2.png)
+If you want to translate this tool, please send a pull request.
+
+### Bug reports
+
+If you find a bug, please report it in [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new)
 
 ## Source
 
