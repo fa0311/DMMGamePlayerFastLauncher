@@ -1,7 +1,7 @@
 import json
 
-from models.setting_data import SettingData
-from static.config import AppConfig, DataPathConfig
+from models.setting_data import AppConfig, SettingData
+from static.config import DataPathConfig
 
 
 def config_loder():

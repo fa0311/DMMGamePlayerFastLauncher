@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from models.setting_data import SettingData
-
 
 class DataPathConfig:
     DATA = Path("data")
@@ -27,7 +25,8 @@ class AssetsPathConfig:
 
 class UrlConfig:
     CONTRIBUTION = "https://github.com/fa0311/DMMGamePlayerFastLauncher"
-    RELEASE = "https://api.github.com/repos/fa0311/DMMGamePlayerFastLauncher/releases/latest"
+    RELEASE_API = "https://api.github.com/repos/fa0311/DMMGamePlayerFastLauncher/releases/latest"
+    RELEASE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/releases/latest"
     DONATE = "https://github.com/sponsors/fa0311"
     ISSUE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new"
 
@@ -35,7 +34,3 @@ class UrlConfig:
 class SchtasksConfig:
     FILE = "schtasks_v1_{0}_{1}"
     NAME = "\\Microsoft\\Windows\\DMMGamePlayerFastLauncher\\{0}"
-
-
-class AppConfig:
-    DATA: SettingData

@@ -101,9 +101,12 @@ class ShortcutCreate(CTkScrollableFrame):
         task = Schtasks(self.filename.get())
         if task.check():
             task.set()
-
-        name, icon = self.get_game_info()
-        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        try:
+            name, icon = self.get_game_info()
+        except Exception:
+            name, icon = self.filename.get(), None
+            self.toast.error(i18n.t("app.shortcut.game_info_error"))
+        sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
 
@@ -113,7 +116,7 @@ class ShortcutCreate(CTkScrollableFrame):
     def save_callback(self):
         self.save()
         name, icon = self.get_game_info()
-        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = [self.filename.get()]
         Shortcut().create(sorce=sorce, args=args, icon=icon)
         self.toast.info(i18n.t("app.shortcut.save_success"))
@@ -220,7 +223,7 @@ class AccountShortcutCreate(CTkScrollableFrame):
             raise Exception(i18n.t("app.shortcut.file_not_selected"))
 
         name = self.account_path.get()
-        sorce = Path.home().joinpath("Desktop").joinpath(name).with_suffix(".lnk")
+        sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = [name, "--type", "launcher"]
         Shortcut().create(sorce=sorce, args=args)
 

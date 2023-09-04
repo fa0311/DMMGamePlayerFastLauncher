@@ -12,8 +12,9 @@ from lib.DGPSessionV2 import DgpSessionV2
 from lib.process_manager import ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
+from models.setting_data import AppConfig
 from models.shortcut_data import ShortcutData
-from static.config import AppConfig, DataPathConfig
+from static.config import DataPathConfig
 from static.env import Env
 from tab.home import HomeTab
 

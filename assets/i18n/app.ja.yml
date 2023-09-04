@@ -1,6 +1,5 @@
 ja:
   title: DMMGamePlayer Fast Launcher
-  version: v5.0.1
   language: 日本語
 
   tab:
@@ -15,11 +14,12 @@ ja:
     launch_create: ランチャー作成
     import: インポート
 
+  home:
+    new_version: DMMGamePlayerFastLauncherの新しいバージョンがあります。
+
   shortcut:
     filename: ファイル名
-    filename_tooltip: |-
-      このショートカットに任意の名前を付けてください。
-      英数字と半角記号のみ推奨です。
+    filename_tooltip: このショートカットに任意の名前を付けてください。
 
     product_id: product_idの選択
     product_id_tooltip: |-
@@ -52,16 +52,18 @@ ja:
 
     product_id_not_entered: product_idが入力されていません。
     filename_not_entered: ファイル名が入力されていません。
+    game_info_error: ゲーム情報の取得に失敗しました。
     file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除
 
   account:
-    import_detail: DMMGamePlayerにアカウント情報をFastLauncherにインポートします。
-    filename_tooltip: |-
-      このアカウントに任意の名前を付けてください。
-      英数字と半角記号のみ推奨です。
+    import_detail: |-
+      DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
+      インポートするとDMMGamePlayer5からログアウトされます。
+      インポート済みのアカウントで直接起動した DMMGamePlayer5 にログインしないでください。
 
+    filename_tooltip: このアカウントに任意の名前を付けてください。
     import: インポート
     filename: ファイル名
     filename_not_entered: ファイル名が入力されていません。

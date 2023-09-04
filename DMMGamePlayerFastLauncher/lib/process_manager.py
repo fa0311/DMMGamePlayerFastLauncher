@@ -59,7 +59,7 @@ class Schtasks:
         return not xml_path.exists()
 
     def set(self) -> None:
-        with open(AssetsPathConfig.SCHTASKS, "r") as f:
+        with open(AssetsPathConfig.SCHTASKS, "r", encoding="utf-8") as f:
             template = f.read()
 
         if Env.DEVELOP:
@@ -76,7 +76,7 @@ class Schtasks:
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
 
         xml_path = DataPathConfig.SCHTASKS.joinpath(self.file).with_suffix(".xml")
-        with open(xml_path, "w") as f:
+        with open(xml_path, "w", encoding="utf-8") as f:
             f.write(template)
         create_args = [Env.SCHTASKS, "/create", "/xml", str(xml_path.absolute()), "/tn", self.name]
 
@@ -89,7 +89,7 @@ class Schtasks:
 
 class Shortcut:
     def create(self, sorce: Path, target: Optional[Path] = None, args: Optional[list[str]] = None, icon: Optional[Path] = None):
-        with open(AssetsPathConfig.SHORTCUT, "r") as f:
+        with open(AssetsPathConfig.SHORTCUT, "r", encoding="utf-8") as f:
             template = f.read()
         if icon is None:
             icon = Path(sys.argv[0])

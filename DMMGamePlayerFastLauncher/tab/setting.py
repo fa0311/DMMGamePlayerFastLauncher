@@ -1,6 +1,5 @@
 import json
 import os
-from tkinter import StringVar
 
 import customtkinter as ctk
 import i18n
@@ -9,8 +8,8 @@ from component.slider import CTkFloatSlider
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.toast import ToastController, error_toast
-from models.setting_data import SettingData
-from static.config import AppConfig, AssetsPathConfig, DataPathConfig
+from models.setting_data import AppConfig, SettingData
+from static.config import AssetsPathConfig, DataPathConfig
 
 
 class SettingTab(CTkFrame):
@@ -44,7 +43,6 @@ class SettingEditTab(CTkScrollableFrame):
         self.toast = ToastController(self)
         self.data = AppConfig.DATA
         self.lang = [(y, i18n.t("app.language", locale=y)) for y in [x.suffixes[0][1:] for x in AssetsPathConfig.I18N.iterdir()]]
-        self.lang_var = StringVar(value=dict(self.lang)[self.data.lang.get()])
 
         self.theme = [x.stem for x in AssetsPathConfig.THEMES.iterdir()]
 
@@ -75,7 +73,6 @@ class SettingEditTab(CTkScrollableFrame):
 
     @error_toast
     def save_callback(self):
-        self.data.lang.set([x[0] for x in self.lang if x[1] == self.lang_var.get()][0])
         with open(DataPathConfig.APP_CONFIG, "w+", encoding="utf-8") as f:
             json.dump(self.data.to_dict(), f)
         self.reload_callback()
