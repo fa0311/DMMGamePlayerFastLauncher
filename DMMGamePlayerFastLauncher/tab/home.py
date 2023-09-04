@@ -25,7 +25,7 @@ class HomeTab(CTkFrame):
         CTkLabel(frame, image=image, text="").pack()
         CTkLabel(frame, text=i18n.t("app.title"), font=CTkFont(size=28)).pack(pady=20)
 
-        CTkLabel(frame, text=i18n.t("app.version"), font=CTkFont(size=18)).pack()
+        CTkLabel(frame, text=Env.VERSION, font=CTkFont(size=18)).pack()
 
         if Env.RELEASE_VERSION != Env.VERSION and HomeTab.update_flag is False:
             HomeTab.update_flag = True
