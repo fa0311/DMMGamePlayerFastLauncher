@@ -8,7 +8,7 @@ from component.slider import CTkFloatSlider
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.toast import ToastController, error_toast
-from models.setting_data import AppConfig, SettingData
+from models.setting_data import AppConfig, DeviceData, SettingData
 from static.config import AssetsPathConfig, DataPathConfig
 
 
@@ -22,11 +22,15 @@ class SettingTab(CTkFrame):
     def create(self):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
+        self.tab.add(text=i18n.t("app.tab.device"), callback=self.device_callback)
         self.tab.add(text=i18n.t("app.tab.other"), callback=self.other_callback)
         return self
 
     def edit_callback(self, master: CTkBaseClass):
         SettingEditTab(master).create().pack(expand=True, fill=ctk.BOTH)
+
+    def device_callback(self, master: CTkBaseClass):
+        SettingDeviceTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
     def other_callback(self, master: CTkBaseClass):
         SettingOtherTab(master).create().pack(expand=True, fill=ctk.BOTH)
@@ -91,6 +95,31 @@ class SettingEditTab(CTkScrollableFrame):
     def delete_callback(self):
         DataPathConfig.APP_CONFIG.unlink()
         self.reload_callback()
+
+
+class SettingDeviceTab(CTkScrollableFrame):
+    toast: ToastController
+    data: DeviceData
+
+    def __init__(self, master: CTkBaseClass):
+        super().__init__(master, fg_color="transparent")
+        self.toast = ToastController(self)
+        self.data = AppConfig.DEVICE
+
+    def create(self):
+        CTkLabel(self, text=i18n.t("app.setting.device_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
+        EntryComponent(self, text=i18n.t("app.setting.mac_address"), variable=self.data.mac_address, required=True).create()
+        EntryComponent(self, text=i18n.t("app.setting.hdd_serial"), variable=self.data.hdd_serial, required=True).create()
+        EntryComponent(self, text=i18n.t("app.setting.motherboard"), variable=self.data.motherboard, required=True).create()
+        EntryComponent(self, text=i18n.t("app.setting.user_os"), variable=self.data.user_os, required=True).create()
+        CTkButton(self, text=i18n.t("app.setting.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
+        return self
+
+    def save_callback(self):
+        with open(DataPathConfig.DEVICE, "w+", encoding="utf-8") as f:
+            json.dump(AppConfig.DEVICE.to_dict(), f)
+        AppConfig.DEVICE.update()
+        self.toast.info(i18n.t("app.setting.save_success"))
 
 
 class SettingOtherTab(CTkScrollableFrame):

@@ -9,7 +9,6 @@ from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
 from lib.toast import ToastController, error_toast
-from models.setting_data import AppConfig, DeviceData
 from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
 
@@ -163,7 +162,6 @@ class AccountEdit(CTkScrollableFrame):
 
 class SettingDeviceTab(CTkScrollableFrame):
     toast: ToastController
-    data: DeviceData
     mode: bool
     hardware_name: StringVar
     auth_code: StringVar
@@ -171,7 +169,6 @@ class SettingDeviceTab(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
-        self.data = AppConfig.DEVICE
         self.mode = False
         self.hardware_name = StringVar(value="DMMGamePlayerFastLauncher")
         self.auth_code = StringVar()
@@ -181,18 +178,13 @@ class SettingDeviceTab(CTkScrollableFrame):
 
     def create(self):
         if self.mode:
-            CTkLabel(self, text=i18n.t("app.account.device_detail_2"), justify=ctk.LEFT).pack(anchor=ctk.W)
+            CTkLabel(self, text=i18n.t("app.account.device_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
             EntryComponent(self, text=i18n.t("app.account.hardware_name"), variable=self.hardware_name, required=True).create()
             EntryComponent(self, text=i18n.t("app.account.auth_code"), tooltip=i18n.t("app.account.auth_code_tooltip"), variable=self.auth_code, required=True).create()
             CTkButton(self, text=i18n.t("app.account.auth"), command=self.auth_callback).pack(fill=ctk.X, pady=10)
 
         else:
-            CTkLabel(self, text=i18n.t("app.account.device_detail_1"), justify=ctk.LEFT).pack(anchor=ctk.W)
             OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename).create()
-            EntryComponent(self, text=i18n.t("app.account.mac_address"), variable=self.data.mac_address, required=True).create()
-            EntryComponent(self, text=i18n.t("app.account.hdd_serial"), variable=self.data.hdd_serial, required=True).create()
-            EntryComponent(self, text=i18n.t("app.account.motherboard"), variable=self.data.motherboard, required=True).create()
-            EntryComponent(self, text=i18n.t("app.account.user_os"), variable=self.data.user_os, required=True).create()
             CTkButton(self, text=i18n.t("app.account.send_auth_code"), command=self.send_auth_code_callback).pack(fill=ctk.X, pady=10)
 
         return self

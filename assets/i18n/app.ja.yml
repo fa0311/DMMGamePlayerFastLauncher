@@ -81,17 +81,8 @@ ja:
     delete: 削除
     save_success: 保存しました。
 
-    device_detail_1: |-
-      デバイス認証を行いますがハードウェア情報を偽装します。
-      基本的には以下の設定のまま `認証コードを送信` を押してください。
-
-    device_detail_2: |-
+    device_detail: |-
       メールアドレスに送信された `デバイス認証コード` を入力してください。
-
-    mac_address: MACアドレス
-    hdd_serial: HDDシリアル
-    motherboard: マザーボードID
-    user_os: OS
 
     send_auth_code: 認証コードを送信
     auth: 認証
@@ -117,6 +108,15 @@ ja:
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウ
+
+    device_detail: |-
+      デバイス認証に使用するデバイス情報を設定します。
+      これらは適当で構いません。
+
+    mac_address: MACアドレス
+    hdd_serial: HDDシリアル
+    motherboard: マザーボードID
+    user_os: OS
 
     other_detail: このツールの設定をテキストエディタで編集します。
     open_save_folder: 設定ファイルを開く
