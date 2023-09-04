@@ -13,6 +13,7 @@ ja:
     edit: 編集
     launch_create: ランチャー作成
     import: インポート
+    device: デバイス登録
 
   home:
     new_version: DMMGamePlayerFastLauncherの新しいバージョンがあります。
@@ -79,6 +80,26 @@ ja:
     save: 保存
     delete: 削除
     save_success: 保存しました。
+
+    device_detail_1: |-
+      デバイス認証を行いますがハードウェア情報を偽装します。
+      基本的には以下の設定のまま `認証コードを送信` を押してください。
+
+    device_detail_2: |-
+      メールアドレスに送信された `デバイス認証コード` を入力してください。
+
+    mac_address: MACアドレス
+    hdd_serial: HDDシリアル
+    motherboard: マザーボードID
+    user_os: OS
+
+    send_auth_code: 認証コードを送信
+    auth: 認証
+
+    hardware_name: デバイス名
+    auth_code: デバイス認証コード
+    auth_code_tooltip: |-
+      メールに記載の英数字を入力してください
 
   setting:
     save: 保存

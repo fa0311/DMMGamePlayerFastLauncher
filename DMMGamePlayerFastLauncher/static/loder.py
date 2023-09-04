@@ -1,6 +1,6 @@
 import json
 
-from models.setting_data import AppConfig, SettingData
+from models.setting_data import AppConfig, DeviceData, SettingData
 from static.config import DataPathConfig
 
 
@@ -10,3 +10,9 @@ def config_loder():
             AppConfig.DATA = SettingData.from_dict(json.load(f))
     else:
         AppConfig.DATA = SettingData()
+
+    if DataPathConfig.DEVICE.exists():
+        with open(DataPathConfig.DEVICE, "r", encoding="utf-8") as f:
+            AppConfig.DEVICE = json.load(f)
+    else:
+        AppConfig.DEVICE = DeviceData()

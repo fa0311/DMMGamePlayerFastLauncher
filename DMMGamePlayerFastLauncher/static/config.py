@@ -7,6 +7,7 @@ class DataPathConfig:
     SHORTCUT = DATA.joinpath("shortcut")
     APP_CONFIG = DATA.joinpath("config.json")
     SCHTASKS = DATA.joinpath("schtasks")
+    DEVICE = DATA.joinpath("device.json")
 
 
 class AssetsPathConfig:

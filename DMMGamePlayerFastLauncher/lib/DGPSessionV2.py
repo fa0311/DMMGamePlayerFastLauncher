@@ -38,9 +38,8 @@ class DgpSessionV2:
     DGP5_PATH: Path
     HEADERS: dict[str, str]
     DGP5_HEADERS: dict[str, str]
-    DGP5_LAUNCH_PARAMS: dict[str, str]
+    DGP5_DEVICE_PARAMS: dict[str, str]
     DATA_DESCR: str
-    LAUNCH_URL: str
     db: sqlite3.Connection
     session: requests.Session
     cookies: requests.cookies.RequestsCookieJar
@@ -60,19 +59,15 @@ class DgpSessionV2:
         "Connection": "keep-alive",
         "User-Agent": "DMMGamePlayer5-Win/5.2.22 Electron/22.0.0",
         "Client-App": "DMMGamePlayer5",
-        "Client-version": "17.1.2",
+        "Client-version": "5.2.22",
     }
-    DGP5_LAUNCH_PARAMS = {
-        "game_type": "GCL",
-        "game_os": "win",
-        "launch_type": "LIB",
+    DGP5_DEVICE_PARAMS = {
         "mac_address": DgpSessionUtils.gen_rand_address(),
         "hdd_serial": DgpSessionUtils.gen_rand_hex(),
         "motherboard": DgpSessionUtils.gen_rand_hex(),
         "user_os": "win",
     }
     DATA_DESCR = "DMMGamePlayerFastLauncher"
-    LAUNCH_URL = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
 
     def __init__(self):
         self.session = requests.session()
@@ -159,16 +154,22 @@ class DgpSessionV2:
     def post(self, url: str, **kwargs) -> requests.Response:
         return self.session.post(url, headers=self.HEADERS, **kwargs)
 
-    def get_dgp(self, url: str, **kwargs) -> requests.Response:
-        return self.session.get(url, headers=self.DGP5_HEADERS, **kwargs)
+    def get_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
+        json = (json or {}) | self.DGP5_DEVICE_PARAMS
+        return self.session.get(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
 
-    def post_dgp(self, url: str, **kwargs) -> requests.Response:
-        return self.session.post(url, headers=self.DGP5_HEADERS, **kwargs)
+    def post_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
+        json = (json or {}) | self.DGP5_DEVICE_PARAMS
+        return self.session.post(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
 
     def lunch(self, product_id: str) -> requests.Response:
-        json = {"product_id": product_id}
-        json.update(self.DGP5_LAUNCH_PARAMS)
-        return self.post_dgp(self.LAUNCH_URL, json=json, verify=False)
+        json = {
+            "product_id": product_id,
+            "game_type": "GCL",
+            "game_os": "win",
+            "launch_type": "LIB",
+        }
+        return self.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", json=json, verify=False)
 
     def login(self):
         response = self.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
