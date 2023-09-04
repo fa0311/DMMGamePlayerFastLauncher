@@ -58,7 +58,7 @@ class DgpSessionV2:
     DGP5_HEADERS = {
         "Host": "apidgp-gameplayer.games.dmm.com",
         "Connection": "keep-alive",
-        "User-Agent": "DMMGamePlayer5-Win/17.1.2 Electron/17.1.2",
+        "User-Agent": "DMMGamePlayer5-Win/5.2.22 Electron/22.0.0",
         "Client-App": "DMMGamePlayer5",
         "Client-version": "17.1.2",
     }
