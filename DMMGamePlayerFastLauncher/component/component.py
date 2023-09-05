@@ -1,3 +1,4 @@
+import tkinter as tk
 from pathlib import Path
 from tkinter import Frame, Misc, StringVar, filedialog
 from typing import Any, Callable, Optional
@@ -85,6 +86,7 @@ class EntryComponent(CTkFrame):
     tooltip: Optional[str]
     required: bool
     command: list[tuple[str, Callable[[Variable], None]]]
+    state: str
 
     def __init__(
         self,
@@ -94,6 +96,7 @@ class EntryComponent(CTkFrame):
         tooltip: Optional[str] = None,
         required: bool = False,
         command: Optional[list[tuple[str, Callable[[Variable], None]]]] = None,
+        state: Optional[str] = None,
     ) -> None:
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
@@ -102,10 +105,11 @@ class EntryComponent(CTkFrame):
         self.tooltip = tooltip
         self.required = required
         self.command = command or []
+        self.state = state or tk.NORMAL
 
     def create(self):
         LabelComponent(self, text=self.text, required=self.required, tooltip=self.tooltip).create()
-        CTkEntry(self, textvariable=self.variable).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        CTkEntry(self, textvariable=self.variable, state=self.state).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
 
         for cmd in self.command:
             CTkButton(self, text=cmd[0], command=self.call(cmd[1]), width=0).pack(side=ctk.LEFT, padx=2)

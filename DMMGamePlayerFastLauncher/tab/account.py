@@ -4,7 +4,7 @@ from typing import TypeVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, OptionMenuComponent
+from component.component import EntryComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionV2 import DgpSessionV2
@@ -30,6 +30,7 @@ class AccountTab(CTkFrame):
         self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
         self.tab.add(text=i18n.t("app.tab.device"), callback=self.device_callback)
+        self.tab.add(text=i18n.t("app.tab.device_list"), callback=self.device_list_callback)
         return self
 
     def import_callback(self, master: CTkBaseClass):
@@ -40,6 +41,9 @@ class AccountTab(CTkFrame):
 
     def device_callback(self, master: CTkBaseClass):
         SettingDeviceTab(master).create().pack(expand=True, fill=ctk.BOTH)
+
+    def device_list_callback(self, master: CTkBaseClass):
+        DeviceListTab(master).create().pack(expand=True, fill=ctk.BOTH)
 
 
 # ===== Account Body =====
@@ -213,4 +217,42 @@ class SettingDeviceTab(CTkScrollableFrame):
         res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwareconf", json=json, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
+        self.toast.info(i18n.t("app.account.auth_success"))
+
+
+class DeviceListTab(CTkScrollableFrame):
+    toast: ToastController
+
+    def __init__(self, master: CTkBaseClass):
+        super().__init__(master, fg_color="transparent")
+        self.toast = ToastController(self)
+        self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.filename = StringVar()
+        self.data = None
+
+    def create(self):
+        OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
+        if self.data:
+            hardwares_len = len(self.data["hardwares"])
+            limit = self.data["device_auth_limit_num"]
+            CTkLabel(self, text=i18n.t("app.account.device_registrations", len=hardwares_len, limit=limit), justify=ctk.LEFT).pack(anchor=ctk.W)
+
+            for hardware in self.data["hardwares"]:
+                for key, value in hardware.items():
+                    EntryComponent(self, text=key, variable=StringVar(value=value), state=ctk.DISABLED).create()
+                PaddingComponent(self, height=20).create()
+
+        return self
+
+    @error_toast
+    def select_callback(self, value: str):
+        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        session = DgpSessionV2.read_cookies(path)
+        res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarelist", json={}, verify=False).json()
+        if res["result_code"] != 100:
+            raise Exception(res["error"])
+        self.data = res["data"]
+
+        children_destroy(self)
+        self.create()
         self.toast.info(i18n.t("app.account.auth_success"))
