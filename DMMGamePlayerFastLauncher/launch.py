@@ -1,6 +1,7 @@
 import json
 import logging
 import traceback
+from base64 import b64decode, b64encode
 from pathlib import Path
 from typing import Callable
 
@@ -63,6 +64,13 @@ class GameLauncher(CTk):
         if response["result_code"] != 100:
             raise Exception(response["error"])
 
+        if response["data"].get("drm_auth_token") is not None:
+            filename = b64encode(data.product_id.get().encode("utf-8")).decode("utf-8")
+            drm_path = Env.DMM_GAME_PLAYER_HIDDEN_FOLDER.joinpath(filename)
+            drm_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(drm_path.absolute(), "w+") as f:
+                f.write(response["data"]["drm_auth_token"])
+
         if not Env.DEVELOP:
             if response["data"]["is_administrator"] and not ProcessManager.admin_check():
                 raise Exception(i18n.t("app.launch.admin_error"))
@@ -84,7 +92,6 @@ class GameLauncher(CTk):
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
         process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
-
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
