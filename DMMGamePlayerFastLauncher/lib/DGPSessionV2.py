@@ -162,14 +162,18 @@ class DgpSessionV2:
         json = (json or {}) | self.DGP5_DEVICE_PARAMS
         return self.session.post(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
 
-    def lunch(self, product_id: str) -> requests.Response:
+    def lunch(self, product_id: str, game_type: str) -> requests.Response:
+        if game_type == "GCL":
+            url = "https://apidgp-gameplayer.games.dmm.com/v5/launch/cl"
+        else:
+            url = "https://apidgp-gameplayer.games.dmm.com/v5/launch/pkg"
         json = {
             "product_id": product_id,
-            "game_type": "GCL",
+            "game_type": game_type,
             "game_os": "win",
             "launch_type": "LIB",
         }
-        return self.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/launch/cl", json=json, verify=False)
+        return self.post_dgp(url, json=json, verify=False)
 
     def login(self):
         response = self.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")

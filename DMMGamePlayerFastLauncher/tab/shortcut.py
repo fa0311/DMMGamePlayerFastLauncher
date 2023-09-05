@@ -127,10 +127,11 @@ class ShortcutCreate(CTkScrollableFrame):
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
     def get_game_info(self) -> tuple[str, Path]:
-        game_path = Path([x["detail"]["path"] for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0])
+        game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
+        game_path = Path(game["detail"]["path"])
         path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
         session = DgpSessionV2().read_cookies(path)
-        response = session.lunch(self.data.product_id.get()).json()
+        response = session.lunch(self.data.product_id.get(), game["gameType"]).json()
 
         if response["result_code"] != 100:
             raise Exception(response["error"])

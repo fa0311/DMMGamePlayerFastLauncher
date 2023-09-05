@@ -52,9 +52,13 @@ class GameLauncher(CTk):
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
         session = DgpSessionV2.read_cookies(account_path)
-        response = session.lunch(data.product_id.get()).json()
+
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
+
+        response = session.lunch(data.product_id.get(), game["gameType"]).json()
+        logging.info(game)
+        logging.info(response)
 
         if response["result_code"] != 100:
             raise Exception(response["error"])
