@@ -153,5 +153,8 @@ ja:
     copy_to_clipboard: "クリップボードにコピー"
     details: 詳細
 
+  lib:
+    dmm_already_running: DMMGamePlayerが起動しているため、起動できませんでした。
+
   utils:
     file_exists: そのファイルは既に存在します。

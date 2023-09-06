@@ -281,7 +281,7 @@ class DgpSessionV2:
     @staticmethod
     def read_cookies(path: Path) -> "DgpSessionV2":
         if DgpSessionV2.is_running_dmm():
-            raise DMMAlreadyRunningException("DMMGamePlayer is running")
+            raise DMMAlreadyRunningException("DMMGamePlayer is already running")
 
         session = DgpSessionV2()
         session.read_bytes(str(path))

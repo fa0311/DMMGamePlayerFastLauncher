@@ -1,5 +1,4 @@
 import json
-import logging
 from pathlib import Path
 from tkinter import Frame, StringVar
 
@@ -8,7 +7,7 @@ import i18n
 from component.component import CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
-from lib.DGPSessionV2 import DgpSessionV2
+from lib.DGPSessionWrap import DgpSessionWrap
 from lib.process_manager import Schtasks, Shortcut
 from lib.toast import ToastController, error_toast
 from models.shortcut_data import ShortcutData
@@ -59,7 +58,7 @@ class ShortcutCreate(CTkScrollableFrame):
         self.toast = ToastController(self)
         self.data = ShortcutData()
         self.filename = StringVar()
-        self.dgp_config = DgpSessionV2().get_config()
+        self.dgp_config = DgpSessionWrap().get_config()
         self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
         self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
 
@@ -84,7 +83,7 @@ class ShortcutCreate(CTkScrollableFrame):
         CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.save_only_callback).pack(fill=ctk.X, pady=5)
         return self
 
-    def save(self, exists=False):
+    def save_check(self, exists=False):
         if self.data.product_id.get() == "":
             raise Exception(i18n.t("app.shortcut.product_id_not_entered"))
         if self.filename.get() == "":
@@ -93,12 +92,15 @@ class ShortcutCreate(CTkScrollableFrame):
         path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         if not exists:
             file_create(path, name=i18n.t("app.shortcut.filename"))
+
+    def save(self):
+        path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
 
     @error_toast
     def bypass_callback(self):
-        self.save()
+        self.save_check()
         task = Schtasks(self.filename.get())
         if task.check():
             task.set()
@@ -110,20 +112,28 @@ class ShortcutCreate(CTkScrollableFrame):
         sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
-
+        self.save()
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
     @error_toast
     def save_callback(self):
-        self.save()
-        name, icon = self.get_game_info()
+        self.save_check()
+
+        try:
+            name, icon = self.get_game_info()
+        except Exception:
+            name, icon = self.filename.get(), None
+            self.toast.error(i18n.t("app.shortcut.game_info_error"))
+
         sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = [self.filename.get()]
         Shortcut().create(sorce=sorce, args=args, icon=icon)
+        self.save()
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
     @error_toast
     def save_only_callback(self):
+        self.save_check()
         self.save()
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
@@ -131,7 +141,7 @@ class ShortcutCreate(CTkScrollableFrame):
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
         game_path = Path(game["detail"]["path"])
         path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionV2().read_cookies(path)
+        session = DgpSessionWrap().read_cookies(path)
         response = session.lunch(self.data.product_id.get(), game["gameType"]).json()
 
         if response["result_code"] != 100:
@@ -169,17 +179,21 @@ class ShortcutEdit(ShortcutCreate):
         return self
 
     def save(self):
+        selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        super().save()
+        selected.unlink()
+        self.values.remove(self.selected.get())
+        self.values.append(self.filename.get())
+        self.selected.set(self.filename.get())
+        self.option_callback("_")
+
+    def save_check(self):
         path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
         if path == selected:
-            super().save(exists=True)
+            super().save_check(exists=True)
         else:
-            super().save()
-            selected.unlink()
-            self.values.remove(self.selected.get())
-            self.values.append(self.filename.get())
-            self.selected.set(self.filename.get())
-            self.option_callback("_")
+            super().save_check()
 
     @error_toast
     def delete_callback(self):

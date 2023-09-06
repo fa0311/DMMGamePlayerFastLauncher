@@ -7,7 +7,7 @@ import i18n
 from component.component import EntryComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
-from lib.DGPSessionV2 import DgpSessionV2
+from lib.DGPSessionWrap import DgpSessionWrap
 from lib.toast import ToastController, error_toast
 from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
@@ -73,7 +73,7 @@ class AccountImport(CTkScrollableFrame):
         if path.exists():
             raise Exception(i18n.t("app.account.filename_already_exists"))
 
-        with DgpSessionV2() as session:
+        with DgpSessionWrap() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.account.import_error"))
@@ -113,7 +113,7 @@ class AccountEdit(CTkScrollableFrame):
         self.body_filename.set(self.filename.get())
         EntryComponent(self.body, text=i18n.t("app.account.filename"), variable=self.body_filename).create()
 
-        session = DgpSessionV2()
+        session = DgpSessionWrap()
         session.read_bytes(str(Path(path)))
         for cookie in session.cookies:
             key = f"{cookie.name}{cookie.domain}"
@@ -131,7 +131,7 @@ class AccountEdit(CTkScrollableFrame):
         body_path = DataPathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
 
         def write():
-            session = DgpSessionV2()
+            session = DgpSessionWrap()
             session.read_bytes(str(Path(path)))
             for cookie in session.cookies:
                 key = f"{cookie.name}{cookie.domain}"
@@ -196,8 +196,8 @@ class SettingDeviceTab(CTkScrollableFrame):
     @error_toast
     def send_auth_code_callback(self):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(path)
-        res = session.post_device_dgp(DgpSessionV2.HARDWARE_CODE, verify=False).json()
+        session = DgpSessionWrap.read_cookies(path)
+        res = session.post_device_dgp(DgpSessionWrap.HARDWARE_CODE, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
 
@@ -209,12 +209,12 @@ class SettingDeviceTab(CTkScrollableFrame):
     @error_toast
     def auth_callback(self):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(path)
+        session = DgpSessionWrap.read_cookies(path)
         json = {
             "hardware_name": self.hardware_name.get(),
             "auth_code": self.auth_code.get(),
         }
-        res = session.post_device_dgp(DgpSessionV2.HARDWARE_CONF, json=json, verify=False).json()
+        res = session.post_device_dgp(DgpSessionWrap.HARDWARE_CONF, json=json, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         self.toast.info(i18n.t("app.account.auth_success"))
@@ -250,8 +250,8 @@ class DeviceListTab(CTkScrollableFrame):
     @error_toast
     def select_callback(self, value: str):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(path)
-        res = session.post_device_dgp(DgpSessionV2.HARDWARE_LIST, json={}, verify=False).json()
+        session = DgpSessionWrap.read_cookies(path)
+        res = session.post_device_dgp(DgpSessionWrap.HARDWARE_LIST, json={}, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         self.data = res["data"]
@@ -263,9 +263,9 @@ class DeviceListTab(CTkScrollableFrame):
     @error_toast
     def delete_callback(self, id: str):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(path)
+        session = DgpSessionWrap.read_cookies(path)
         json = {"hardware_manage_id": [id]}
-        res = session.post_device_dgp(DgpSessionV2.HARDWARE_REJECT, json=json, verify=False).json()
+        res = session.post_device_dgp(DgpSessionWrap.HARDWARE_REJECT, json=json, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         assert isinstance(self.data, dict)

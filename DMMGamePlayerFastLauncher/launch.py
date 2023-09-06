@@ -9,7 +9,7 @@ import customtkinter as ctk
 import i18n
 from component.component import CTkProgressWindow
 from customtkinter import CTk
-from lib.DGPSessionV2 import DgpSessionV2
+from lib.DGPSessionWrap import DgpSessionWrap
 from lib.process_manager import ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
@@ -52,7 +52,7 @@ class GameLauncher(CTk):
             data = ShortcutData.from_dict(json.load(f))
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(account_path)
+        session = DgpSessionWrap.read_cookies(account_path)
 
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
@@ -123,7 +123,7 @@ class LanchLauncher(CTk):
 
     def launch(self, id: str):
         path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
-        with DgpSessionV2() as session:
+        with DgpSessionWrap() as session:
             session.read_bytes(str(path))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.export_error"))
@@ -137,7 +137,7 @@ class LanchLauncher(CTk):
             text = line.decode("utf-8").strip()
             logging.debug(text)
 
-        with DgpSessionV2() as session:
+        with DgpSessionWrap() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.import_error"))

@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from DMMGamePlayerFastLauncher.lib.DGPSessionV2 import DgpSessionV2
+from DMMGamePlayerFastLauncher.lib.DgpSessionWrap import DgpSessionWrap
 
-session = DgpSessionV2.read_cookies(Path("data/account/a.bytes"))
+session = DgpSessionWrap.read_cookies(Path("data/account/a.bytes"))
 
 
 json = {}
