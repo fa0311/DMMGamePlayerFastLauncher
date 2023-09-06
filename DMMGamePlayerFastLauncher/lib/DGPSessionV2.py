@@ -288,3 +288,13 @@ class DgpSessionV2:
         session.login()
         session.write_bytes(str(path))
         return session
+
+    @staticmethod
+    def is_running_dmm() -> bool:
+        for proc in psutil.process_iter():
+            try:
+                if Path(proc.exe()) == DgpSessionV2.DGP5_PATH.joinpath("DMMGamePlayer.exe"):
+                    return True
+            except Exception:
+                pass
+        return False
