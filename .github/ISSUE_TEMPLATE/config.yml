@@ -1,5 +1,8 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Twitter
-    url: https://twitter.com/faa0311
-    about: Please ask and answer questions here.
+name: Default
+description: The default issue template for this project
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Default issue template
+        This is the default issue template for this project
