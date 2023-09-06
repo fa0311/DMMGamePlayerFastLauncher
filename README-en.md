@@ -11,9 +11,13 @@ DMM Game Player Fast Launcher for secure and fast start-up
 ## Features
 
 - **One click to launch the game**
-- **Run with minimal privileges**
+- **Fast**
 - **Do not send hardware information to DMM**
 - **Hidden command line arguments can be used**
+- **Configurable with GUI**
+- **Manage multiple accounts**
+- **Automatic game update**
+- **Launch DRM protected games**
 
 ## Installation
 
