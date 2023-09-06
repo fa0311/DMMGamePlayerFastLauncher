@@ -30,7 +30,7 @@
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
       "justMyCode": false,
-      "args": ["aa"],
+      "args": ["priconner"],
       "env": {
         "ENV": "DEVELOP"
       }
@@ -42,7 +42,7 @@
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
       "justMyCode": false,
-      "args": ["a", "--type", "launcher"],
+      "args": ["main", "--type", "launcher"],
       "env": {
         "ENV": "DEVELOP"
       }
