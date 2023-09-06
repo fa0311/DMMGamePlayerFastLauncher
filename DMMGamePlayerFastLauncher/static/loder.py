@@ -14,9 +14,10 @@ def config_loder():
     if DataPathConfig.DEVICE.exists():
         with open(DataPathConfig.DEVICE, "r", encoding="utf-8") as f:
             AppConfig.DEVICE = DeviceData.from_dict(json.load(f))
-        AppConfig.DEVICE.update()
     else:
         AppConfig.DEVICE = DeviceData()
-        AppConfig.DEVICE.update()
         with open(DataPathConfig.DEVICE, "w+", encoding="utf-8") as f:
             json.dump(AppConfig.DEVICE.to_dict(), f)
+
+    AppConfig.DATA.update()
+    AppConfig.DEVICE.update()
