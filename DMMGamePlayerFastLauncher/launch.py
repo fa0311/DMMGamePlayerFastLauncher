@@ -1,7 +1,7 @@
 import json
 import logging
 import traceback
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from pathlib import Path
 from typing import Callable
 
@@ -58,8 +58,6 @@ class GameLauncher(CTk):
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
 
         response = session.lunch(data.product_id.get(), game["gameType"]).json()
-        logging.info(game)
-        logging.info(response)
 
         if response["result_code"] != 100:
             raise Exception(response["error"])
@@ -83,7 +81,6 @@ class GameLauncher(CTk):
                 download = session.download(response["data"]["file_list_url"], game_path.parent)
                 box = CTkProgressWindow(self).create()
                 for progress, file in download:
-                    logging.info(file["local_path"])
                     box.set(progress)
                 box.destroy()
                 game["detail"]["version"] = response["data"]["latest_version"]
@@ -95,7 +92,7 @@ class GameLauncher(CTk):
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
-            logging.info(text)
+            logging.debug(text)
 
 
 class LanchLauncher(CTk):
@@ -138,7 +135,7 @@ class LanchLauncher(CTk):
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
-            logging.info(text)
+            logging.debug(text)
 
         with DgpSessionV2() as session:
             session.read()

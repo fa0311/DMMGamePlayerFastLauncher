@@ -3,14 +3,8 @@ from pathlib import Path
 
 import requests
 from static.config import UrlConfig
+from static.dump import Dump
 from windows_pathlib import WindowsPathlib
-
-
-class Dump:
-    @classmethod
-    def dump(cls):
-        item = [(k, v) for k, v in Env.__dict__.items() if not k.startswith("__") and not isinstance(v, classmethod)]
-        return dict(item)
 
 
 class Env(Dump):

@@ -197,7 +197,7 @@ class SettingDeviceTab(CTkScrollableFrame):
     def send_auth_code_callback(self):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         session = DgpSessionV2.read_cookies(path)
-        res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarecode", verify=False).json()
+        res = session.post_device_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarecode", verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
 
@@ -214,7 +214,7 @@ class SettingDeviceTab(CTkScrollableFrame):
             "hardware_name": self.hardware_name.get(),
             "auth_code": self.auth_code.get(),
         }
-        res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwareconf", json=json, verify=False).json()
+        res = session.post_device_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwareconf", json=json, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         self.toast.info(i18n.t("app.account.auth_success"))
@@ -248,7 +248,7 @@ class DeviceListTab(CTkScrollableFrame):
     def select_callback(self, value: str):
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         session = DgpSessionV2.read_cookies(path)
-        res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarelist", json={}, verify=False).json()
+        res = session.post_device_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarelist", json={}, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         self.data = res["data"]

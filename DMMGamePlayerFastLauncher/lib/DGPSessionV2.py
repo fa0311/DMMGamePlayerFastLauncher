@@ -68,6 +68,7 @@ class DgpSessionV2:
         "user_os": "win",
     }
     DATA_DESCR = "DMMGamePlayerFastLauncher"
+    LOGGER = logging.getLogger("DgpSessionV2")
 
     def __init__(self):
         self.session = requests.session()
@@ -94,7 +95,7 @@ class DgpSessionV2:
                     (memoryview(data), cookie_row[3]),
                 )
             except Exception as e:
-                logging.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
+                self.LOGGER.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
         self.db.commit()
 
     def read(self):
@@ -113,7 +114,7 @@ class DgpSessionV2:
                 }
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
             except Exception as e:
-                logging.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
+                self.LOGGER.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
 
     def write_bytes(self, file: str):
         contents = []
@@ -148,19 +149,34 @@ class DgpSessionV2:
             for cookie in json.loads(contents):
                 self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
 
-    def get(self, url: str, **kwargs) -> requests.Response:
-        return self.session.get(url, headers=self.HEADERS, **kwargs)
+    def get(self, url: str, params=None, **kwargs) -> requests.Response:
+        self.LOGGER.info("params %s", params)
+        res = self.session.get(url, headers=self.HEADERS, params=params, **kwargs)
+        return self.logger(res)
 
-    def post(self, url: str, **kwargs) -> requests.Response:
-        return self.session.post(url, headers=self.HEADERS, **kwargs)
+    def post(self, url: str, json=None, **kwargs) -> requests.Response:
+        self.LOGGER.info("json %s", json)
+        res = self.session.post(url, headers=self.HEADERS, json=json, **kwargs)
+        return self.logger(res)
 
-    def get_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
-        json = (json or {}) | self.DGP5_DEVICE_PARAMS
-        return self.session.get(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
+    def get_dgp(self, url: str, params=None, **kwargs) -> requests.Response:
+        self.LOGGER.info("params %s", params)
+        res = self.session.get(url, headers=self.DGP5_HEADERS, params=params, **kwargs)
+        return self.logger(res)
 
     def post_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
+        self.LOGGER.info("json %s", json)
+        res = self.session.post(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
+        return self.logger(res)
+
+    def post_device_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
         json = (json or {}) | self.DGP5_DEVICE_PARAMS
-        return self.session.post(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
+        return self.post_dgp(url, json=json, **kwargs)
+
+    def logger(self, res: requests.Response) -> requests.Response:
+        if res.headers.get("Content-Type") == "application/json":
+            self.LOGGER.info("application/json %s", res.text)
+        return res
 
     def lunch(self, product_id: str, game_type: str) -> requests.Response:
         if game_type == "GCL":
@@ -173,7 +189,7 @@ class DgpSessionV2:
             "game_os": "win",
             "launch_type": "LIB",
         }
-        return self.post_dgp(url, json=json, verify=False)
+        return self.post_device_dgp(url, json=json, verify=False)
 
     def login(self):
         response = self.get("https://apidgp-gameplayer.games.dmm.com/v5/loginurl")
@@ -217,7 +233,9 @@ class DgpSessionV2:
     def get_config(self):
         with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "r", encoding="utf-8") as f:
             config = f.read()
-        return json.loads(config)
+        res = json.loads(config)
+        self.LOGGER.info("READ dmmgame.cnf %s", res)
+        return res
 
     def set_config(self, config):
         with open(self.DGP5_PATH.joinpath("dmmgame.cnf"), "w", encoding="utf-8") as f:
