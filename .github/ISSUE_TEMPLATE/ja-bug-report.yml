@@ -1,0 +1,50 @@
+name: "[ja] 🐛 バグを報告する"
+description: DMMGamePlayerFastLauncherの不具合を報告する。
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## バグ報告の前に
+        バグを報告する前に、[Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues) に同様のバグがないか確認してください。
+        同様のバグがあり、それらに補足情報を追加できる場合は、コメントで追記してください。
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: バージョンも含めてください
+      placeholder: "例: Window 10"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 不具合の説明
+      description: バグの内容を詳しく記述してください。必要があれば画像を添付して下さい。
+      placeholder: |
+        設定がxxxxxxの際にプリコネRのショートカットが起動できません。
+        ウマ娘のショートカットは起動できます。
+        プリコネRのproduct_idはxxxxxです。
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-message
+    attributes:
+      label: エラーメッセージ
+      description: エラーメッセージが表示されていればそれを貼り付けてください。
+      render: Shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: log
+    attributes:
+      label: ログ
+      description: デバッグウィンドウに表示されているログを貼り付けてください。Tokenなどの個人情報が含まれている場合は伏せてください。
+      render: Shell
+    validations:
+      required: false
