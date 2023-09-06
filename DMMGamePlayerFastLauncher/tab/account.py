@@ -233,13 +233,16 @@ class DeviceListTab(CTkScrollableFrame):
     def create(self):
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
         if self.data:
-            hardwares_len = len(self.data["hardwares"])
+            count = len(self.data["hardwares"])
             limit = self.data["device_auth_limit_num"]
-            CTkLabel(self, text=i18n.t("app.account.device_registrations", len=hardwares_len, limit=limit), justify=ctk.LEFT).pack(anchor=ctk.W)
+            CTkLabel(self, text=i18n.t("app.account.device_registrations", count=count, limit=limit), justify=ctk.LEFT).pack(anchor=ctk.W)
 
             for hardware in self.data["hardwares"]:
                 for key, value in hardware.items():
                     EntryComponent(self, text=key, variable=StringVar(value=value), state=ctk.DISABLED).create()
+
+                command = lambda id=hardware["hardware_manage_id"]: self.delete_callback(id)
+                CTkButton(self, text=i18n.t("app.account.delete"), command=command).pack(fill=ctk.X, pady=10)
                 PaddingComponent(self, height=20).create()
 
         return self
@@ -256,3 +259,18 @@ class DeviceListTab(CTkScrollableFrame):
         children_destroy(self)
         self.create()
         self.toast.info(i18n.t("app.account.auth_success"))
+
+    @error_toast
+    def delete_callback(self, id: str):
+        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+        session = DgpSessionV2.read_cookies(path)
+        json = {"hardware_manage_id": [id]}
+        res = session.post_device_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarereject", json=json, verify=False).json()
+        if res["result_code"] != 100:
+            raise Exception(res["error"])
+        assert isinstance(self.data, dict)
+        self.data["hardwares"] = [x for x in self.data["hardwares"] if x["hardware_manage_id"] != id]
+
+        children_destroy(self)
+        self.create()
+        self.toast.info(i18n.t("app.account.delete_success"))
