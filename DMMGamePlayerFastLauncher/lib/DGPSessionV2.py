@@ -201,8 +201,12 @@ class DgpSessionV2:
     def lunch(self, product_id: str, game_type: str) -> requests.Response:
         if game_type == "GCL":
             url = self.LAUNCH_CL
-        else:
+        elif game_type == "ACL":
+            url = self.LAUNCH_CL
+        elif game_type == "AMAIN":
             url = self.LAUNCH_PKG
+        else:
+            raise Exception("Unknown game_type: " + game_type + " " + product_id)
         json = {
             "product_id": product_id,
             "game_type": game_type,
