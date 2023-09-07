@@ -1,6 +1,7 @@
 import json
 import logging
 import traceback
+from base64 import b64encode
 from pathlib import Path
 from typing import Callable
 
@@ -8,7 +9,7 @@ import customtkinter as ctk
 import i18n
 from component.component import CTkProgressWindow
 from customtkinter import CTk
-from lib.DGPSessionV2 import DgpSessionV2
+from lib.DGPSessionWrap import DgpSessionWrap
 from lib.process_manager import ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
@@ -51,13 +52,22 @@ class GameLauncher(CTk):
             data = ShortcutData.from_dict(json.load(f))
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionV2.read_cookies(account_path)
-        response = session.lunch(data.product_id.get()).json()
+        session = DgpSessionWrap.read_cookies(account_path)
+
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
 
+        response = session.lunch(data.product_id.get(), game["gameType"]).json()
+
         if response["result_code"] != 100:
             raise Exception(response["error"])
+
+        if response["data"].get("drm_auth_token") is not None:
+            filename = b64encode(data.product_id.get().encode("utf-8")).decode("utf-8")
+            drm_path = Env.DMM_GAME_PLAYER_HIDDEN_FOLDER.joinpath(filename)
+            drm_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(drm_path.absolute(), "w+") as f:
+                f.write(response["data"]["drm_auth_token"])
 
         if not Env.DEVELOP:
             if response["data"]["is_administrator"] and not ProcessManager.admin_check():
@@ -71,7 +81,6 @@ class GameLauncher(CTk):
                 download = session.download(response["data"]["file_list_url"], game_path.parent)
                 box = CTkProgressWindow(self).create()
                 for progress, file in download:
-                    logging.info(file["local_path"])
                     box.set(progress)
                 box.destroy()
                 game["detail"]["version"] = response["data"]["latest_version"]
@@ -80,11 +89,10 @@ class GameLauncher(CTk):
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
         process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
-
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
-            logging.info(text)
+            logging.debug(text)
 
 
 class LanchLauncher(CTk):
@@ -115,7 +123,7 @@ class LanchLauncher(CTk):
 
     def launch(self, id: str):
         path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
-        with DgpSessionV2() as session:
+        with DgpSessionWrap() as session:
             session.read_bytes(str(path))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.export_error"))
@@ -127,9 +135,9 @@ class LanchLauncher(CTk):
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
-            logging.info(text)
+            logging.debug(text)
 
-        with DgpSessionV2() as session:
+        with DgpSessionWrap() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.import_error"))

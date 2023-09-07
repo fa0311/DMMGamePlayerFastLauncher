@@ -5,6 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: 現在のファイル",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "DMMGamePlayerFastLauncher",
       "type": "python",
       "request": "launch",
@@ -22,7 +30,7 @@
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
       "justMyCode": false,
-      "args": ["aa"],
+      "args": ["priconner"],
       "env": {
         "ENV": "DEVELOP"
       }
@@ -34,7 +42,7 @@
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
       "justMyCode": false,
-      "args": ["a", "--type", "launcher"],
+      "args": ["main", "--type", "launcher"],
       "env": {
         "ENV": "DEVELOP"
       }

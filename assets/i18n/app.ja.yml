@@ -13,6 +13,8 @@ ja:
     edit: 編集
     launch_create: ランチャー作成
     import: インポート
+    device: デバイス登録
+    device_list: デバイス一覧
 
   home:
     new_version: DMMGamePlayerFastLauncherの新しいバージョンがあります。
@@ -80,6 +82,22 @@ ja:
     delete: 削除
     save_success: 保存しました。
 
+    device_detail: |-
+      メールアドレスに送信された `デバイス認証コード` を入力してください。
+
+    send_auth_code: 認証コードを送信
+    auth: 認証
+
+    hardware_name: デバイス名
+    auth_code: デバイス認証コード
+    auth_code_tooltip: |-
+      メールに記載の英数字を入力してください
+    send_auth_code_success: 認証コードを送信しました。
+    auth_success: 認証に成功しました。
+    delete_success: 削除しました。
+
+    device_registrations: "登録されたデバイス数 : %{count} / %{limit}"
+
   setting:
     save: 保存
     reset_all_settings: 全ての設定をリセット
@@ -96,6 +114,15 @@ ja:
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウ
+
+    device_detail: |-
+      デバイス認証に使用するデバイス情報を設定します。
+      これらは適当で構いません。
+
+    mac_address: MACアドレス
+    hdd_serial: HDDシリアル
+    motherboard: マザーボードID
+    user_os: OS
 
     other_detail: このツールの設定をテキストエディタで編集します。
     open_save_folder: 設定ファイルを開く
@@ -125,6 +152,9 @@ ja:
     report: 報告
     copy_to_clipboard: "クリップボードにコピー"
     details: 詳細
+
+  lib:
+    dmm_already_running: DMMGamePlayerが起動しているため、起動できませんでした。
 
   utils:
     file_exists: そのファイルは既に存在します。

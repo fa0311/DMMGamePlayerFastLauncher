@@ -9,7 +9,7 @@ from coloredlogs import ColoredFormatter
 from component.logger import StyleScheme, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
 from models.setting_data import AppConfig
-from static.config import AssetsPathConfig, DataPathConfig
+from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig, UrlConfig
 from static.env import Env
 from static.loder import config_loder
 from tkinter_colored_logging_handlers import LoggingHandler
@@ -25,17 +25,28 @@ def loder(master: LanchLauncher):
         handler.setFormatter(ColoredFormatter("[%(levelname)s] [%(asctime)s] %(message)s"))
         logging.basicConfig(level=logging.DEBUG, handlers=[handler])
 
+        logging.debug("==================================================")
+        logging.debug("===== DMMGamePlayerFastLauncher Environment =====")
+        logging.debug("==================================================")
         logging.debug(Env.dump())
         logging.debug(AppConfig.DATA.to_dict())
+        logging.debug(AppConfig.DEVICE.to_dict())
+        logging.debug(DataPathConfig.dump())
+        logging.debug(AssetsPathConfig.dump())
+        logging.debug(UrlConfig.dump())
+        logging.debug(SchtasksConfig.dump())
+        logging.debug("==================================================")
+        logging.debug("==================================================")
+        logging.debug("==================================================")
 
     if AppConfig.DATA.proxy_http.get() != "":
         os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
     if AppConfig.DATA.proxy_https.get() != "":
         os.environ["HTTPS_PROXY"] = AppConfig.DATA.proxy_https.get()
 
-    os.makedirs(DataPathConfig.ACCOUNT, exist_ok=True)
-    os.makedirs(DataPathConfig.SHORTCUT, exist_ok=True)
-    os.makedirs(DataPathConfig.SCHTASKS, exist_ok=True)
+    DataPathConfig.ACCOUNT.mkdir(exist_ok=True)
+    DataPathConfig.SHORTCUT.mkdir(exist_ok=True)
+    DataPathConfig.SCHTASKS.mkdir(exist_ok=True)
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
@@ -44,8 +55,6 @@ def loder(master: LanchLauncher):
         ctk.set_widget_scaling(AppConfig.DATA.window_scaling.get())
     except Exception:
         pass
-
-    logging.debug("loder success")
 
 
 argpar = argparse.ArgumentParser(
