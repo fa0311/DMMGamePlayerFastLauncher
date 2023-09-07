@@ -1,0 +1,10 @@
+name: "[ja] 💡 機能を提案する"
+description: DMMGamePlayerFastLauncherに欲しい機能を提案して下さい
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 機能を説明する
+    validations:
+      required: true
