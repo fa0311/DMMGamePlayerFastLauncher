@@ -44,9 +44,9 @@ def loder(master: LanchLauncher):
     if AppConfig.DATA.proxy_https.get() != "":
         os.environ["HTTPS_PROXY"] = AppConfig.DATA.proxy_https.get()
 
-    os.makedirs(DataPathConfig.ACCOUNT, exist_ok=True)
-    os.makedirs(DataPathConfig.SHORTCUT, exist_ok=True)
-    os.makedirs(DataPathConfig.SCHTASKS, exist_ok=True)
+    DataPathConfig.ACCOUNT.mkdir(exist_ok=True)
+    DataPathConfig.SHORTCUT.mkdir(exist_ok=True)
+    DataPathConfig.SCHTASKS.mkdir(exist_ok=True)
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
