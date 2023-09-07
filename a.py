@@ -6,7 +6,9 @@ session = DgpSessionWrap.read_cookies(Path("data/account/a.bytes"))
 
 
 json = {}
-res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/hardwarelist", json=json, verify=False)
+res = session.post_dgp(
+    "https://apidgp-gameplayer.games.dmm.com/v5/hardwarelist", json=json, verify=False
+)
 print(res.json())
 
 
@@ -41,5 +43,7 @@ json = {
     "launch_type": "LIB",
 }
 
-res = session.post_dgp("https://apidgp-gameplayer.games.dmm.com/v5/launch/pkg", json=json, verify=False)
+res = session.post_dgp(
+    "https://apidgp-gameplayer.games.dmm.com/v5/launch/pkg", json=json, verify=False
+)
 print(res.json())
