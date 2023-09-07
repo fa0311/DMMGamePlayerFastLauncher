@@ -1,5 +1,6 @@
 import json
 import logging
+import subprocess
 import traceback
 from base64 import b64encode
 from pathlib import Path
@@ -7,6 +8,7 @@ from typing import Callable
 
 import customtkinter as ctk
 import i18n
+import psutil
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -59,6 +61,11 @@ class GameLauncher(CTk):
 
         response = session.lunch(data.product_id.get(), game["gameType"]).json()
 
+        if response["result_code"] == 203:
+            launch(data.account_path.get(), self.process)
+            session = DgpSessionWrap.read_cookies(account_path)
+            response = session.lunch(data.product_id.get(), game["gameType"]).json()
+
         if response["result_code"] != 100:
             raise Exception(response["error"])
 
@@ -94,6 +101,15 @@ class GameLauncher(CTk):
             text = line.decode("utf-8").strip()
             logging.debug(text)
 
+    def process(self, process: subprocess.Popen[bytes]):
+        assert process.stdout is not None
+        for line in process.stdout:
+            text = line.decode("utf-8").strip()
+            logging.debug(text)
+            if "Checking for update" in text:
+                terminate(process.pid)
+                logging.debug("terminate")
+
 
 class LanchLauncher(CTk):
     loder: Callable
@@ -113,7 +129,7 @@ class LanchLauncher(CTk):
     @threading_wrapper
     def thread(self, id: str):
         try:
-            self.launch(id)
+            launch(id, self.process)
             self.quit()
         except Exception as e:
             if not Env.DEVELOP:
@@ -121,27 +137,37 @@ class LanchLauncher(CTk):
                 ErrorWindow(self, str(e), traceback.format_exc(), quit=True).create()
             raise
 
-    def launch(self, id: str):
-        path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
-        with DgpSessionWrap() as session:
-            session.read_bytes(str(path))
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.launch.export_error"))
-            session.write()
-
-        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
-        process = ProcessManager().run([str(dgp)])
-
+    def process(self, process: subprocess.Popen[bytes]):
         assert process.stdout is not None
         for line in process.stdout:
             text = line.decode("utf-8").strip()
             logging.debug(text)
 
-        with DgpSessionWrap() as session:
-            session.read()
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
-                raise Exception(i18n.t("app.launch.import_error"))
-            session.write_bytes(str(path))
 
-            session.cookies.clear()
-            session.write()
+def launch(id: str, fn: Callable[[subprocess.Popen[bytes]], None]):
+    path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
+    with DgpSessionWrap() as session:
+        session.read_bytes(str(path))
+        if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
+            raise Exception(i18n.t("app.launch.export_error"))
+        session.write()
+
+    dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
+    process = ProcessManager().run([str(dgp)])
+
+    fn(process)
+
+    with DgpSessionWrap() as session:
+        session.read()
+        if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
+            raise Exception(i18n.t("app.launch.import_error"))
+        session.write_bytes(str(path))
+
+        session.cookies.clear()
+        session.write()
+
+
+# CloseMainWindow
+def terminate(proc_pid):
+    process = psutil.Process(proc_pid)
+    process.children(recursive=True)[2].terminate()
