@@ -3,7 +3,7 @@ from tkinter import BooleanVar, DoubleVar, StringVar
 
 from component.var import PathVar
 from component.variable_base import VariableBase
-from lib.DGPSessionWrap import DgpSessionWrap
+from lib.DGPSessionV2 import DgpSessionV2
 from static.env import Env
 
 
@@ -20,19 +20,19 @@ class SettingData(VariableBase):
     debug_window: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))
 
     def update(self):
-        DgpSessionWrap.DGP5_PATH = self.dmm_game_player_program_folder.get_path()
-        DgpSessionWrap.DGP5_DATA_PATH = self.dmm_game_player_data_folder.get_path()
+        DgpSessionV2.DGP5_PATH = self.dmm_game_player_program_folder.get_path()
+        DgpSessionV2.DGP5_DATA_PATH = self.dmm_game_player_data_folder.get_path()
 
 
 @dataclass
 class DeviceData(VariableBase):
-    mac_address: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionWrap.DGP5_DEVICE_PARAMS["mac_address"]))
-    hdd_serial: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionWrap.DGP5_DEVICE_PARAMS["hdd_serial"]))
-    motherboard: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionWrap.DGP5_DEVICE_PARAMS["motherboard"]))
-    user_os: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionWrap.DGP5_DEVICE_PARAMS["user_os"]))
+    mac_address: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionV2.DGP5_DEVICE_PARAMS["mac_address"]))
+    hdd_serial: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionV2.DGP5_DEVICE_PARAMS["hdd_serial"]))
+    motherboard: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionV2.DGP5_DEVICE_PARAMS["motherboard"]))
+    user_os: StringVar = field(default_factory=lambda: StringVar(value=DgpSessionV2.DGP5_DEVICE_PARAMS["user_os"]))
 
     def update(self):
-        DgpSessionWrap.DGP5_DEVICE_PARAMS = {
+        DgpSessionV2.DGP5_DEVICE_PARAMS = {
             "mac_address": self.mac_address.get(),
             "hdd_serial": self.hdd_serial.get(),
             "motherboard": self.motherboard.get(),
