@@ -38,7 +38,7 @@ If you want to translate this tool, please send a pull request.
 
 ### Bug reports
 
-If you find a bug, please report it in [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new)
+If you find a bug, please report it in [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new/choose)
 
 ## Source
 

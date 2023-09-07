@@ -28,6 +28,9 @@
 - DMMGamePlayerの基本設定をデフォルトに戻す。
   - `コンピューター起動時にDMM GAME PLAYERを実行` のチェックを外す
   - `バックグラウンド実行を許可する` のチェックを外す
+- ファイル名から日本語を削除し半角英数字のみにする
+
+それでも解決しないまたは再現性の高い不具合については [issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new/choose) から報告してください。
 
 ## DRMで保護されたゲームを起動する(デバイス認証が必要なゲーム)
 

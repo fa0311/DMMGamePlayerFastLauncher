@@ -38,7 +38,7 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 ### バグ報告
 
-バグを見つけた場合は [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new) から報告してください
+バグを見つけた場合は [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new/choose) から報告してください
 
 ## 典拠
 
