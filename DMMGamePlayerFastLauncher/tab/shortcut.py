@@ -180,8 +180,8 @@ class ShortcutEdit(ShortcutCreate):
 
     def save(self):
         selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
-        super().save()
         selected.unlink()
+        super().save()
         self.values.remove(self.selected.get())
         self.values.append(self.filename.get())
         self.selected.set(self.filename.get())
