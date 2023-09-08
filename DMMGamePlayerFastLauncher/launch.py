@@ -90,9 +90,12 @@ class GameLauncher(CTk):
 
         process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
         assert process.stdout is not None
-        for line in process.stdout:
-            text = line.decode("utf-8").strip()
-            logging.debug(text)
+
+        if AppConfig.DATA.debug_window.get():
+            for line in process.stdout:
+                logging.debug(decode(line))
+        else:
+            process.wait()
 
 
 class LanchLauncher(CTk):
@@ -133,9 +136,11 @@ class LanchLauncher(CTk):
         process = ProcessManager().run([str(dgp)])
 
         assert process.stdout is not None
-        for line in process.stdout:
-            text = line.decode("utf-8").strip()
-            logging.debug(text)
+        if AppConfig.DATA.debug_window.get():
+            for line in process.stdout:
+                logging.debug(decode(line))
+        else:
+            process.wait()
 
         with DgpSessionWrap() as session:
             session.read()
@@ -145,3 +150,15 @@ class LanchLauncher(CTk):
 
             session.cookies.clear()
             session.write()
+
+
+def decode(s: bytes) -> str:
+    try:
+        return s.decode("utf-8").strip()
+    except Exception:
+        pass
+    try:
+        return s.decode("cp932").strip()
+    except Exception:
+        pass
+    return str(s)
