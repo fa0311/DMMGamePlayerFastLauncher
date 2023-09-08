@@ -78,7 +78,7 @@ class GameLauncher(CTk):
 
         if response["data"]["latest_version"] != game["detail"]["version"]:
             if data.auto_update.get():
-                download = session.download(response["data"]["file_list_url"], game_path.parent)
+                download = session.download(response["data"]["file_list_url"], game_file)
                 box = CTkProgressWindow(self).create()
                 for progress, file in download:
                     box.set(progress)
@@ -88,7 +88,7 @@ class GameLauncher(CTk):
 
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
-        process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
+        process = ProcessManager.run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
         assert process.stdout is not None
 
         for line in process.stdout:
