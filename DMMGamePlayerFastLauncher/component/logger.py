@@ -18,6 +18,7 @@ class TkinkerLogger(CTkToplevel):
         self.title("Log")
         self.geometry("600x300")
         self.box = CTkTextbox(self, height=30)
+        self.protocol("WM_DELETE_WINDOW", lambda: self.withdraw())
 
     def create(self):
         self.box.pack(fill=ctk.BOTH, padx=10, pady=(0, 10), expand=True)
