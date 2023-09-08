@@ -105,10 +105,11 @@ class ShortcutCreate(CTkScrollableFrame):
         if task.check():
             task.set()
         try:
-            name, icon = self.get_game_info()
+            name, icon, admin = self.get_game_info()
         except Exception:
             name, icon = self.filename.get(), None
             self.toast.error(i18n.t("app.shortcut.game_info_error"))
+
         sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = ["/run", "/tn", task.name]
         Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
@@ -120,10 +121,13 @@ class ShortcutCreate(CTkScrollableFrame):
         self.save_check()
 
         try:
-            name, icon = self.get_game_info()
+            name, icon, admin = self.get_game_info()
         except Exception:
-            name, icon = self.filename.get(), None
+            name, icon, admin = self.filename.get(), None, False
             self.toast.error(i18n.t("app.shortcut.game_info_error"))
+
+        if admin:
+            raise Exception(i18n.t("app.shortcut.administrator_error"))
 
         sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
         args = [self.filename.get()]
@@ -137,7 +141,7 @@ class ShortcutCreate(CTkScrollableFrame):
         self.save()
         self.toast.info(i18n.t("app.shortcut.save_success"))
 
-    def get_game_info(self) -> tuple[str, Path]:
+    def get_game_info(self) -> tuple[str, Path, bool]:
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
         game_path = Path(game["detail"]["path"])
         path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
@@ -152,7 +156,7 @@ class ShortcutCreate(CTkScrollableFrame):
         title = title.replace(":", "").replace("*", "").replace("?", "")
         title = title.replace('"', "").replace("<", "").replace(">", "").replace("|", "")
 
-        return title, game_path.joinpath(data["exec_file_name"])
+        return title, game_path.joinpath(data["exec_file_name"]), data["is_administrator"]
 
 
 class ShortcutEdit(ShortcutCreate):

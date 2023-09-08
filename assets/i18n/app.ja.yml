@@ -55,6 +55,7 @@ ja:
     product_id_not_entered: product_idが入力されていません。
     filename_not_entered: ファイル名が入力されていません。
     game_info_error: ゲーム情報の取得に失敗しました。
+    administrator_error: 管理者権限が必要です。`UAC自動昇格ショートカット` を作成してください。
     file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除
