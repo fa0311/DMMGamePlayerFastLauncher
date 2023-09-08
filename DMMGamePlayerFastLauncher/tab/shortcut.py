@@ -10,6 +10,7 @@ from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOption
 from lib.DGPSessionWrap import DgpSessionWrap
 from lib.process_manager import Schtasks, Shortcut
 from lib.toast import ToastController, error_toast
+from models.setting_data import AppConfig
 from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
 from static.env import Env
@@ -271,7 +272,8 @@ class LauncherShortcutBase(CTkScrollableFrame):
             name = self.filename.get()
             sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = [name, "--type", "launcher"]
-            Shortcut().create(sorce=sorce, args=args)
+            icon = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe")
+            Shortcut().create(sorce=sorce, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
             DataPathConfig.ACCOUNT_SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
