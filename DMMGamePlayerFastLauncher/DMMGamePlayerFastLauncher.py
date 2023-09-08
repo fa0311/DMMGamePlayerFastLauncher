@@ -16,6 +16,10 @@ from tkinter_colored_logging_handlers import LoggingHandler
 
 
 def loder(master: LanchLauncher):
+    DataPathConfig.ACCOUNT.mkdir(exist_ok=True, parents=True)
+    DataPathConfig.SHORTCUT.mkdir(exist_ok=True, parents=True)
+    DataPathConfig.SCHTASKS.mkdir(exist_ok=True, parents=True)
+
     config_loder()
     i18n.load_path.append(str(AssetsPathConfig.I18N))
     i18n.set("locale", AppConfig.DATA.lang.get())
@@ -43,10 +47,6 @@ def loder(master: LanchLauncher):
         os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
     if AppConfig.DATA.proxy_https.get() != "":
         os.environ["HTTPS_PROXY"] = AppConfig.DATA.proxy_https.get()
-
-    DataPathConfig.ACCOUNT.mkdir(exist_ok=True)
-    DataPathConfig.SHORTCUT.mkdir(exist_ok=True)
-    DataPathConfig.SCHTASKS.mkdir(exist_ok=True)
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
