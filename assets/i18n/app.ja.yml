@@ -94,6 +94,7 @@ ja:
       メールに記載の英数字を入力してください
     send_auth_code_success: 認証コードを送信しました。
     auth_success: 認証に成功しました。
+    device_list_success: デバイス一覧を取得しました。
     delete_success: 削除しました。
 
     device_registrations: "登録されたデバイス数 : %{count} / %{limit}"

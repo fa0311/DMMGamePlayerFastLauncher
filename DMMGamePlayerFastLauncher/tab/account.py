@@ -258,7 +258,7 @@ class DeviceListTab(CTkScrollableFrame):
 
         children_destroy(self)
         self.create()
-        self.toast.info(i18n.t("app.account.auth_success"))
+        self.toast.info(i18n.t("app.account.device_list_success"))
 
     @error_toast
     def delete_callback(self, id: str):
