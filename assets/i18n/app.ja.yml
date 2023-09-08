@@ -12,6 +12,7 @@ ja:
     create: 作成
     edit: 編集
     launch_create: ランチャー作成
+    launch_edit: ランチャー編集
     import: インポート
     device: デバイス登録
     device_list: デバイス一覧
@@ -59,6 +60,14 @@ ja:
     file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除
+
+    account_edit_detail: ショートカットの設定ファイルを編集します。
+    dgp_args: DMMGamePlayerの引数
+    dgp_args_tooltip: |-
+      DMMGamePlayerに渡す引数を指定します。
+      例えば `dmmgameplayer://play/GCL/priconner/cl/win` と入力すると
+      DMMGamePlayerが起動した際にプリコネRが起動します。
+      空欄の場合はDMMGamePlayerのみが起動します。
 
   account:
     import_detail: |-

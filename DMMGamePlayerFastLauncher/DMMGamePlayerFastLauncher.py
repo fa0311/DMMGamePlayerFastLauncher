@@ -17,6 +17,7 @@ from tkinter_colored_logging_handlers import LoggingHandler
 
 def loder(master: LanchLauncher):
     DataPathConfig.ACCOUNT.mkdir(exist_ok=True, parents=True)
+    DataPathConfig.ACCOUNT_SHORTCUT.mkdir(exist_ok=True, parents=True)
     DataPathConfig.SHORTCUT.mkdir(exist_ok=True, parents=True)
     DataPathConfig.SCHTASKS.mkdir(exist_ok=True, parents=True)
 

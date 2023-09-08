@@ -6,6 +6,7 @@ from static.dump import Dump
 class DataPathConfig(Dump):
     DATA = Path("data")
     ACCOUNT = DATA.joinpath("account")
+    ACCOUNT_SHORTCUT = DATA.joinpath("account_shortcut")
     SHORTCUT = DATA.joinpath("shortcut")
     APP_CONFIG = DATA.joinpath("config.json")
     SCHTASKS = DATA.joinpath("schtasks")

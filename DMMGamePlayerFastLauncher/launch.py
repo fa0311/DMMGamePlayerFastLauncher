@@ -14,7 +14,7 @@ from lib.process_manager import ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
 from models.setting_data import AppConfig
-from models.shortcut_data import ShortcutData
+from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
 from static.env import Env
 from tab.home import HomeTab
@@ -125,15 +125,22 @@ class LanchLauncher(CTk):
             raise
 
     def launch(self, id: str):
-        path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(id).with_suffix(".json")
+        with open(path, "r", encoding="utf-8") as f:
+            data = LauncherShortcutData.from_dict(json.load(f))
+
+        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
+
         with DgpSessionWrap() as session:
-            session.read_bytes(str(path))
+            session.read_bytes(str(account_path))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.export_error"))
             session.write()
 
         dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
-        process = ProcessManager().run([str(dgp)])
+
+        dmm_args = data.dgp_args.get().split(" ")
+        process = ProcessManager().run([str(dgp)] + dmm_args)
 
         assert process.stdout is not None
         if AppConfig.DATA.debug_window.get():
@@ -146,7 +153,7 @@ class LanchLauncher(CTk):
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.import_error"))
-            session.write_bytes(str(path))
+            session.write_bytes(str(account_path))
 
             session.cookies.clear()
             session.write()
