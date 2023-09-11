@@ -12,6 +12,7 @@ ja:
     create: 作成
     edit: 編集
     launch_create: ランチャー作成
+    launch_edit: ランチャー編集
     import: インポート
     device: デバイス登録
     device_list: デバイス一覧
@@ -55,9 +56,18 @@ ja:
     product_id_not_entered: product_idが入力されていません。
     filename_not_entered: ファイル名が入力されていません。
     game_info_error: ゲーム情報の取得に失敗しました。
+    administrator_error: 管理者権限が必要です。`UAC自動昇格ショートカット` を作成してください。
     file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除
+
+    account_edit_detail: ショートカットの設定ファイルを編集します。
+    dgp_args: DMMGamePlayerの引数
+    dgp_args_tooltip: |-
+      DMMGamePlayerに渡す引数を指定します。
+      例えば `dmmgameplayer://play/GCL/priconner/cl/win` と入力すると
+      DMMGamePlayerが起動した際にプリコネRが起動します。
+      空欄の場合はDMMGamePlayerのみが起動します。
 
   account:
     import_detail: |-
@@ -94,6 +104,7 @@ ja:
       メールに記載の英数字を入力してください
     send_auth_code_success: 認証コードを送信しました。
     auth_success: 認証に成功しました。
+    device_list_success: デバイス一覧を取得しました。
     delete_success: 削除しました。
 
     device_registrations: "登録されたデバイス数 : %{count} / %{limit}"
@@ -114,6 +125,7 @@ ja:
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウ
+    output_logfile: ログをファイル出力
 
     device_detail: |-
       デバイス認証に使用するデバイス情報を設定します。
@@ -146,7 +158,7 @@ ja:
     "yes": はい
     "no": いいえ
 
-    download: ダウンロード
+    download: ダウンロード中です...
 
   toast:
     report: 報告

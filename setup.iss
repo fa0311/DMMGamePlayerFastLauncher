@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "DMMGamePlayerFastLauncher"
-#define MyAppVersion "5.1.2"
+#define MyAppVersion "5.2.0"
 #define MyAppPublisher "yuki"
 #define MyAppURL "https://github.com/fa0311/DMMGamePlayerFastLauncher"
 #define MyAppExeName "DMMGamePlayerFastLauncher.exe"

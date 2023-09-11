@@ -243,6 +243,7 @@ class ConfirmWindow(CTkToplevel):
 
 
 class CTkProgressWindow(CTkToplevel):
+    label: CTkLabel
     progress: CTkProgressBar
     now: int
     max: int
@@ -250,6 +251,7 @@ class CTkProgressWindow(CTkToplevel):
     def __init__(self, master: Misc, now: int = 0, max: int = 1):
         super().__init__(master)
         self.geometry("300x100")
+        self.label = CTkLabel(self, text="0.00%", justify=ctk.LEFT, anchor=ctk.W)
         self.progress = CTkProgressBar(self, width=300)
 
         self.deiconify()
@@ -260,15 +262,19 @@ class CTkProgressWindow(CTkToplevel):
         self.max = max
 
     def create(self):
-        CTkLabel(self, text=i18n.t("app.component.download")).pack(side=ctk.TOP, fill=ctk.X, expand=True, padx=10, pady=10)
-        self.progress.pack(expand=True, fill="x", padx=10, pady=10)
+        CTkLabel(self, text=i18n.t("app.component.download")).pack(fill=ctk.X, expand=True, padx=10, pady=(10, 0))
+        self.label.pack(fill=ctk.X, expand=True, padx=10, pady=0)
+        self.progress.pack(fill=ctk.X, expand=True, padx=10, pady=(0, 10))
+
         self.progress.set(self.now / self.max)
         return self
 
     def add(self, value: int):
         self.now += value
         self.progress.set(self.now / self.max)
+        self.label.configure(text=f"{(self.now / self.max * 100):.2f}%")
 
     def set(self, value: int):
         self.now = value
         self.progress.set(self.now / self.max)
+        self.label.configure(text=f"{(self.now / self.max * 100):.2f}%")

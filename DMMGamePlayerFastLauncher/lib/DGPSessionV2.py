@@ -243,6 +243,9 @@ class DgpSessionV2:
                 f.write(content)
             return file["size"], file
 
+        if data["data"]["page"] > 1:
+            raise Exception("Not supported multiple pages")
+
         size = sum([x["size"] for x in data["data"]["file_list"]])
         download_size = 0
 

@@ -14,7 +14,7 @@ from lib.process_manager import ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
 from models.setting_data import AppConfig
-from models.shortcut_data import ShortcutData
+from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
 from static.env import Env
 from tab.home import HomeTab
@@ -78,7 +78,7 @@ class GameLauncher(CTk):
 
         if response["data"]["latest_version"] != game["detail"]["version"]:
             if data.auto_update.get():
-                download = session.download(response["data"]["file_list_url"], game_path.parent)
+                download = session.download(response["data"]["file_list_url"], game_file)
                 box = CTkProgressWindow(self).create()
                 for progress, file in download:
                     box.set(progress)
@@ -88,11 +88,11 @@ class GameLauncher(CTk):
 
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
-        process = ProcessManager.run([str(game_path.absolute())] + dmm_args)
+        process = ProcessManager.run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
         assert process.stdout is not None
+
         for line in process.stdout:
-            text = line.decode("utf-8").strip()
-            logging.debug(text)
+            logging.debug(decode(line))
 
 
 class LanchLauncher(CTk):
@@ -122,26 +122,44 @@ class LanchLauncher(CTk):
             raise
 
     def launch(self, id: str):
-        path = DataPathConfig.ACCOUNT.joinpath(id).with_suffix(".bytes")
+        path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(id).with_suffix(".json")
+        with open(path, "r", encoding="utf-8") as f:
+            data = LauncherShortcutData.from_dict(json.load(f))
+
+        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
+
         with DgpSessionWrap() as session:
-            session.read_bytes(str(path))
+            session.read_bytes(str(account_path))
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.export_error"))
             session.write()
 
-        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
-        process = ProcessManager().run([str(dgp)])
+        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path()
+
+        dmm_args = data.dgp_args.get().split(" ")
+        process = ProcessManager.run(["DMMGamePlayer.exe"] + dmm_args, cwd=str(dgp.absolute()))
 
         assert process.stdout is not None
         for line in process.stdout:
-            text = line.decode("utf-8").strip()
-            logging.debug(text)
+            logging.debug(decode(line))
 
         with DgpSessionWrap() as session:
             session.read()
             if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
                 raise Exception(i18n.t("app.launch.import_error"))
-            session.write_bytes(str(path))
+            session.write_bytes(str(account_path))
 
             session.cookies.clear()
             session.write()
+
+
+def decode(s: bytes) -> str:
+    try:
+        return s.decode("utf-8").strip()
+    except Exception:
+        pass
+    try:
+        return s.decode("cp932").strip()
+    except Exception:
+        pass
+    return str(s)

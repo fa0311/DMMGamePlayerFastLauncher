@@ -12,3 +12,9 @@ class ShortcutData(VariableBase):
     game_args: StringVar = field(default_factory=StringVar)
     auto_update: BooleanVar = field(default_factory=lambda: BooleanVar(value=True))
     game_type: StringVar = field(default_factory=lambda: StringVar(value="GCL"))
+
+
+@dataclass
+class LauncherShortcutData(VariableBase):
+    account_path: PathVar = field(default_factory=PathVar)
+    dgp_args: StringVar = field(default_factory=StringVar)

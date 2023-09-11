@@ -26,9 +26,9 @@ class ProcessManager:
             return False
 
     @staticmethod
-    def run(args: list[str]) -> subprocess.Popen[bytes]:
-        logging.info(args)
-        return subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def run(args: list[str], cwd: Optional[str] = None) -> subprocess.Popen:
+        logging.info({"cwd": cwd, "args": args})
+        return subprocess.Popen(args, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     @staticmethod
     def run_ps(args: str) -> int:
