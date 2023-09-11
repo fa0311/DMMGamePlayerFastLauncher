@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 import time
 
 import customtkinter as ctk
@@ -55,6 +56,7 @@ def loder(master: LanchLauncher):
     logging.debug(AssetsPathConfig.dump())
     logging.debug(UrlConfig.dump())
     logging.debug(SchtasksConfig.dump())
+    logging.debug(sys.argv)
     logging.debug("==================================================")
     logging.debug("==================================================")
     logging.debug("==================================================")
