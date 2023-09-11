@@ -31,7 +31,7 @@ def loder(master: LanchLauncher):
 
     if AppConfig.DATA.output_logfile.get() and not any([isinstance(x, logging.FileHandler) for x in logging.getLogger().handlers]):
         DataPathConfig.LOG.mkdir(exist_ok=True, parents=True)
-        handler = logging.FileHandler(DataPathConfig.LOG.joinpath(f"{time.strftime('%Y%m%d%H%M%S')}.log"))
+        handler = logging.FileHandler(DataPathConfig.LOG.joinpath(f"{time.strftime('%Y%m%d%H%M%S')}.log"), encoding="utf-8")
         handlers.append(handler)
 
     if AppConfig.DATA.debug_window.get() and not any([isinstance(x, LoggingHandler) for x in logging.getLogger().handlers]):
