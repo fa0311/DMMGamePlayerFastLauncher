@@ -18,6 +18,7 @@ class SettingData(VariableBase):
     appearance_mode: StringVar = field(default_factory=lambda: StringVar(value="dark"))
     window_scaling: DoubleVar = field(default_factory=lambda: DoubleVar(value=1.0))
     debug_window: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))
+    output_logfile: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))
 
     def update(self):
         DgpSessionV2.DGP5_PATH = self.dmm_game_player_program_folder.get_path()

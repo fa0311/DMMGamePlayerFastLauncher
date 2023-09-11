@@ -125,6 +125,7 @@ ja:
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウ
+    output_logfile: ログをファイル出力
 
     device_detail: |-
       デバイス認証に使用するデバイス情報を設定します。

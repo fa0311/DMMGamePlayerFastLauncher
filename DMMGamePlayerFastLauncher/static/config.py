@@ -8,6 +8,7 @@ class DataPathConfig(Dump):
     ACCOUNT = DATA.joinpath("account")
     ACCOUNT_SHORTCUT = DATA.joinpath("account_shortcut")
     SHORTCUT = DATA.joinpath("shortcut")
+    LOG = DATA.joinpath("log")
     APP_CONFIG = DATA.joinpath("config.json")
     SCHTASKS = DATA.joinpath("schtasks")
     DEVICE = DATA.joinpath("device.json")
