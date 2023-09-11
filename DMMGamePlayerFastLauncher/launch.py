@@ -134,10 +134,10 @@ class LanchLauncher(CTk):
                 raise Exception(i18n.t("app.launch.export_error"))
             session.write()
 
-        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe").absolute()
+        dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path()
 
         dmm_args = data.dgp_args.get().split(" ")
-        process = ProcessManager().run([str(dgp)] + dmm_args)
+        process = ProcessManager.run(["DMMGamePlayer.exe"] + dmm_args, cwd=str(dgp.absolute()))
 
         assert process.stdout is not None
         for line in process.stdout:
