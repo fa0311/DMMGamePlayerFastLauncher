@@ -124,8 +124,8 @@ ja:
     proxy_https: HTTPSプロキシ
 
     window_scaling: ウィンドウの拡大率
-    debug_window: デバッグウィンドウ
-    output_logfile: ログをファイル出力
+    debug_window: デバッグウィンドウを表示する
+    output_logfile: ログをファイルで出力する
 
     device_detail: |-
       デバイス認証に使用するデバイス情報を設定します。
