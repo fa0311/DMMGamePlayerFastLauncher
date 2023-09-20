@@ -73,7 +73,7 @@ ja:
     import_detail: |-
       DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
       インポートをするとDMMGamePlayer5からログアウトされます。
-      インポート済みのアカウントで直接起動した DMMGamePlayer5 にログインしないでください。
+      インポート済みのアカウントで直接起動した DMMGamePlayer5 でログインをしないでください。
 
     filename_tooltip: このアカウントに任意の名前を付けてください。
     import: インポート
