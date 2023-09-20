@@ -34,7 +34,9 @@ Start `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe`.
 
 ### Translations
 
-If you want to translate this tool, please send a pull request.
+If you want to translate this tool, language file please send a pull request.
+
+language file are located in `assets/i18n`.
 
 ### Bug reports
 
