@@ -1,0 +1,170 @@
+zh_CN:
+  title: DMMGamePlayer Fast Launcher
+  language: 简体中文
+
+  tab:
+    home: 主页
+    shortcut: 快捷方式
+    account: 帐户
+    setting: 设置
+    other: 其他
+    help: 帮助
+    create: 创建快捷方式
+    edit: 编辑快捷方式
+    launch_create: 快速启动 GamePlayer
+    launch_edit: 编辑快速启动 GamePlayer
+    import: 导入
+    device: 注册设备
+    device_list: 设备列表
+
+  home:
+    new_version: DMMGamePlayer Fast Launcher有新版本可用。
+
+  shortcut:
+    filename: 文件名
+    filename_tooltip: 请为此快捷方式提供任何名称。
+
+    product_id: 选择 product_id
+    product_id_tooltip: |
+      product_id 是 DMM 用于识别游戏的 ID。
+
+    account_create_detail: |-
+      创建一个用于快速启动 DMMGamePlayer 的快捷方式。
+      请在“帐户”选项卡中选择您创建的帐户。
+
+    account_path: 选择帐户
+    account_path_tooltip: |-
+      请在“帐户”选项卡中选择您创建的帐户。
+
+    game_args: 游戏参数
+    game_args_tooltip: |-
+      指定传递给游戏的参数。
+      对于基于 Unity 的游戏，您可以输入类似 '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' 的参数，以窗口模式启动游戏，分辨率为 1280x720。
+
+    auto_update: 启动时自动更新游戏
+
+    create_bypass_shortcut_and_save: 创建 UAC 自动提升的快捷方式并保存设置
+    create_shortcut_and_save: 创建快捷方式并保存设置
+    save_only: 仅保存设置
+
+    add_detail: 创建快速启动的快捷方式和设置。
+    edit_detail: 编辑快速启动快捷方式的设置。
+
+    file_select: 选择文件
+
+    product_id_not_entered: 未输入 product_id。
+    filename_not_entered: 未输入文件名。
+    game_info_error: 无法检索游戏信息。
+    administrator_error: 需要管理员权限。请创建“UAC 自动提升的快捷方式”。
+    file_not_selected: 未选择文件。
+    save_success: 已成功保存。
+    delete: 删除
+
+    account_edit_detail: 编辑快速启动 DMMGamePlayer 的设置。
+    dgp_args: DMMGamePlayer 参数
+    dgp_args_tooltip: |-
+      指定传递给 DMMGamePlayer 的参数。
+      例如，输入 'dmmgameplayer://play/GCL/priconner/cl/win' 将启动 '公主连结！Re:Dive' 在 DMMGamePlayer 中。留空以仅启动 DMMGamePlayer。
+
+  account:
+    import_detail: |-
+      将您的 DMMGamePlayer 帐户信息导入快速启动器。
+      导入操作将注销 DMMGamePlayer 5。
+      请勿直接在 DMMGamePlayer 5 中使用已导入的帐户登录。
+
+    filename_tooltip: 请为此帐户提供任何名称。
+    import: 导入
+    filename: 文件名
+    filename_not_entered: 未输入文件名。
+    filename_already_exists: 该文件名已存在。
+    import_error: 导入失败。
+    import_success: 导入成功。
+
+    file_select: 选择文件
+
+    edit_detail: |-
+      编辑您的帐户信息。
+      这是一项高级操作。
+
+    save: 保存
+    delete: 删除
+    save_success: 已成功保存。
+
+    device_detail: |-
+      输入发送到您电子邮件地址的“设备认证码”。
+
+    send_auth_code: 发送认证码
+    auth: 认证
+
+    hardware_name: 设备名称
+    auth_code: 设备认证码
+    auth_code_tooltip: |-
+      输入您电子邮件中提供的字母数字代码。
+    send_auth_code_success: 已成功发送认证码。
+    auth_success: 认证成功。
+    device_list_success: 成功检索设备列表。
+    delete_success: 已成功删除。
+
+    device_registrations: "已注册设备数： %{count} / %{limit}"
+
+  setting:
+    save: 保存
+    reset_all_settings: 重置所有设置
+    confirm_reset: 您确定要重置所有设置吗？
+    save_success: 设置已成功保存。
+    dmm_game_player_program_folder: DMMGamePlayer 程序文件夹
+    dmm_game_player_data_folder: DMMGamePlayer 数据文件夹
+    lang: 语言
+    theme: 主题
+    appearance: 外观
+
+    proxy_http: HTTP 代理
+    proxy_https: HTTPS 代理
+
+    window_scaling: 窐口缩放比例
+    debug_window: 显示调试窗口
+    output_logfile: 以文件形式记录日志
+
+    device_detail: |-
+      配置用于设备认证的设备信息。
+      这些值不需要精确。
+
+    mac_address: MAC 地址
+    hdd_serial: 硬盘序列号
+    motherboard: 主板 ID
+    user_os: 操作系统
+
+    other_detail: 使用文本编辑器编辑工具设置。
+    open_save_folder: 打开设置文件夹
+
+  help:
+    coop_in_develop: 参与开发
+    donations_to_developer: 向开发者捐款
+    bug_report: 报告问题
+
+  launch:
+    export_error: 导出失败。
+    import_error: 导入失败。
+
+    admin_error: 需要管理员权限。
+
+  component:
+    required: 此字段为必填项目。
+    required_symbol: "*"
+    reference: 参考
+
+    "yes": 是
+    "no": 否
+
+    download: 正在下载...
+
+  toast:
+    report: 报告
+    copy_to_clipboard: "复制到剪贴板"
+    details: 详情
+
+  lib:
+    dmm_already_running: DMMGamePlayer 已經在運行，因此無法啟動。
+
+  utils:
+    file_exists: 该文件已经存在。
