@@ -1,3 +1,171 @@
 en:
   title: DMMGamePlayer Fast Launcher
   language: English
+
+  tab:
+    home: Home
+    shortcut: Shortcut
+    account: Account
+    setting: Setting
+    other: Other
+    help: Help
+    create: Create Shortcut
+    edit: Edit Shortcut
+    launch_create: Fast Launch GamePlayer
+    launch_edit: Edit Fast Launch GamePlayer
+    import: Import
+    device: Register Device
+    device_list: Device List
+
+  home:
+    new_version: There is a new version of DMMGamePlayer Fast Launcher available.
+
+  shortcut:
+    filename: File Name
+    filename_tooltip: Please provide any name for this shortcut.
+
+    product_id: Select product_id
+    product_id_tooltip: |
+      The product_id is the ID used by DMM to identify games.
+
+    account_create_detail: |-
+      Create a shortcut for fast launching DMMGamePlayer.
+      Please select the account you created in the 'Account' tab.
+
+    account_path: Select Account
+    account_path_tooltip: |-
+      Please select the account you created in the 'Account' tab.
+
+    game_args: Game Arguments
+    game_args_tooltip: |-
+      Specify the arguments to pass to the game.
+      For Unity-based games, you can input something like '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' to launch the game in windowed mode with a resolution of 1280x720.
+
+    auto_update: Automatically update the game on launch
+
+    create_bypass_shortcut_and_save: Create a UAC auto-elevated shortcut and save settings
+    create_shortcut_and_save: Create shortcut and save settings
+    save_only: Save settings only
+
+    add_detail: Create a shortcut and settings for fast launching.
+    edit_detail: Edit the settings for the fast launch shortcut.
+
+    file_select: Select File
+
+    product_id_not_entered: product_id is not entered.
+    filename_not_entered: File name is not entered.
+    game_info_error: Failed to retrieve game information.
+    administrator_error: Administrator privileges are required. Please create a 'UAC auto-elevated shortcut'.
+    file_not_selected: No file selected.
+    save_success: Saved successfully.
+    delete: Delete
+
+    account_edit_detail: Edit settings for fast launching DMMGamePlayer.
+    dgp_args: DMMGamePlayer Arguments
+    dgp_args_tooltip: |-
+      Specify the arguments to pass to DMMGamePlayer.
+      For example, entering 'dmmgameplayer://play/GCL/priconner/cl/win' will launch 'Princess Connect! Re:Dive' in DMMGamePlayer.
+      Leave it blank to launch only DMMGamePlayer.
+
+  account:
+    import_detail: |-
+      Import your DMMGamePlayer account information into Fast Launcher.
+      Importing will log you out of DMMGamePlayer 5.
+      Do not log in directly with an imported account in DMMGamePlayer 5.
+
+    filename_tooltip: Please provide any name for this account.
+    import: Import
+    filename: File Name
+    filename_not_entered: File name is not entered.
+    filename_already_exists: That file name already exists.
+    import_error: Import failed.
+    import_success: Import succeeded.
+
+    file_select: Select File
+
+    edit_detail: |-
+      Edit your account information.
+      This is an advanced operation.
+
+    save: Save
+    delete: Delete
+    save_success: Saved successfully.
+
+    device_detail: |-
+      Enter the 'Device Authentication Code' sent to your email address.
+
+    send_auth_code: Send Authentication Code
+    auth: Authenticate
+
+    hardware_name: Device Name
+    auth_code: Device Authentication Code
+    auth_code_tooltip: |-
+      Enter the alphanumeric code provided in your email.
+    send_auth_code_success: Authentication code sent successfully.
+    auth_success: Authentication succeeded.
+    device_list_success: Device list retrieved successfully.
+    delete_success: Deleted successfully.
+
+    device_registrations: "Registered Devices: %{count} / %{limit}"
+
+  setting:
+    save: Save
+    reset_all_settings: Reset All Settings
+    confirm_reset: Are you sure you want to reset all settings?
+    save_success: Settings saved successfully.
+    dmm_game_player_program_folder: DMMGamePlayer Program Folder
+    dmm_game_player_data_folder: DMMGamePlayer Data Folder
+    lang: Language
+    theme: Theme
+    appearance: Appearance
+
+    proxy_http: HTTP Proxy
+    proxy_https: HTTPS Proxy
+
+    window_scaling: Window Scaling
+    debug_window: Show Debug Window
+    output_logfile: Log to File
+
+    device_detail: |-
+      Configure device information for device authentication.
+      These values do not need to be accurate.
+
+    mac_address: MAC Address
+    hdd_serial: HDD Serial
+    motherboard: Motherboard ID
+    user_os: OS
+
+    other_detail: Edit tool settings in a text editor.
+    open_save_folder: Open Settings Folder
+
+  help:
+    coop_in_develop: Contribute to Development
+    donations_to_developer: Donate to Developer
+    bug_report: Report a Bug
+
+  launch:
+    export_error: Export failed.
+    import_error: Import failed.
+
+    admin_error: Administrator privileges required.
+
+  component:
+    required: This field is required.
+    required_symbol: "*"
+    reference: Reference
+
+    "yes": Yes
+    "no": No
+
+    download: Downloading...
+
+  toast:
+    report: Report
+    copy_to_clipboard: "Copy to Clipboard"
+    details: Details
+
+  lib:
+    dmm_already_running: DMMGamePlayer is already running, so it could not be launched.
+
+  utils:
+    file_exists: That file already exists.
