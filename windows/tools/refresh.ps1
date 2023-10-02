@@ -5,5 +5,5 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 Get-ScheduledTask | Where-Object TaskPath -eq "\Microsoft\Windows\DMMGamePlayerFastLauncher\" | Unregister-ScheduledTask -Confirm:$false
 $schtasks = Join-Path -Path (Split-Path -Path ($PSScriptRoot) -Parent) -ChildPath "data\schtasks"
-Get-ChildItem -Path $schtasks | ForEach-Object { schtasks.exe /create /xml $_.FullName /tn $_.Name }
+Get-ChildItem -Path $schtasks | ForEach-Object { schtasks.exe /create /xml $_.FullName /tn "\Microsoft\Windows\DMMGamePlayerFastLauncher\$($_.Name -replace '\.xml$')" }
 Read-Host -Prompt "Press Enter to exit"
