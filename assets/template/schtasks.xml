@@ -3,7 +3,7 @@
   <RegistrationInfo>
     <Date>2023-01-01T00:00:00</Date>
     <Author>fa0311</Author>
-    <Description>uac_bypass_v1</Description>
+    <Description>uac_bypass_v2</Description>
     <URI>\Microsoft\Windows\DMMGamePlayerFastLauncher\{{UID}}</URI>
   </RegistrationInfo>
   <Triggers />
