@@ -37,5 +37,5 @@ class UrlConfig(Dump):
 
 
 class SchtasksConfig(Dump):
-    FILE = "schtasks_v2_{0}_{1}"
+    FILE = "schtasks_v1_{0}_{1}"
     NAME = "\\Microsoft\\Windows\\DMMGamePlayerFastLauncher\\{0}"
