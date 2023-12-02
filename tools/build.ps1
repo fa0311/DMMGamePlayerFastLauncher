@@ -9,4 +9,4 @@ Copy-Item -Path "dist\DMMGamePlayerFastLauncher.exe" -Destination "windows" -For
 
 
 Copy-Item -Path "assets" -Destination "windows" -Force -Recurse
-Start-Process "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "setup.iss"
+Start-Process "C:\Users\yuki\AppData\Local\Programs\Inno Setup 6\ISCC.exe" "setup.iss"

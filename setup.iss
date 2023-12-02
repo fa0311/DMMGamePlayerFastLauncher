@@ -26,10 +26,10 @@ DisableDirPage=yes
 ChangesAssociations=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=Z:\Project\Python\DMMGamePlayerFastLauncher\LICENSE
+LicenseFile=Z:\Project\py\DMMGamePlayerFastLauncher\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
-OutputDir=Z:\Project\Python\DMMGamePlayerFastLauncher\dist
+OutputDir=Z:\Project\py\DMMGamePlayerFastLauncher\dist
 OutputBaseFilename=DMMGamePlayerFastLauncher-Setup
 Compression=lzma
 SolidCompression=yes
@@ -42,8 +42,8 @@ Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Files]
-Source: "Z:\Project\Python\DMMGamePlayerFastLauncher\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Z:\Project\Python\DMMGamePlayerFastLauncher\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Z:\Project\py\DMMGamePlayerFastLauncher\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Z:\Project\py\DMMGamePlayerFastLauncher\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
