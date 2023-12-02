@@ -1,0 +1,49 @@
+name: "[en] 🐛 Report a Bug"
+description: Report a bug in DMMGamePlayerFastLauncher.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Before Reporting a Bug
+        Before reporting a bug, please check [Issues](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues) to see if a similar bug has already been reported. If there is a similar bug and you can provide additional information, please add a comment.
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: Please include the version.
+      placeholder: "Example: Windows 10"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: Please provide detailed information about the bug. Attach images if necessary.
+      placeholder: |
+        The shortcut for Princess Connect Re:Dive does not launch when the setting is xxxxxx.
+        The shortcut for Uma Musume launches successfully.
+        The product_id for Princess Connect Re:Dive is xxxxx.
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-message
+    attributes:
+      label: Error Message
+      description: If an error message is displayed, please paste it here.
+      render: Shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Paste the logs displayed in the debug window here. If there are personal information such as tokens, please redact them.
+      render: Shell
+    validations:
+      required: false
