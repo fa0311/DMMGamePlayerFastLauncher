@@ -59,6 +59,11 @@ class SettingEditTab(CTkScrollableFrame):
 
         EntryComponent(self, text=i18n.t("app.setting.proxy_http"), variable=self.data.proxy_http).create()
         EntryComponent(self, text=i18n.t("app.setting.proxy_https"), variable=self.data.proxy_https).create()
+        EntryComponent(self, text=i18n.t("app.setting.proxy_socks"), variable=self.data.proxy_socks).create()
+
+        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_http"), variable=self.data.dmm_proxy_http).create()
+        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_https"), variable=self.data.dmm_proxy_https).create()
+        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_socks"), variable=self.data.dmm_proxy_socks).create()
 
         PaddingComponent(self, height=5).create()
         CTkLabel(self, text=i18n.t("app.setting.window_scaling")).pack(anchor=ctk.W)
@@ -71,7 +76,9 @@ class SettingEditTab(CTkScrollableFrame):
         PaddingComponent(self, height=5).create()
         CTkButton(self, text=i18n.t("app.setting.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
 
-        command = lambda: ConfirmWindow(self, command=self.delete_callback, text=i18n.t("app.setting.confirm_reset")).create()
+        def command():
+            return ConfirmWindow(self, command=self.delete_callback, text=i18n.t("app.setting.confirm_reset")).create()
+
         CTkButton(self, text=i18n.t("app.setting.reset_all_settings"), command=command).pack(fill=ctk.X, pady=10)
 
         return self

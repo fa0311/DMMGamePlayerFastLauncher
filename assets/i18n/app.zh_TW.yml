@@ -117,8 +117,14 @@ zh_TW:
     lang: 語言
     theme: 主題
     appearance: 外貌
+
     proxy_http: HTTP 代理
     proxy_https: HTTPS 代理
+    proxy_socks: SOCKS 代理
+
+    dmm_proxy_http: DMM HTTP 代理
+    dmm_proxy_https: DMM HTTPS 代理
+    dmm_proxy_socks: DMM SOCKS 代理
 
     window_scaling: 窐口縮放比例
     debug_window: 顯示除錯窗口

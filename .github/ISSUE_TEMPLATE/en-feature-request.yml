@@ -1,0 +1,10 @@
+name: "[en] 💡 Propose a Feature"
+description: Please propose the desired features for DMMGamePlayerFastLauncher.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+    validations:
+      required: true

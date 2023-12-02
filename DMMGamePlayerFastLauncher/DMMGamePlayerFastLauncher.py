@@ -10,6 +10,7 @@ from app import App
 from coloredlogs import ColoredFormatter
 from component.logger import StyleScheme, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
+from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig, UrlConfig
 from static.env import Env
@@ -65,6 +66,14 @@ def loder(master: LanchLauncher):
         os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
     if AppConfig.DATA.proxy_https.get() != "":
         os.environ["HTTPS_PROXY"] = AppConfig.DATA.proxy_https.get()
+    if AppConfig.DATA.proxy_socks.get() != "":
+        os.environ["SOCKS_PROXY"] = AppConfig.DATA.proxy_socks.get()
+    if AppConfig.DATA.dmm_proxy_http.get() != "":
+        DgpSessionV2.PROXY["http"] = AppConfig.DATA.dmm_proxy_http.get()
+    if AppConfig.DATA.dmm_proxy_https.get() != "":
+        DgpSessionV2.PROXY["https"] = AppConfig.DATA.dmm_proxy_https.get()
+    if AppConfig.DATA.dmm_proxy_socks.get() != "":
+        DgpSessionV2.PROXY["socks"] = AppConfig.DATA.dmm_proxy_socks.get()
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
@@ -104,4 +113,5 @@ elif type == "game":
     lanch.thread(id)
     lanch.mainloop()
 else:
+    raise Exception("type error")
     raise Exception("type error")
