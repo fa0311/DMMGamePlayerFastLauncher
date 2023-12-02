@@ -121,6 +121,11 @@ en:
 
     proxy_http: HTTP Proxy
     proxy_https: HTTPS Proxy
+    proxy_socks: SOCKS Proxy
+
+    dmm_proxy_http: DMM HTTP Proxy
+    dmm_proxy_https: DMM HTTPS Proxy
+    dmm_proxy_socks: DMM SOCKS Proxy
 
     window_scaling: Window Scaling
     debug_window: Show Debug Window

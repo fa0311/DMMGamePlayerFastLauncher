@@ -120,6 +120,11 @@ zh_CN:
 
     proxy_http: HTTP 代理
     proxy_https: HTTPS 代理
+    proxy_socks: SOCKS 代理
+
+    dmm_proxy_http: DMM HTTP 代理
+    dmm_proxy_https: DMM HTTPS 代理
+    dmm_proxy_socks: DMM SOCKS 代理
 
     window_scaling: 窐口缩放比例
     debug_window: 显示调试窗口

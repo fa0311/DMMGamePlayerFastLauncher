@@ -122,6 +122,11 @@ ja:
 
     proxy_http: HTTPプロキシ
     proxy_https: HTTPSプロキシ
+    proxy_socks: SOCKSプロキシ
+
+    dmm_proxy_http: DMM HTTPプロキシ
+    dmm_proxy_https: DMM HTTPSプロキシ
+    dmm_proxy_socks: DMM SOCKSプロキシ
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウを表示する

@@ -13,8 +13,8 @@ import psutil
 import requests
 import requests.cookies
 import urllib3
-import win32crypt
 from Crypto.Cipher import AES
+from win32 import win32crypt
 
 urllib3.disable_warnings()
 
@@ -90,8 +90,11 @@ class DgpSessionV2:
     LOGIN = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
     SIGNED_URL = "https://cdn-gameplayer.games.dmm.com/product/*"
 
+    PROXY = {}
+
     def __init__(self):
         self.session = requests.session()
+        self.session.proxies = self.PROXY
         self.cookies = self.session.cookies
 
     def __enter__(self):
