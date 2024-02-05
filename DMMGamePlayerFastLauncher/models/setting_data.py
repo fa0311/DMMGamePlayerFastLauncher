@@ -5,6 +5,7 @@ from component.var import PathVar
 from component.variable_base import VariableBase
 from lib.DGPSessionV2 import DgpSessionV2
 from static.env import Env
+from utils.utils import get_default_locale
 
 
 @dataclass
@@ -17,7 +18,7 @@ class SettingData(VariableBase):
     dmm_proxy_http: StringVar = field(default_factory=StringVar)
     dmm_proxy_https: StringVar = field(default_factory=StringVar)
     dmm_proxy_socks: StringVar = field(default_factory=StringVar)
-    lang: StringVar = field(default_factory=lambda: StringVar(value="ja"))
+    lang: StringVar = field(default_factory=lambda: StringVar(value=get_default_locale()[0]))
     theme: StringVar = field(default_factory=lambda: StringVar(value="blue"))
     appearance_mode: StringVar = field(default_factory=lambda: StringVar(value="dark"))
     window_scaling: DoubleVar = field(default_factory=lambda: DoubleVar(value=1.0))

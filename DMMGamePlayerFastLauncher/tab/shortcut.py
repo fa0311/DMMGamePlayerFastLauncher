@@ -14,7 +14,7 @@ from models.setting_data import AppConfig
 from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
 from static.env import Env
-from utils.utils import children_destroy, file_create
+from utils.utils import children_destroy, file_create, get_default_locale
 
 # ===== Shortcut Sub Menu =====
 
@@ -160,7 +160,15 @@ class ShortcutBase(CTkScrollableFrame):
         title = title.replace(":", "").replace("*", "").replace("?", "")
         title = title.replace('"', "").replace("<", "").replace(">", "").replace("|", "")
 
-        return (title, game_path.joinpath(data["exec_file_name"]), data["is_administrator"])
+        file = game_path.joinpath(data["exec_file_name"])
+
+        if get_default_locale()[1] != "cp932":
+            return (title, file, data["is_administrator"])
+
+        if all(ord(c) < 128 for c in title):
+            return (title, file, data["is_administrator"])
+
+        return (self.filename.get(), file, data["is_administrator"])
 
 
 class ShortcutCreate(ShortcutBase):

@@ -10,6 +10,7 @@ from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScroll
 from lib.toast import ToastController, error_toast
 from models.setting_data import AppConfig, DeviceData, SettingData
 from static.config import AssetsPathConfig, DataPathConfig
+from utils.utils import get_supported_lang
 
 
 class SettingTab(CTkFrame):
@@ -46,7 +47,7 @@ class SettingEditTab(CTkScrollableFrame):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.data = AppConfig.DATA
-        self.lang = [(y, i18n.t("app.language", locale=y)) for y in [x.suffixes[0][1:] for x in AssetsPathConfig.I18N.iterdir()]]
+        self.lang = get_supported_lang()
 
         self.theme = [x.stem for x in AssetsPathConfig.THEMES.iterdir()]
 
