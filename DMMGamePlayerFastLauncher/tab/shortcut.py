@@ -162,7 +162,7 @@ class ShortcutBase(CTkScrollableFrame):
 
         file = game_path.joinpath(data["exec_file_name"])
 
-        if get_default_locale()[1] != "cp932":
+        if get_default_locale()[1] == "cp932":
             return (title, file, data["is_administrator"])
 
         if all(ord(c) < 128 for c in title):
