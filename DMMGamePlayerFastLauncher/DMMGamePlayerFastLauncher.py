@@ -114,4 +114,3 @@ elif type == "game":
     lanch.mainloop()
 else:
     raise Exception("type error")
-    raise Exception("type error")
