@@ -130,6 +130,7 @@ en:
     window_scaling: Window Scaling
     debug_window: Show Debug Window
     output_logfile: Log to File
+    mask_token: Hide tokens on the log
 
     device_detail: |-
       Configure device information for device authentication.

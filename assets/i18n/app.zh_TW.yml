@@ -129,6 +129,7 @@ zh_TW:
     window_scaling: 窐口縮放比例
     debug_window: 顯示除錯窗口
     output_logfile: 以文件形式記錄日誌
+    mask_token: 隱藏日誌上的令牌
 
     device_detail: |-
       設定用於設備認證的設備信息。

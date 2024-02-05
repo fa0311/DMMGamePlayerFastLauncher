@@ -8,7 +8,7 @@ import customtkinter as ctk
 import i18n
 from app import App
 from coloredlogs import ColoredFormatter
-from component.logger import StyleScheme, TkinkerLogger
+from component.logger import LoggingHandlerMask, StyleScheme, TkinkerLogger
 from launch import GameLauncher, LanchLauncher
 from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
@@ -36,7 +36,8 @@ def loder(master: LanchLauncher):
         handlers.append(handler)
 
     if AppConfig.DATA.debug_window.get() and not any([isinstance(x, LoggingHandler) for x in logging.getLogger().handlers]):
-        handler = LoggingHandler(TkinkerLogger(master).create().box, scheme=StyleScheme)
+        handle = LoggingHandlerMask if AppConfig.DATA.mask_token.get() else LoggingHandler
+        handler = handle(TkinkerLogger(master).create().box, scheme=StyleScheme)
         handler.setFormatter(ColoredFormatter("[%(levelname)s] [%(asctime)s] %(message)s"))
         handlers.append(handler)
 

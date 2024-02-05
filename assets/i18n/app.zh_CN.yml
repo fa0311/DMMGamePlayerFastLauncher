@@ -129,6 +129,7 @@ zh_CN:
     window_scaling: 窐口缩放比例
     debug_window: 显示调试窗口
     output_logfile: 以文件形式记录日志
+    mask_token: 隐藏日志上的令牌
 
     device_detail: |-
       配置用于设备认证的设备信息。

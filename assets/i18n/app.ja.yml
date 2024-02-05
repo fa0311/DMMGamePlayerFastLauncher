@@ -131,6 +131,7 @@ ja:
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウを表示する
     output_logfile: ログをファイルで出力する
+    mask_token: ログ上のトークンを隠す
 
     device_detail: |-
       デバイス認証に使用するデバイス情報を設定します。

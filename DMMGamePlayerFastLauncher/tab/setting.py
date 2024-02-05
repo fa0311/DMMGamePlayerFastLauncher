@@ -72,6 +72,7 @@ class SettingEditTab(CTkScrollableFrame):
         PaddingComponent(self, height=5).create()
         CheckBoxComponent(self, text=i18n.t("app.setting.debug_window"), variable=self.data.debug_window).create()
         CheckBoxComponent(self, text=i18n.t("app.setting.output_logfile"), variable=self.data.output_logfile).create()
+        CheckBoxComponent(self, text=i18n.t("app.setting.mask_token"), variable=self.data.mask_token).create()
 
         PaddingComponent(self, height=5).create()
         CTkButton(self, text=i18n.t("app.setting.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
