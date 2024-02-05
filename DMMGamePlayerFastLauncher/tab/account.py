@@ -241,7 +241,9 @@ class DeviceListTab(CTkScrollableFrame):
                 for key, value in hardware.items():
                     EntryComponent(self, text=key, variable=StringVar(value=value), state=ctk.DISABLED).create()
 
-                command = lambda id=hardware["hardware_manage_id"]: self.delete_callback(id)
+                def command(id=hardware["hardware_manage_id"]):
+                    return self.delete_callback(id)
+
                 CTkButton(self, text=i18n.t("app.account.delete"), command=command).pack(fill=ctk.X, pady=10)
                 PaddingComponent(self, height=20).create()
 

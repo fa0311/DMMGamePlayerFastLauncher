@@ -1,17 +1,12 @@
 {
-  "flake8.args": ["--ignore=E501,E731"],
   "markdownlint.config": {
     "MD033": false
   },
   "python.analysis.typeCheckingMode": "basic",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit",
   },
-  "black-formatter.args": ["--line-length=180"],
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-
   "files.exclude": {
     "**/__pycache__": true,
     "**/build": true,

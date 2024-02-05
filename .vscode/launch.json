@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "Python: 現在のファイル",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
@@ -14,7 +14,7 @@
     },
     {
       "name": "DMMGamePlayerFastLauncher",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
@@ -25,7 +25,7 @@
     },
     {
       "name": "GameLauncher",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",
@@ -37,7 +37,7 @@
     },
     {
       "name": "LaunchLauncher",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
       "console": "integratedTerminal",

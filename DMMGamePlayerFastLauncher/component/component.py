@@ -6,9 +6,8 @@ from typing import Any, Callable, Optional
 import customtkinter as ctk
 import i18n
 from component.var import PathVar
-from customtkinter import CTkBaseClass, CTkButton, CTkCheckBox, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkProgressBar, CTkToplevel
+from customtkinter import CTkBaseClass, CTkButton, CTkCheckBox, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu, CTkProgressBar, CTkToplevel, Variable
 from customtkinter import ThemeManager as CTkm
-from customtkinter import Variable
 
 
 class LabelComponent(CTkFrame):

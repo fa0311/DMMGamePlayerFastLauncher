@@ -160,7 +160,7 @@ class ShortcutBase(CTkScrollableFrame):
         title = title.replace(":", "").replace("*", "").replace("?", "")
         title = title.replace('"', "").replace("<", "").replace(">", "").replace("|", "")
 
-        return title, game_path.joinpath(data["exec_file_name"]), data["is_administrator"]
+        return (title, game_path.joinpath(data["exec_file_name"]), data["is_administrator"])
 
 
 class ShortcutCreate(ShortcutBase):
