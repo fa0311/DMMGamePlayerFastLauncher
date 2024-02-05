@@ -25,9 +25,9 @@ zh_CN:
     filename_tooltip: 请为此快捷方式提供任何名称。
 
     product_id: 选择 product_id
-    product_id_tooltip: |
+    product_id_tooltip: |-
       product_id 是 DMM 用于识别游戏的 ID。
-
+      非英数字字符的使用可能导致问题。
     account_create_detail: |-
       创建一个用于快速启动 DMMGamePlayer 的快捷方式。
       请在“帐户”选项卡中选择您创建的帐户。
@@ -72,7 +72,9 @@ zh_CN:
       导入操作将注销 DMMGamePlayer 5。
       请勿直接在 DMMGamePlayer 5 中使用已导入的帐户登录。
 
-    filename_tooltip: 请为此帐户提供任何名称。
+    filename_tooltip: |-
+      请为此帐户提供任何名称。
+      非英数字字符的使用可能导致问题。
     import: 导入
     filename: 文件名
     filename_not_entered: 未输入文件名。

@@ -25,8 +25,9 @@ zh_TW:
     filename_tooltip: 請為此快捷方式提供任何名稱。
 
     product_id: 選擇 product_id
-    product_id_tooltip: |
+    product_id_tooltip: |-
       product_id 是 DMM 用來識別遊戲的 ID。
+      非英數字元的使用可能導致問題。
 
     account_create_detail: |-
       創建一個用於快速啟動 DMMGamePlayer 的快捷方式。
@@ -72,7 +73,9 @@ zh_TW:
       匯入操作將登出 DMMGamePlayer 5。
       請勿直接在 DMMGamePlayer 5 中使用已匯入的帳戶登錄。
 
-    filename_tooltip: 請為此帳戶提供任何名稱。
+    filename_tooltip: |-
+      請為此帳戶提供任何名稱。
+      非英數字元的使用可能導致問題。
     import: 匯入
     filename: 檔案名稱
     filename_not_entered: 未輸入檔案名稱。
