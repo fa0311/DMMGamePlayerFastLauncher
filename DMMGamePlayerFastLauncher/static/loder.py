@@ -2,6 +2,7 @@ import json
 
 from models.setting_data import AppConfig, DeviceData, SettingData
 from static.config import DataPathConfig
+from utils.utils import get_supported_lang
 
 
 def config_loder():
@@ -18,6 +19,9 @@ def config_loder():
         AppConfig.DEVICE = DeviceData()
         with open(DataPathConfig.DEVICE, "w+", encoding="utf-8") as f:
             json.dump(AppConfig.DEVICE.to_dict(), f)
+
+    if AppConfig.DATA.lang.get() not in [x[0] for x in get_supported_lang()]:
+        AppConfig.DATA.lang.set("en_US")
 
     AppConfig.DATA.update()
     AppConfig.DEVICE.update()
