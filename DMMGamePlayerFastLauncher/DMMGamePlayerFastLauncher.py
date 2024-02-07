@@ -14,7 +14,7 @@ from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig, UrlConfig
 from static.env import Env
-from static.loder import config_loder
+from static.loder import config_loder, config_migrate
 from tkinter_colored_logging_handlers import LoggingHandler
 
 
@@ -62,6 +62,8 @@ def loder(master: LanchLauncher):
     logging.debug("==================================================")
     logging.debug("==================================================")
     logging.debug("==================================================")
+
+    config_migrate()
 
     if AppConfig.DATA.proxy_http.get() != "":
         os.environ["HTTP_PROXY"] = AppConfig.DATA.proxy_http.get()
