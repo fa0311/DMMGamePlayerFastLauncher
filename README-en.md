@@ -28,8 +28,6 @@ Run and set up
 
 Start `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe`.
 
-(Type `%AppData%\DMMGamePlayerFastLauncher` in the Explorer address bar, navigate to the folder, click `DMMGamePlayerFastLauncher` and run it.)
-
 [Detailed instructions](/docs/README-advance.md)
 
 ## Contribute

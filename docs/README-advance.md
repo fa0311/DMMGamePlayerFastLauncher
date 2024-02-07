@@ -2,6 +2,11 @@
 
 [日本語](/README.md) / [English](/README-en.md)
 
+## 起動方法
+
+1. エクスプローラーのアドレスバーに `%AppData%\DMMGamePlayerFastLauncher` と入力する。
+2. フォルダを移動し `DMMGamePlayerFastLauncher` をクリックして実行する。
+
 ## チュートリアル
 
 1. アカウントをDMMGamePlayerからインポートをする

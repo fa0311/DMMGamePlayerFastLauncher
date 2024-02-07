@@ -28,8 +28,6 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 `%AppData%\DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.exe` を起動する
 
-(エクスプローラーのアドレスバーに `%AppData%\DMMGamePlayerFastLauncher` と入力してフォルダを移動し `DMMGamePlayerFastLauncher` をクリックして実行する。)
-
 [詳しい使い方](/docs/README-advance.md)
 
 ## 貢献
