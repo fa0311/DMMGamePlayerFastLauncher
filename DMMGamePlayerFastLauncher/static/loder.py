@@ -1,8 +1,9 @@
 import json
+from pathlib import Path
 
 from models.setting_data import AppConfig, DeviceData, SettingData
-from static.config import DataPathConfig
-from utils.utils import get_supported_lang
+from static.config import AssetsPathConfig, DataPathConfig
+from static.env import Env
 
 
 def config_loder():
@@ -20,8 +21,13 @@ def config_loder():
         with open(DataPathConfig.DEVICE, "w+", encoding="utf-8") as f:
             json.dump(AppConfig.DEVICE.to_dict(), f)
 
-    if AppConfig.DATA.lang.get() not in [x[0] for x in get_supported_lang()]:
-        AppConfig.DATA.lang.set("en_US")
+    if AppConfig.DATA.last_version.get() != Env.VERSION:
+        if AppConfig.DATA.last_version.get() == "v5.4.0":
+            Path(AssetsPathConfig.I18N).joinpath("app.ja.yml").unlink(missing_ok=True)
+            Path(AssetsPathConfig.I18N).joinpath("app.en.yml").unlink(missing_ok=True)
+            AppConfig.DATA.lang.set("en_US")
+
+        AppConfig.DATA.last_version.set(Env.VERSION)
 
     AppConfig.DATA.update()
     AppConfig.DEVICE.update()

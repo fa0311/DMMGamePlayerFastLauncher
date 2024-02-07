@@ -10,6 +10,7 @@ from utils.utils import get_default_locale
 
 @dataclass
 class SettingData(VariableBase):
+    last_version: StringVar = field(default_factory=lambda: StringVar(value="v5.4.0"))  # field(default_factory=lambda: StringVar(value=Env.VERSION))
     dmm_game_player_program_folder: PathVar = field(default_factory=lambda: PathVar(value=Env.DEFAULT_DMM_GAME_PLAYER_PROGURAM_FOLDER))
     dmm_game_player_data_folder: PathVar = field(default_factory=lambda: PathVar(value=Env.DEFAULT_DMM_GAME_PLAYER_DATA_FOLDER))
     proxy_http: StringVar = field(default_factory=StringVar)
