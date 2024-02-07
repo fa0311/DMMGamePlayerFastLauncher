@@ -11,7 +11,7 @@
 
 2. DMMGamePlayerの高速起動を行なうショートカットを作成する
    1. DMMGamePlayerFastLauncherの `ショートカット` 内の `GamePlayerの高速化` を開きます。
-   2. 次に`1-3` でインポートしたアカウントを選択をします。
+   2. `1-3` でインポートしたアカウントを選択をします。
    3. `ショートカットを作成して設定を保存する`をクリックするとショートカットが作成されます。
 
 3. ゲームの高速起動を行なうショートカットを作成する
@@ -26,6 +26,7 @@
 動作が不安定な場合は以下の手順をお試しください
 
 - ウイルス対策ソフトを一時的に無効化する。
+- Windows Defenderを無効にする。
 - ゲームの権限をインストール時の状態に戻す。
 - DMMGamePlayerの基本設定をデフォルトに戻す。
   - `コンピューター起動時にDMM GAME PLAYERを実行` のチェックを外す。
@@ -39,10 +40,10 @@
 起動時に `Exception: failed to authenticate device` というエラーが出る場合はデバイス認証が必要なゲームです。
 
 1. [チュートリアル](#チュートリアル) と同じ手順でゲームのショートカットを作成してください。
-2. デバイス認証を行う手順
+2. デバイス認証を行う
    1. DMMGamePlayerFastLauncherの `アカウント` 内の `デバイスの登録` を開きます。
    2. `ファイルの選択` をクリックし、認証を行なうアカウントを選択します。
-   3. `認証コードを送信する` をクリックすると登録をしたメールアドレスに認証コードが届きます。
+   3. `認証コードを送信する` をクリックするとそのDMMアカウントに登録をしたメールアドレスに認証コードが届きます。
    4. `デバイス名` と `デバイス認証コード` を入力後に `認証` をクリックでデバイス認証がされます。
 
 ## デバイス認証の5台制限を回避するには
@@ -50,6 +51,40 @@
 1. デバイス情報を共通にする
    1. 回避元のデバイスで `設定` 内の `デバイスの登録` を開いてデバイス情報をメモしてください。
    2. 回避をしたいデバイスで `設定` 内の `デバイスの登録` を開き、 `1-1` でメモをしたデバイス情報に変更をしてください。
+
+## コマンドラインで実行する
+
+GUI の動作が不安定で上手くショートカットが作成されない場合や高度な自動化を行いたい場合、コマンドラインを使用して動作させることができます。
+
+コマンドを実行した権限と同じ権限でゲームが実行されます。
+つまりこの方法だけでは、UAC自動昇格が行われないので `RunAs` や [sudo](https://bjansen.github.io/scoop-apps/main/sudo/) と組み合わせて使用する必要があります。
+タスクスケジューラを使用する DMMGamePlayerFastLauncher の解説は [タスクスケジューラ](#タスクスケジューラ) で行います。
+
+```ps1
+DMMGamePlayerFastLauncher.exe [ID] [--type TYPE]
+```
+
+- `ID`: 起動するゲームもしくはアカウントのファイル名。省略するとGUIが起動します。
+- `--type TYPE`: `game` もしくは `launcher` を指定。
+
+例:
+
+```ps1
+# DMMGamePlayerFastLauncher\data\shortcut\priconner.json をもとにゲームを起動します。
+DMMGamePlayerFastLauncher.exe priconner --type game
+# DMMGamePlayerFastLauncher\data\shortcut\account_shortcut\Karyl.json をもとにゲームを起動します。
+DMMGamePlayerFastLauncher.exe Karyl --type launcher
+```
+
+## タスクスケジューラ
+
+UAC 自動昇格はタスクスケジューラを使用して行われるので安全です。
+`\Microsoft\Windows\DMMGamePlayerFastLauncher` に存在します。
+
+また、`DMMGamePlayerFastLauncher\data\schtasks` にタスクスケジューラのコピーがあります。
+コピーをタスクスケジューラに反映させるには `DMMGamePlayerFastLauncher\tools\refresh.ps1` を実行する必要があります。
+
+タスクスケジューラを手動でいじるのはオススメしていません。
 
 ## 技術的な話
 
@@ -129,6 +164,7 @@ DMMGamePlayerが収集するハードウェアの情報は以下の通りです�
 - マザーボードのシリアル番号
 
 DMMGamePlayerFastLauncherはそれらを偽装してDMMに送信します。
+よってログに出力されるMACアドレスなどの情報はすべて偽装されたものです。
 
 DMMGamePlayerでの認証が通ると `~/.DMMGamePlayer/{product_idのbase64エンコード}` に認証情報が保存されます。
 ゲームはそれを読み取って認証情報が誤っていないかを確認します。
