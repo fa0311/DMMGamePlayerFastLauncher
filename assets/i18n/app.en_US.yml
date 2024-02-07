@@ -1,4 +1,4 @@
-en:
+en_US:
   title: DMMGamePlayer Fast Launcher
   language: English
 
@@ -22,7 +22,9 @@ en:
 
   shortcut:
     filename: File Name
-    filename_tooltip: Please provide any name for this shortcut.
+    filename_tooltip: |-
+      Please provide any name for this shortcut.
+      Using non-alphanumeric characters may cause problems.
 
     product_id: Select product_id
     product_id_tooltip: |
@@ -73,7 +75,9 @@ en:
       Importing will log you out of DMMGamePlayer 5.
       Do not log in directly with an imported account in DMMGamePlayer 5.
 
-    filename_tooltip: Please provide any name for this account.
+    filename_tooltip: |-
+      Please provide any name for this account.
+      Using non-alphanumeric characters may cause problems.
     import: Import
     filename: File Name
     filename_not_entered: File name is not entered.
@@ -130,6 +134,7 @@ en:
     window_scaling: Window Scaling
     debug_window: Show Debug Window
     output_logfile: Log to File
+    mask_token: Hide tokens on the log
 
     device_detail: |-
       Configure device information for device authentication.

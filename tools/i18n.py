@@ -19,9 +19,9 @@ def in_py(key):
 def i18n_flatten(data: dict[str, Any], parent: str) -> list[str]:
     res = []
     for k, v in data.items():
-        if type(v) is dict:
+        if isinstance(v, dict):
             res.extend(i18n_flatten(v, f"{parent}.{k}"))
-        elif type(v) is str:
+        elif isinstance(v, str):
             res.append(f"{parent}.{k}")
     return res
 

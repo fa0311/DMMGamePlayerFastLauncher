@@ -5,6 +5,7 @@ from component.var import PathVar
 from component.variable_base import VariableBase
 from lib.DGPSessionV2 import DgpSessionV2
 from static.env import Env
+from utils.utils import get_default_locale
 
 
 @dataclass
@@ -17,12 +18,13 @@ class SettingData(VariableBase):
     dmm_proxy_http: StringVar = field(default_factory=StringVar)
     dmm_proxy_https: StringVar = field(default_factory=StringVar)
     dmm_proxy_socks: StringVar = field(default_factory=StringVar)
-    lang: StringVar = field(default_factory=lambda: StringVar(value="ja"))
+    lang: StringVar = field(default_factory=lambda: StringVar(value=get_default_locale()[0]))
     theme: StringVar = field(default_factory=lambda: StringVar(value="blue"))
     appearance_mode: StringVar = field(default_factory=lambda: StringVar(value="dark"))
     window_scaling: DoubleVar = field(default_factory=lambda: DoubleVar(value=1.0))
     debug_window: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))
     output_logfile: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))
+    mask_token: BooleanVar = field(default_factory=lambda: BooleanVar(value=True))
 
     def update(self):
         DgpSessionV2.DGP5_PATH = self.dmm_game_player_program_folder.get_path()
