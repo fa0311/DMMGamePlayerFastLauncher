@@ -4,8 +4,8 @@
 
 ## 起動方法
 
-1. エクスプローラーのアドレスバーに `%AppData%\DMMGamePlayerFastLauncher` と入力する。
-2. フォルダを移動し `DMMGamePlayerFastLauncher` をクリックして実行する。
+1. エクスプローラーのアドレスバーに `%AppData%\DMMGamePlayerFastLauncher` と入力しフォルダを移動する。
+2. `DMMGamePlayerFastLauncher` をクリックして実行する。
 
 ## チュートリアル
 
