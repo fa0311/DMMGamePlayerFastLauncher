@@ -1,4 +1,3 @@
-black *.py
 pip freeze > requirements.txt
 python .\tools\build.py
 
