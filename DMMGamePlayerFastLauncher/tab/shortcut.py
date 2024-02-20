@@ -127,7 +127,6 @@ class ShortcutBase(CTkScrollableFrame):
 
     @error_toast
     def uac_callback(self):
-        self.data.uac.set(True)
         self.save()
         try:
             try:
@@ -141,7 +140,6 @@ class ShortcutBase(CTkScrollableFrame):
             Shortcut().create(sorce=sorce, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
-            self.data.uac.set(False)
             DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
             raise
 

@@ -70,11 +70,6 @@ class GameLauncher(CTk):
             with open(drm_path.absolute(), "w+") as f:
                 f.write(response["data"]["drm_auth_token"])
 
-        if not Env.DEVELOP:
-            is_admin = ProcessManager.admin_check() or data.uac.get()
-            if response["data"]["is_administrator"] and is_admin:
-                raise Exception(i18n.t("app.launch.admin_error"))
-
         game_file = Path(game["detail"]["path"])
         game_path = game_file.joinpath(response["data"]["exec_file_name"])
 
@@ -90,7 +85,8 @@ class GameLauncher(CTk):
 
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
-        if data.uac.get():
+        is_admin = ProcessManager.admin_check()
+        if response["data"]["is_administrator"] and (not is_admin):
             pid_manager = ProcessIdManager()
             process = ProcessManager.admin_run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
             game_pid = pid_manager.new_process().search(str(game_path.relative_to(game_file)))
