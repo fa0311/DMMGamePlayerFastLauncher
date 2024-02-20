@@ -14,5 +14,15 @@
     // "**/data": true,
     "**/*.spec": true,
     "**/.venv": true
-  }
+  },
+  "python.testing.unittestArgs": [
+    "-v",
+    "-p",
+    "test_*.py",
+    "-s",
+    "test"
+  ],
+  "python.testing.cwd": "${workspaceRoot}",
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": true
 }
