@@ -4,7 +4,7 @@ from tkinter import Frame, StringVar
 
 import customtkinter as ctk
 import i18n
-from component.component import CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
+from component.component import ButtonComponent, CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -74,15 +74,21 @@ class ShortcutBase(CTkScrollableFrame):
         text = i18n.t("app.shortcut.account_path")
         OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.data.account_path).create()
 
-        game_args_tooltip = i18n.t("app.shortcut.game_args_tooltip")
-        EntryComponent(self, text=i18n.t("app.shortcut.game_args"), tooltip=game_args_tooltip, variable=self.data.game_args).create()
+        text = i18n.t("app.shortcut.game_args")
+        EntryComponent(self, text=text, tooltip=i18n.t("app.shortcut.game_args_tooltip"), variable=self.data.game_args).create()
 
         CheckBoxComponent(self, text=i18n.t("app.shortcut.auto_update"), variable=self.data.auto_update).create()
 
         PaddingComponent(self, height=5).create()
-        CTkButton(self, text=i18n.t("app.shortcut.create_bypass_shortcut_and_save"), command=self.bypass_callback).pack(fill=ctk.X, pady=5)
-        CTkButton(self, text=i18n.t("app.shortcut.create_shortcut_and_save"), command=self.save_callback).pack(fill=ctk.X, pady=5)
-        CTkButton(self, text=i18n.t("app.shortcut.save_only"), command=self.save_only_callback).pack(fill=ctk.X, pady=5)
+
+        text = i18n.t("app.shortcut.create_bypass_shortcut_and_save")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.create_bypass_shortcut_and_save_tooltip"), command=self.bypass_callback).create()
+        text = i18n.t("app.shortcut.create_uac_shortcut_and_save")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.create_uac_shortcut_and_save_tooltip"), command=self.uac_callback).create()
+        text = i18n.t("app.shortcut.create_shortcut_and_save")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.create_shortcut_and_save_tooltip"), command=self.save_callback).create()
+        text = i18n.t("app.shortcut.save_only")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.save_only_tooltip"), command=self.save_only_callback).create()
         return self
 
     def save(self):
@@ -116,6 +122,26 @@ class ShortcutBase(CTkScrollableFrame):
             Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
+            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            raise
+
+    @error_toast
+    def uac_callback(self):
+        self.data.uac.set(True)
+        self.save()
+        try:
+            try:
+                name, icon, admin = self.get_game_info()
+            except Exception:
+                name, icon = self.filename.get(), None
+                self.toast.error(i18n.t("app.shortcut.game_info_error"))
+
+            sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+            args = [self.filename.get()]
+            Shortcut().create(sorce=sorce, args=args, icon=icon)
+            self.toast.info(i18n.t("app.shortcut.save_success"))
+        except Exception:
+            self.data.uac.set(False)
             DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
             raise
 

@@ -7,10 +7,11 @@ from typing import Callable
 
 import customtkinter as ctk
 import i18n
+import psutil
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
-from lib.process_manager import ProcessManager
+from lib.process_manager import ProcessIdManager, ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
 from models.setting_data import AppConfig
@@ -70,7 +71,8 @@ class GameLauncher(CTk):
                 f.write(response["data"]["drm_auth_token"])
 
         if not Env.DEVELOP:
-            if response["data"]["is_administrator"] and not ProcessManager.admin_check():
+            is_admin = ProcessManager.admin_check() or data.uac.get()
+            if response["data"]["is_administrator"] and is_admin:
                 raise Exception(i18n.t("app.launch.admin_error"))
 
         game_file = Path(game["detail"]["path"])
@@ -88,11 +90,17 @@ class GameLauncher(CTk):
 
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
 
-        process = ProcessManager.run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
-        assert process.stdout is not None
-
-        for line in process.stdout:
-            logging.debug(decode(line))
+        if data.uac.get():
+            pid_manager = ProcessIdManager()
+            process = ProcessManager.admin_run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
+            game_pid = pid_manager.new_process().search(str(game_path.relative_to(game_file)))
+            while psutil.pid_exists(game_pid):
+                pass
+        else:
+            process = ProcessManager.run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
+            assert process.stdout is not None
+            for line in process.stdout:
+                logging.debug(decode(line))
 
 
 class LanchLauncher(CTk):

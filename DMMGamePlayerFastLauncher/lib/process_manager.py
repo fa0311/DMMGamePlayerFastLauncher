@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+import psutil
 import win32security
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig
 from static.env import Env
@@ -13,10 +14,11 @@ from static.env import Env
 
 class ProcessManager:
     @staticmethod
-    def admin_run(args: list[str]) -> int:
-        args = [f'"{arg}"' for arg in args]
+    def admin_run(args: list[str], cwd: Optional[str] = None) -> int:
+        file, *args = args
+        args = [f'"{arg}"' for arg in args[1:]]
         logging.info(args)
-        return ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join(args[1:]), None, 1)
+        return ctypes.windll.shell32.ShellExecuteW(None, "runas", file, " ".join(args), cwd, 1)
 
     @staticmethod
     def admin_check() -> bool:
@@ -36,6 +38,43 @@ class ProcessManager:
         args = args.replace('"', '\\"').replace("\n", "").replace("\r", "")
         text = f'powershell -Command "{args}"'
         return subprocess.call(text, shell=True)
+
+    @staticmethod
+    def search_process(name: str) -> psutil.Process:
+        for process in psutil.process_iter():
+            if process.name() == name:
+                return process
+        raise Exception(f"Process not found: {name}")
+
+
+class ProcessIdManager:
+    process: list[tuple[int, str]]
+
+    def __init__(self, _process: Optional[list[tuple[int, str]]] = None) -> None:
+        if _process is None:
+            self.process = [(x.pid, x.name()) for x in psutil.process_iter()]
+        else:
+            self.process = _process
+
+    def __sub__(self, other: "ProcessIdManager") -> "ProcessIdManager":
+        process = [x for x in self.process if x not in other.process]
+        return ProcessIdManager(process)
+
+    def __add__(self, other: "ProcessIdManager") -> "ProcessIdManager":
+        process = list(set(self.process + other.process))
+        return ProcessIdManager(process)
+
+    def __repr__(self) -> str:
+        return "\n".join([f"{x[0]}: {x[1]}" for x in self.process]) + "\n"
+
+    def new_process(self) -> "ProcessIdManager":
+        return ProcessIdManager() - self
+
+    def search(self, name: str) -> int:
+        process = [x[0] for x in self.process if x[1] == name]
+        if len(process) != 1:
+            raise Exception(f"Process not found: {name}")
+        return process[0]
 
 
 def get_sid() -> str:

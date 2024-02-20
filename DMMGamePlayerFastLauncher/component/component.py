@@ -44,7 +44,7 @@ class LabelComponent(CTkFrame):
 
     def enter_event(self, event):
         assert self.tooltip is not None
-        self.frame.place(x=self.winfo_rootx() - self.frame.master.winfo_rootx(), y=self.winfo_rooty() - self.frame.master.winfo_rooty() + 25)
+        self.frame.place(x=self.winfo_rootx() - self.frame.master.winfo_rootx(), y=self.winfo_rooty() - self.frame.master.winfo_rooty() + 28)
 
     def leave_event(self, event):
         assert self.tooltip is not None
@@ -116,6 +116,50 @@ class EntryComponent(CTkFrame):
 
     def call(self, cmd):
         return lambda: cmd(self.variable)
+
+
+class ButtonComponent(CTkFrame):
+    frame: CTkFrame
+    text: str
+    tooltip: Optional[str]
+    command: Callable[[], None]
+    state: str
+
+    def __init__(
+        self,
+        master: Frame,
+        text: str,
+        command: Callable[[], None],
+        tooltip: Optional[str] = None,
+    ) -> None:
+        super().__init__(master, fg_color="transparent")
+        self.frame = CTkFrame(self.winfo_toplevel(), fg_color=CTkm.theme["LabelComponent"]["fg_color"])
+        self.pack(fill=ctk.X, expand=True)
+        self.text = text
+        self.tooltip = tooltip
+        self.command = command
+
+    def create(self):
+        button = CTkButton(self, text=self.text, command=self.command)
+        button.pack(fill=ctk.X, pady=5)
+        if self.tooltip is not None:
+            button.bind("<Enter>", self.enter_event)
+            button.bind("<Leave>", self.leave_event)
+            CTkLabel(self.frame, text=self.tooltip, fg_color=CTkm.theme["LabelComponent"]["fg_color"], justify=ctk.LEFT).pack(padx=5, pady=0)
+
+        return self
+
+    def enter_event(self, event):
+        assert self.tooltip is not None
+        self.frame.place(x=self.winfo_rootx() - self.frame.master.winfo_rootx(), y=self.winfo_rooty() - self.frame.master.winfo_rooty() + 35)
+
+    def leave_event(self, event):
+        assert self.tooltip is not None
+        self.frame.place_forget()
+
+    def destroy(self):
+        self.frame.destroy()
+        return super().destroy()
 
 
 class PathComponentBase(EntryComponent):

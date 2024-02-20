@@ -22,7 +22,9 @@ zh_CN:
 
   shortcut:
     filename: 文件名
-    filename_tooltip: 请为此快捷方式提供任何名称。
+    filename_tooltip: |
+      请给这个快捷方式任意名称。
+      使用半角英文数字以外的字符可能会导致问题。
 
     product_id: 选择 product_id
     product_id_tooltip: |-
@@ -43,9 +45,29 @@ zh_CN:
 
     auto_update: 启动时自动更新游戏
 
-    create_bypass_shortcut_and_save: 创建 UAC 自动提升的快捷方式并保存设置
+    create_bypass_shortcut_and_save: 创建UAC自动提升的快捷方式并保存设置
+    create_bypass_shortcut_and_save_tooltip: |
+      创建UAC自动提升的快捷方式并保存设置。
+      如果游戏运行需要管理员权限，请选择此选项。
+
+    create_uac_shortcut_and_save: 创建UAC手动提升的快捷方式并保存设置
+    create_uac_shortcut_and_save_tooltip: |-
+      创建并保存UAC手动提升的快捷方式。
+      如果游戏运行需要管理员权限，请选择此选项。
+      由于每次启动游戏都会出现UAC对话框，因此需要手动提升权限。
+      它在同一进程中执行，与其他软件的集成性更好。
+
     create_shortcut_and_save: 创建快捷方式并保存设置
+    create_shortcut_and_save_tooltip: |
+      创建快捷方式并保存设置。
+      如果游戏运行不需要管理员权限，请选择此选项。
+      对于需要管理员权限的游戏选择此选项将导致错误。
+
     save_only: 仅保存设置
+    save_only_tooltip: |
+      仅保存设置而不创建快捷方式。
+      要从快捷方式启动保存的设置，请执行命令行：
+      `DMMGamePlayerFastLauncher.exe [文件名] --type game`。
 
     add_detail: 创建快速启动的快捷方式和设置。
     edit_detail: 编辑快速启动快捷方式的设置。
