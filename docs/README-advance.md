@@ -61,16 +61,25 @@
 
 GUI の動作が不安定で上手くショートカットが作成されない場合や高度な自動化を行いたい場合、コマンドラインを使用して動作させることができます。
 
-コマンドを実行した権限と同じ権限でゲームが実行されます。
-つまりこの方法だけでは、UAC自動昇格が行われないので `RunAs` や [sudo](https://bjansen.github.io/scoop-apps/main/sudo/) と組み合わせて使用する必要があります。
-タスクスケジューラを使用する DMMGamePlayerFastLauncher の解説は [タスクスケジューラ](#タスクスケジューラ) で行います。
-
 ```ps1
 DMMGamePlayerFastLauncher.exe [ID] [--type TYPE]
 ```
 
 - `ID`: 起動するゲームもしくはアカウントのファイル名。省略するとGUIが起動します。
-- `--type TYPE`: `game` もしくは `launcher` を指定。
+- `--type TYPE`: `game`, `launcher`, `kill-game`, `force-user-game`から選択します。
+
+### 詳細な--typeの説明
+
+`game` を指定するとゲームを起動します。
+
+`launcher` を指定するとランチャーを起動します。
+
+`kill-game` を指定するとゲームを起動したあと、直ちに終了します。管理者権限で実行する必要があります。このオプションは主に `force-user-game` の内部で利用されます。
+
+`force-user-game` を指定するとゲームを強制的にユーザー権限で実行させます。主にCygames製のゲームにSteamオーバーレイを表示させる際に利用します。`kill-game` と `game` を連続して動作させたような挙動を行います。
+
+Steamオーバーレイは管理者権限で実行されているゲームでは表示されません。
+Cygames 製のゲームはユーザー権限でも起動することができますが、1日に1回程度、管理者権限で実行させる必要があります。なので `kill-game` を使用して一時的に管理者権限で起動させます。
 
 例:
 
@@ -80,6 +89,15 @@ DMMGamePlayerFastLauncher.exe priconner --type game
 # DMMGamePlayerFastLauncher\data\shortcut\account_shortcut\Karyl.json をもとにゲームを起動します。
 DMMGamePlayerFastLauncher.exe Karyl --type launcher
 ```
+
+### Steam Overlay
+
+[#コマンドラインで実行する](#コマンドラインで実行する) を参考にSteam Overlayに登録します。
+
+権限の自動昇格は行われません。
+`game` と指定しても起動しますが Cygames製のゲームは `force-user-game` と指定すると安定して起動します。
+
+![steam](./img/steam.png)
 
 ## タスクスケジューラ
 

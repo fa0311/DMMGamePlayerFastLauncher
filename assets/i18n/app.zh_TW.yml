@@ -43,10 +43,31 @@ zh_TW:
       對於基於 Unity 的遊戲，您可以輸入像 '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' 這樣的引數，以以 1280x720 的解析度以視窗模式啟動遊戲。
 
     auto_update: 啟動時自動更新遊戲
+    rich_presence: 啟用 Discord 的豐富存在
 
-    create_bypass_shortcut_and_save: 創建 UAC 自動提升的快捷方式並保存設置
+    create_bypass_shortcut_and_save: 創建UAC自動提升快捷方式並保存設置
+    create_bypass_shortcut_and_save_tooltip: |
+      創建UAC自動提升的快捷方式並保存設置。
+      如果遊戲運行需要管理員權限，請選擇此選項。
+
+    create_uac_shortcut_and_save: 創建UAC手動提升快捷方式並保存設置
+    create_uac_shortcut_and_save_tooltip: |-
+      建立並保存UAC手動提升的快捷方式。
+      如果遊戲運行需要管理員權限，請選擇此選項。
+      由於遊戲啟動時會顯示UAC對話框，因此需要手動提升權限。
+      它在同一進程中執行，與其他軟件的整合性更好。
+
     create_shortcut_and_save: 創建快捷方式並保存設置
+    create_shortcut_and_save_tooltip: |
+      創建快捷方式並保存設置。
+      如果遊戲運行不需要管理員權限，請選擇此選項。
+      對於需要管理員權限的遊戲選擇此選項將導致錯誤。
+
     save_only: 僅保存設置
+    save_only_tooltip: |
+      僅保存設置而不創建快捷方式。
+      若要從快捷方式啟動保存的設置，請執行命令行：
+      `DMMGamePlayerFastLauncher.exe [檔名] --type game`。
 
     add_detail: 創建快速啟動的快捷方式和設置。
     edit_detail: 編輯快速啟動快捷方式的設置。
@@ -177,3 +198,6 @@ zh_TW:
 
   utils:
     file_exists: 該文件已經存在。
+
+  discord:
+    state: "正在玩 %{name}"

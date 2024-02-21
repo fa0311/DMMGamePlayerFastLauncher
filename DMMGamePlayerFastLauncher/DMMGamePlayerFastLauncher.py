@@ -9,7 +9,7 @@ import i18n
 from app import App
 from coloredlogs import ColoredFormatter
 from component.logger import LoggingHandlerMask, StyleScheme, TkinkerLogger
-from launch import GameLauncher, LanchLauncher
+from launch import GameLauncher, GameLauncherUac, LanchLauncher
 from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig, UrlConfig
@@ -115,5 +115,17 @@ elif type == "game":
     lanch = GameLauncher(loder).create()
     lanch.thread(id)
     lanch.mainloop()
+
+elif type == "force-user-game":
+    GameLauncherUac.wait([id, "--type", "kill-game"])
+    lanch = GameLauncher(loder).create()
+    lanch.thread(id, force_non_uac=True)
+    lanch.mainloop()
+
+elif type == "kill-game":
+    lanch = GameLauncher(loder).create()
+    lanch.thread(id, kill=True)
+    lanch.mainloop()
+
 else:
     raise Exception("type error")

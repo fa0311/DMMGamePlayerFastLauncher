@@ -18,6 +18,8 @@ DMM Game Player Fast Launcher for secure and fast start-up
 - **Manage multiple accounts**
 - **Automatic game update**
 - **Launch DRM protected games**
+- **Launch via Steam**
+- **Discord Rich Presence**
 
 ## Installation
 

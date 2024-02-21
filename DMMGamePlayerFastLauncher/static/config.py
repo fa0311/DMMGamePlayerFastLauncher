@@ -39,3 +39,7 @@ class UrlConfig(Dump):
 class SchtasksConfig(Dump):
     FILE = "schtasks_v1_{0}_{1}"
     NAME = "\\Microsoft\\Windows\\DMMGamePlayerFastLauncher\\{0}"
+
+
+class DiscordConfig(Dump):
+    CLIENT_ID = "1209708526889345075"
