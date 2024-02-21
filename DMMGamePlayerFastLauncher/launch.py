@@ -1,5 +1,8 @@
 import json
 import logging
+import subprocess
+import sys
+import time
 import traceback
 from base64 import b64encode
 from pathlib import Path
@@ -37,9 +40,9 @@ class GameLauncher(CTk):
         return self
 
     @threading_wrapper
-    def thread(self, id: str):
+    def thread(self, id: str, kill: bool = False, force_non_uac: bool = False):
         try:
-            self.launch(id)
+            self.launch(id, kill, force_non_uac)
             self.quit()
         except Exception as e:
             if not Env.DEVELOP:
@@ -47,7 +50,7 @@ class GameLauncher(CTk):
                 ErrorWindow(self, str(e), traceback.format_exc(), quit=True).create()
             raise
 
-    def launch(self, id: str):
+    def launch(self, id: str, kill: bool = False, force_non_uac: bool = False):
         path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             data = ShortcutData.from_dict(json.load(f))
@@ -84,19 +87,27 @@ class GameLauncher(CTk):
                 session.set_config(dgp_config)
 
         dmm_args = response["data"]["execute_args"].split(" ") + data.game_args.get().split(" ")
-
+        game_path = str(game_path.relative_to(game_file))
+        game_full_path = str(game_file.joinpath(game_path))
         is_admin = ProcessManager.admin_check()
-        if response["data"]["is_administrator"] and (not is_admin):
+        if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
             pid_manager = ProcessIdManager()
-            process = ProcessManager.admin_run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
-            game_pid = pid_manager.new_process().search(str(game_path.relative_to(game_file)))
+            process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
+            game_pid = pid_manager.new_process().search(game_full_path)
             while psutil.pid_exists(game_pid):
-                pass
+                time.sleep(1)
         else:
-            process = ProcessManager.run([str(game_path.relative_to(game_file))] + dmm_args, cwd=str(game_file))
-            assert process.stdout is not None
-            for line in process.stdout:
-                logging.debug(decode(line))
+            process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
+            if kill:
+                try:
+                    process.wait(2)
+                except subprocess.TimeoutExpired:
+                    for child in psutil.Process(process.pid).children(recursive=True):
+                        child.kill()
+            else:
+                assert process.stdout is not None
+                for line in process.stdout:
+                    logging.debug(decode(line))
 
 
 class LanchLauncher(CTk):
@@ -155,6 +166,18 @@ class LanchLauncher(CTk):
 
             session.cookies.clear()
             session.write()
+
+
+class GameLauncherUac(CTk):
+    @staticmethod
+    def wait(args: list[str]):
+        if not ProcessManager.admin_check():
+            pid_manager = ProcessIdManager()
+            ProcessManager.admin_run([sys.executable, *args])
+            print(sys.executable)
+            game_pid = pid_manager.new_process().search(sys.executable)
+            while psutil.pid_exists(game_pid):
+                time.sleep(1)
 
 
 def decode(s: bytes) -> str:

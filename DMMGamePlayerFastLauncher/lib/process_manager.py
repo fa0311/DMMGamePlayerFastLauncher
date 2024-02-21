@@ -16,9 +16,8 @@ class ProcessManager:
     @staticmethod
     def admin_run(args: list[str], cwd: Optional[str] = None) -> int:
         file, *args = args
-        args = [f'"{arg}"' for arg in args[1:]]
-        logging.info(args)
-        return ctypes.windll.shell32.ShellExecuteW(None, "runas", file, " ".join(args), cwd, 1)
+        logging.info({"cwd": cwd, "args": args, "file": file})
+        return ctypes.windll.shell32.ShellExecuteW(None, "runas", file, " ".join([f"{arg}" for arg in args]), cwd, 1)
 
     @staticmethod
     def admin_check() -> bool:
@@ -48,11 +47,17 @@ class ProcessManager:
 
 
 class ProcessIdManager:
-    process: list[tuple[int, str]]
+    process: list[tuple[int, Optional[str]]]
 
-    def __init__(self, _process: Optional[list[tuple[int, str]]] = None) -> None:
+    def __init__(self, _process: Optional[list[tuple[int, Optional[str]]]] = None) -> None:
+        def wrapper(x: psutil.Process) -> Optional[str]:
+            try:
+                return x.exe()
+            except Exception:
+                return None
+
         if _process is None:
-            self.process = [(x.pid, x.name()) for x in psutil.process_iter()]
+            self.process = [(x.pid, wrapper(x)) for x in psutil.process_iter()]
         else:
             self.process = _process
 
