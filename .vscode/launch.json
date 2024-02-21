@@ -46,18 +46,6 @@
       "env": {
         "ENV": "DEVELOP"
       }
-    },
-    {
-      "name": "ForceUserGameLauncher",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "DMMGamePlayerFastLauncher/DMMGamePlayerFastLauncher.py",
-      "console": "integratedTerminal",
-      "justMyCode": false,
-      "args": ["priconner", "--type", "force-user-game"],
-      "env": {
-        "ENV": "DEVELOP"
-      }
     }
   ]
 }

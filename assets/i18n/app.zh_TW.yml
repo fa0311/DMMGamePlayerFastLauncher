@@ -43,6 +43,7 @@ zh_TW:
       對於基於 Unity 的遊戲，您可以輸入像 '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' 這樣的引數，以以 1280x720 的解析度以視窗模式啟動遊戲。
 
     auto_update: 啟動時自動更新遊戲
+    rich_presence: 啟用 Discord 的豐富存在
 
     create_bypass_shortcut_and_save: 創建UAC自動提升快捷方式並保存設置
     create_bypass_shortcut_and_save_tooltip: |
@@ -197,3 +198,6 @@ zh_TW:
 
   utils:
     file_exists: 該文件已經存在。
+
+  discord:
+    state: "正在玩 %{name}"

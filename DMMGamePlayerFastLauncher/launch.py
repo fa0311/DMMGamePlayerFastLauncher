@@ -14,6 +14,7 @@ import psutil
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
+from lib.discord import start_rich_presence
 from lib.process_manager import ProcessIdManager, ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
@@ -94,6 +95,8 @@ class GameLauncher(CTk):
             pid_manager = ProcessIdManager()
             process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
             game_pid = pid_manager.new_process().search(game_full_path)
+            if data.rich_presence.get():
+                start_rich_presence(game_pid, id, response["data"]["title"])
             while psutil.pid_exists(game_pid):
                 time.sleep(1)
         else:
@@ -105,6 +108,8 @@ class GameLauncher(CTk):
                     for child in psutil.Process(process.pid).children(recursive=True):
                         child.kill()
             else:
+                if data.rich_presence.get():
+                    start_rich_presence(process.pid, id, response["data"]["title"])
                 assert process.stdout is not None
                 for line in process.stdout:
                     logging.debug(decode(line))

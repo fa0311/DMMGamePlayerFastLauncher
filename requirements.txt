@@ -24,6 +24,7 @@ psutil==5.9.4
 pycryptodome==3.17
 pyinstaller @ git+https://github.com/fa0311/pyinstaller@4bbed269a4e759f920c59aec138b88b7570e330f
 pyinstaller-hooks-contrib==2022.14
+pypresence==4.3.0
 pyreadline3==3.4.1
 python-dateutil==2.8.2
 pytz==2022.7.1

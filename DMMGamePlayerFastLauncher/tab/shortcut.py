@@ -78,6 +78,7 @@ class ShortcutBase(CTkScrollableFrame):
         EntryComponent(self, text=text, tooltip=i18n.t("app.shortcut.game_args_tooltip"), variable=self.data.game_args).create()
 
         CheckBoxComponent(self, text=i18n.t("app.shortcut.auto_update"), variable=self.data.auto_update).create()
+        CheckBoxComponent(self, text=i18n.t("app.shortcut.rich_presence"), variable=self.data.rich_presence).create()
 
         PaddingComponent(self, height=5).create()
 

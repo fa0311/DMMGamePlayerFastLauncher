@@ -44,6 +44,7 @@ zh_CN:
       对于基于 Unity 的游戏，您可以输入类似 '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' 的参数，以窗口模式启动游戏，分辨率为 1280x720。
 
     auto_update: 启动时自动更新游戏
+    rich_presence: 启用 Discord 的丰富存在
 
     create_bypass_shortcut_and_save: 创建UAC自动提升的快捷方式并保存设置
     create_bypass_shortcut_and_save_tooltip: |
@@ -198,3 +199,6 @@ zh_CN:
 
   utils:
     file_exists: 该文件已经存在。
+
+  discord:
+    state: "正在玩 %{name}"
