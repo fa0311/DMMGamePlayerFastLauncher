@@ -105,6 +105,10 @@ class ShortcutBase(CTkScrollableFrame):
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
 
+    def failed_save(self):
+        path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
+        path.unlink()
+
     @error_toast
     def bypass_callback(self):
         self.save()
@@ -123,7 +127,7 @@ class ShortcutBase(CTkScrollableFrame):
             Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            self.failed_save()
             raise
 
     @error_toast
@@ -141,7 +145,7 @@ class ShortcutBase(CTkScrollableFrame):
             Shortcut().create(sorce=sorce, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            self.failed_save()
             raise
 
     @error_toast
@@ -162,7 +166,7 @@ class ShortcutBase(CTkScrollableFrame):
             Shortcut().create(sorce=sorce, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            self.failed_save()
             raise
 
     @error_toast
@@ -238,8 +242,12 @@ class ShortcutEdit(ShortcutBase):
             self.selected.set(self.filename.get())
             self.option_callback("_")
         except Exception:
-            selected.with_suffix(".json.bak").rename(selected.with_suffix(".json"))
+            self.failed_save()
             raise
+
+    def failed_save(self):
+        selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
+        selected.with_suffix(".json.bak").rename(selected.with_suffix(".json"))
 
     @error_toast
     def delete_callback(self):
