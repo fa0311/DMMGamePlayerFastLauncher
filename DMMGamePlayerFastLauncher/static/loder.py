@@ -40,7 +40,7 @@ def config_migrate():
         version = Version(AppConfig.DATA.last_version.get() or "v0.0.0")
         logging.info(f"Migration from {version} to {Env.VERSION}")
 
-        if version < Version("v5.5.0"):
+        if version < Version("v5.5.2"):
             logging.info("Migration from v5.5.0 to v5.5.1")
             Path(AssetsPathConfig.I18N).joinpath("app.ja.yml").unlink(missing_ok=True)
             Path(AssetsPathConfig.I18N).joinpath("app.en.yml").unlink(missing_ok=True)
