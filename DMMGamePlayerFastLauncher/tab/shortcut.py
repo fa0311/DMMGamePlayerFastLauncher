@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from tkinter import Frame, StringVar
+from typing import Callable
 
 import customtkinter as ctk
 import i18n
@@ -105,10 +106,12 @@ class ShortcutBase(CTkScrollableFrame):
         with open(path, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data.to_dict()))
 
+    def save_handler(self, fn: Callable[[], None]):
+        pass
+
     @error_toast
     def bypass_callback(self):
-        self.save()
-        try:
+        def fn():
             task = Schtasks(self.filename.get())
             if task.check():
                 task.set()
@@ -117,53 +120,52 @@ class ShortcutBase(CTkScrollableFrame):
             except Exception:
                 name, icon = self.filename.get(), None
                 self.toast.error(i18n.t("app.shortcut.game_info_error"))
-
             sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = ["/run", "/tn", task.name]
             Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
-        except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
-            raise
+
+        self.save_handler(fn)
 
     @error_toast
     def uac_callback(self):
-        self.save()
-        try:
+        def fn():
             try:
-                name, icon, admin = self.get_game_info()
+                try:
+                    name, icon, admin = self.get_game_info()
+                except Exception:
+                    name, icon = self.filename.get(), None
+                    self.toast.error(i18n.t("app.shortcut.game_info_error"))
+                sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+                args = [self.filename.get()]
+                Shortcut().create(sorce=sorce, args=args, icon=icon)
+                self.toast.info(i18n.t("app.shortcut.save_success"))
             except Exception:
-                name, icon = self.filename.get(), None
-                self.toast.error(i18n.t("app.shortcut.game_info_error"))
+                DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+                raise
 
-            sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
-            args = [self.filename.get()]
-            Shortcut().create(sorce=sorce, args=args, icon=icon)
-            self.toast.info(i18n.t("app.shortcut.save_success"))
-        except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
-            raise
+        self.save_handler(fn)
 
     @error_toast
     def save_callback(self):
-        self.save()
-        try:
+        def fn():
             try:
-                name, icon, admin = self.get_game_info()
+                try:
+                    name, icon, admin = self.get_game_info()
+                except Exception:
+                    name, icon, admin = self.filename.get(), None, False
+                    self.toast.error(i18n.t("app.shortcut.game_info_error"))
+                if admin:
+                    raise Exception(i18n.t("app.shortcut.administrator_error"))
             except Exception:
-                name, icon, admin = self.filename.get(), None, False
-                self.toast.error(i18n.t("app.shortcut.game_info_error"))
-
-            if admin:
-                raise Exception(i18n.t("app.shortcut.administrator_error"))
-
+                DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+                raise
             sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = [self.filename.get()]
             Shortcut().create(sorce=sorce, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
-        except Exception:
-            DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
-            raise
+
+        self.save_handler(fn)
 
     @error_toast
     def save_only_callback(self):
@@ -203,6 +205,10 @@ class ShortcutCreate(ShortcutBase):
         super().create()
         return self
 
+    def save_handler(self, fn: Callable[[], None]):
+        self.save()
+        fn()
+
 
 class ShortcutEdit(ShortcutBase):
     selected: StringVar
@@ -227,19 +233,23 @@ class ShortcutEdit(ShortcutBase):
 
         return self
 
-    def save(self):
-        selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
-        selected.rename(selected.with_suffix(".json.bak"))
+    def save_handler(self, fn: Callable[[], None]):
+        selected = DataPathConfig.SHORTCUT.joinpath(self.selected.get())
+        selected.with_suffix(".json").rename(selected.with_suffix(".json.bak"))
         try:
-            super().save()
-            selected.with_suffix(".json.bak").unlink()
-            self.values.remove(self.selected.get())
-            self.values.append(self.filename.get())
-            self.selected.set(self.filename.get())
-            self.option_callback("_")
+            self.save()
+            try:
+                fn()
+            except Exception:
+                DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
         except Exception:
             selected.with_suffix(".json.bak").rename(selected.with_suffix(".json"))
             raise
+        selected.with_suffix(".json.bak").unlink()
+        self.values.remove(self.selected.get())
+        self.values.append(self.filename.get())
+        self.selected.set(self.filename.get())
+        self.option_callback("_")
 
     @error_toast
     def delete_callback(self):

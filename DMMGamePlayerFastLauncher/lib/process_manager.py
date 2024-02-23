@@ -15,9 +15,9 @@ from static.env import Env
 class ProcessManager:
     @staticmethod
     def admin_run(args: list[str], cwd: Optional[str] = None) -> int:
-        file, *args = args
+        file = args.pop(0)
         logging.info({"cwd": cwd, "args": args, "file": file})
-        return ctypes.windll.shell32.ShellExecuteW(None, "runas", file, " ".join([f"{arg}" for arg in args]), cwd, 1)
+        return ctypes.windll.shell32.ShellExecuteW(None, "runas", str(file), " ".join([f"{arg}" for arg in args]), cwd, 1)
 
     @staticmethod
     def admin_check() -> bool:
