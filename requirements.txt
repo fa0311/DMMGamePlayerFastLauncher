@@ -26,6 +26,7 @@ pyinstaller @ git+https://github.com/fa0311/pyinstaller@4bbed269a4e759f920c59aec
 pyinstaller-hooks-contrib==2022.14
 pypresence==4.3.0
 pyreadline3==3.4.1
+PySocks==1.7.1
 python-dateutil==2.8.2
 pytz==2022.7.1
 pywin32==305
