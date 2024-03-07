@@ -58,13 +58,10 @@ class SettingEditTab(CTkScrollableFrame):
         OptionMenuComponent(self, text=i18n.t("app.setting.theme"), values=self.theme, variable=self.data.theme).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.appearance"), values=["light", "dark", "system"], variable=self.data.appearance_mode).create()
 
-        EntryComponent(self, text=i18n.t("app.setting.proxy_http"), variable=self.data.proxy_http).create()
-        EntryComponent(self, text=i18n.t("app.setting.proxy_https"), variable=self.data.proxy_https).create()
-        EntryComponent(self, text=i18n.t("app.setting.proxy_socks"), variable=self.data.proxy_socks).create()
-
-        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_http"), variable=self.data.dmm_proxy_http).create()
-        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_https"), variable=self.data.dmm_proxy_https).create()
-        EntryComponent(self, text=i18n.t("app.setting.dmm_proxy_socks"), variable=self.data.dmm_proxy_socks).create()
+        text = i18n.t("app.setting.proxy_all")
+        EntryComponent(self, text=text, tooltip=i18n.t("app.setting.proxy_all_tooltip"), variable=self.data.proxy_all).create()
+        text = i18n.t("app.setting.dmm_proxy_all")
+        EntryComponent(self, text=text, tooltip=i18n.t("app.setting.dmm_proxy_all_tooltip"), variable=self.data.dmm_proxy_all).create()
 
         PaddingComponent(self, height=5).create()
         CTkLabel(self, text=i18n.t("app.setting.window_scaling")).pack(anchor=ctk.W)
