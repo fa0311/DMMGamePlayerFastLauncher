@@ -141,13 +141,21 @@ ja_JP:
     theme: テーマ
     appearance: 外観
 
-    proxy_http: HTTPプロキシ
-    proxy_https: HTTPSプロキシ
-    proxy_socks: SOCKSプロキシ
+    proxy_all: プロキシ
+    proxy_all_tooltip: |-
+      ゲームのプロキシを設定します。
+      例: http://127.0.0.1:80
+          https://127.0.0.1:443
+          socks5://127.0.0.1:1080
+          socks5://user:pass@127.0.0.1:1080
 
-    dmm_proxy_http: DMM HTTPプロキシ
-    dmm_proxy_https: DMM HTTPSプロキシ
-    dmm_proxy_socks: DMM SOCKSプロキシ
+    dmm_proxy_all: DMM プロキシ
+    dmm_proxy_all_tooltip: |-
+      DMMのプロキシを設定します。
+      例: http://127.0.0.1:80
+          https://127.0.0.1:443
+          socks5://127.0.0.1:1080
+          socks5://user:pass@127.0.0.1:1080
 
     window_scaling: ウィンドウの拡大率
     debug_window: デバッグウィンドウを表示する

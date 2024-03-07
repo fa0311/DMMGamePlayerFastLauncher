@@ -144,13 +144,21 @@ en_US:
     theme: Theme
     appearance: Appearance
 
-    proxy_http: HTTP Proxy
-    proxy_https: HTTPS Proxy
-    proxy_socks: SOCKS Proxy
+    proxy_all: Proxy
+    proxy_all_tooltip: |-
+      Set up the game's proxy.
+      Example: http://127.0.0.1:80
+               https://127.0.0.1:443
+               socks5://127.0.0.1:1080
+               socks5://user:pass@127.0.0.1:1080
 
-    dmm_proxy_http: DMM HTTP Proxy
-    dmm_proxy_https: DMM HTTPS Proxy
-    dmm_proxy_socks: DMM SOCKS Proxy
+    dmm_proxy_all: DMM Proxy
+    dmm_proxy_all_tooltip: |-
+      Set up DMM's proxy.
+      Example: http://127.0.0.1:80
+               https://127.0.0.1:443
+               socks5://127.0.0.1:1080
+               socks5://user:pass@127.0.0.1:1080
 
     window_scaling: Window Scaling
     debug_window: Show Debug Window

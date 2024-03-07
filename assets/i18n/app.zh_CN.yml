@@ -143,13 +143,21 @@ zh_CN:
     theme: 主题
     appearance: 外观
 
-    proxy_http: HTTP 代理
-    proxy_https: HTTPS 代理
-    proxy_socks: SOCKS 代理
+    proxy_all: 代理
+    proxy_all_tooltip: |-
+      设置游戏的代理。
+      例子：http://127.0.0.1:80
+            https://127.0.0.1:443
+            socks5://127.0.0.1:1080
+            socks5://user:pass@127.0.0.1:1080
 
-    dmm_proxy_http: DMM HTTP 代理
-    dmm_proxy_https: DMM HTTPS 代理
-    dmm_proxy_socks: DMM SOCKS 代理
+    dmm_proxy_all: DMM 代理
+    dmm_proxy_all_tooltip: |-
+      设置 DMM 的代理。
+      例子：http://127.0.0.1:80
+            https://127.0.0.1:443
+            socks5://127.0.0.1:1080
+            socks5://user:pass@127.0.0.1:1080
 
     window_scaling: 窐口缩放比例
     debug_window: 显示调试窗口
