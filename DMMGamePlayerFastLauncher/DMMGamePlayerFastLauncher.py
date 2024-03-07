@@ -68,7 +68,8 @@ def loder(master: LanchLauncher):
     if AppConfig.DATA.proxy_all.get() != "":
         os.environ["ALL_PROXY"] = AppConfig.DATA.proxy_all.get()
     if AppConfig.DATA.dmm_proxy_all.get() != "":
-        DgpSessionV2.PROXY["all"] = AppConfig.DATA.dmm_proxy_all.get()
+        DgpSessionV2.PROXY["http"] = AppConfig.DATA.dmm_proxy_all.get()
+        DgpSessionV2.PROXY["https"] = AppConfig.DATA.dmm_proxy_all.get()
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
