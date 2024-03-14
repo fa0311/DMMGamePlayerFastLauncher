@@ -46,10 +46,11 @@ class GameLauncher(CTk):
             self.launch(id, kill, force_non_uac)
             self.quit()
         except Exception as e:
-            if not Env.DEVELOP:
+            if Env.DEVELOP:
+                raise
+            else:
                 self.iconify()
                 ErrorWindow(self, str(e), traceback.format_exc(), quit=True).create()
-            raise
 
     def launch(self, id: str, kill: bool = False, force_non_uac: bool = False):
         path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
