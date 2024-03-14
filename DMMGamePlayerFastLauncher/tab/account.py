@@ -60,8 +60,9 @@ class AccountImport(CTkScrollableFrame):
 
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.import_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
-        filename_tooltip = i18n.t("app.account.filename_tooltip")
-        EntryComponent(self, text=i18n.t("app.account.filename"), tooltip=filename_tooltip, required=True, variable=self.name).create()
+        text = i18n.t("app.account.filename")
+        tooltip = i18n.t("app.account.filename_tooltip")
+        EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.name, alnum_only=True).create()
         CTkButton(self, text=i18n.t("app.account.import"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 
@@ -111,7 +112,9 @@ class AccountEdit(CTkScrollableFrame):
         children_destroy(self.body)
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         self.body_filename.set(self.filename.get())
-        EntryComponent(self.body, text=i18n.t("app.account.filename"), variable=self.body_filename).create()
+        text = i18n.t("app.account.filename")
+        tooltip = i18n.t("app.account.filename_tooltip")
+        EntryComponent(self.body, text=text, tooltip=tooltip, required=True, variable=self.body_filename, alnum_only=True).create()
 
         session = DgpSessionWrap()
         session.read_bytes(str(Path(path)))

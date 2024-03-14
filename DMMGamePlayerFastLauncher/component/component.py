@@ -86,6 +86,7 @@ class EntryComponent(CTkFrame):
     required: bool
     command: list[tuple[str, Callable[[Variable], None]]]
     state: str
+    alnum_only: bool
 
     def __init__(
         self,
@@ -96,6 +97,7 @@ class EntryComponent(CTkFrame):
         required: bool = False,
         command: Optional[list[tuple[str, Callable[[Variable], None]]]] = None,
         state: Optional[str] = None,
+        alnum_only: bool = False,
     ) -> None:
         super().__init__(master, fg_color="transparent")
         self.pack(fill=ctk.X, expand=True)
@@ -105,10 +107,15 @@ class EntryComponent(CTkFrame):
         self.required = required
         self.command = command or []
         self.state = state or tk.NORMAL
+        self.alnum_only = alnum_only
 
     def create(self):
         LabelComponent(self, text=self.text, required=self.required, tooltip=self.tooltip).create()
-        CTkEntry(self, textvariable=self.variable, state=self.state).pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+        entry = CTkEntry(self, textvariable=self.variable, state=self.state)
+        entry.pack(side=ctk.LEFT, fill=ctk.BOTH, expand=True)
+
+        if self.alnum_only:
+            entry.bind("<Key>", self.alnum_only_callback)
 
         for cmd in self.command:
             CTkButton(self, text=cmd[0], command=self.call(cmd[1]), width=0).pack(side=ctk.LEFT, padx=2)
@@ -116,6 +123,16 @@ class EntryComponent(CTkFrame):
 
     def call(self, cmd):
         return lambda: cmd(self.variable)
+
+    def alnum_only_callback(self, event):
+        char = event.char.encode("utf-8")
+        if event.keysym in ["BackSpace", "Delete", "Left", "Right"]:
+            return
+        if char.isalnum():
+            return
+        if event.char in ["_", "-"]:
+            return
+        return "break"
 
 
 class ButtonComponent(CTkFrame):

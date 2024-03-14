@@ -69,7 +69,9 @@ class ShortcutBase(CTkScrollableFrame):
         self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
 
     def create(self):
-        EntryComponent(self, text=i18n.t("app.shortcut.filename"), tooltip=i18n.t("app.shortcut.filename_tooltip"), required=True, variable=self.filename).create()
+        text = i18n.t("app.shortcut.filename")
+        tooltip = i18n.t("app.shortcut.filename_tooltip")
+        EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.filename, alnum_only=True).create()
         text = i18n.t("app.shortcut.product_id")
         OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.product_id_tooltip"), values=self.product_ids, variable=self.data.product_id).create()
         text = i18n.t("app.shortcut.account_path")
@@ -286,7 +288,8 @@ class LauncherShortcutBase(CTkScrollableFrame):
 
     def create(self):
         text = i18n.t("app.shortcut.filename")
-        EntryComponent(self, text=i18n.t("app.shortcut.filename"), tooltip=i18n.t("app.shortcut.filename_tooltip"), required=True, variable=self.filename).create()
+        tooltip = i18n.t("app.shortcut.filename_tooltip")
+        EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.filename, alnum_only=True).create()
         text = i18n.t("app.shortcut.account_path")
         OptionMenuComponent(self, text=text, values=self.account_name_list, variable=self.data.account_path).create()
         text = i18n.t("app.shortcut.dgp_args")
