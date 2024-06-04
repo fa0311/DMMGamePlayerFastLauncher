@@ -2,6 +2,9 @@ zh_CN:
   title: DMMGamePlayer Fast Launcher
   language: 简体中文
 
+  font:
+    home: "Microsoft YaHei UI"
+
   tab:
     home: 主页
     shortcut: 快捷方式
@@ -142,7 +145,13 @@ zh_CN:
     lang: 语言
     theme: 主题
     appearance: 外观
-    force_use_os_font: 强制使用 OS 字体
+
+    font_preset: 字体预设
+    font_preset_tooltip: |-
+      选择字体预设。
+      i18n: 将选择针对每种语言优化的字体。
+      os: 将选择操作系统的默认字体。
+      theme: 将选择与主题匹配的字体。
 
     proxy_all: 代理
     proxy_all_tooltip: |-

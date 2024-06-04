@@ -2,6 +2,9 @@ en_US:
   title: DMMGamePlayer Fast Launcher
   language: English
 
+  font:
+    home: "Segoe UI"
+
   tab:
     home: Home
     shortcut: Shortcut
@@ -143,7 +146,13 @@ en_US:
     lang: Language
     theme: Theme
     appearance: Appearance
-    force_use_os_font: Force use of OS fonts
+
+    font_preset: Font Preset
+    font_preset_tooltip: |-
+      Select a font preset.
+      i18n: Optimized fonts for each language will be selected.
+      os: The default font of the operating system will be selected.
+      theme: Fonts matching the theme will be selected.
 
     proxy_all: Proxy
     proxy_all_tooltip: |-

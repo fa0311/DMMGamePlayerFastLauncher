@@ -2,6 +2,9 @@ ja_JP:
   title: DMMGamePlayer Fast Launcher
   language: 日本語
 
+  font:
+    home: "Yu Gothic UI"
+
   tab:
     home: ホーム
     shortcut: ショートカット
@@ -140,7 +143,13 @@ ja_JP:
     lang: 言語
     theme: テーマ
     appearance: 外観
-    force_use_os_font: OS フォントの利用を強制する
+
+    font_preset: フォントプリセット
+    font_preset_tooltip: |-
+      フォントプリセットを選択します。
+      i18n: 言語ごとに最適化されたフォントが選択されます。
+      os: OSのデフォルトフォントが選択されます。
+      theme: テーマに合わせたフォントが選択されます。
 
     proxy_all: プロキシ
     proxy_all_tooltip: |-

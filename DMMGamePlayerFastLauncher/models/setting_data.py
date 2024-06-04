@@ -17,7 +17,7 @@ class SettingData(VariableBase):
     dmm_proxy_all: StringVar = field(default_factory=StringVar)
     lang: StringVar = field(default_factory=lambda: StringVar(value=get_default_locale()[0]))
     theme: StringVar = field(default_factory=lambda: StringVar(value="blue"))
-    force_use_os_font: BooleanVar = field(default_factory=lambda: BooleanVar(value=True))
+    theme_font: StringVar = field(default_factory=lambda: StringVar(value="i18n"))
     appearance_mode: StringVar = field(default_factory=lambda: StringVar(value="dark"))
     window_scaling: DoubleVar = field(default_factory=lambda: DoubleVar(value=1.0))
     debug_window: BooleanVar = field(default_factory=lambda: BooleanVar(value=False))

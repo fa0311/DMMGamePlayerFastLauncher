@@ -74,9 +74,18 @@ def loder(master: LanchLauncher):
         DgpSessionV2.PROXY["https"] = AppConfig.DATA.dmm_proxy_all.get()
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
-    if AppConfig.DATA.force_use_os_font.get():
-        os_default_font = font.nametofont("TkDefaultFont").actual()
-        ThemeManager.theme["CTkFont"]["family"] = os_default_font["family"]
+
+    if AppConfig.DATA.theme_font.get() == "i18n":
+        i18n_font = i18n.t("app.font.home")
+        if i18n_font not in font.families():
+            logging.warning(f"Font {i18n_font} not found")
+        ThemeManager.theme["CTkFont"]["family"] = i18n_font
+    elif AppConfig.DATA.theme_font.get() == "os":
+        os_default_font = font.nametofont("TkDefaultFont").config()
+        if os_default_font is None:
+            logging.warning(f"Font {os_default_font} not found")
+        else:
+            ThemeManager.theme["CTkFont"]["family"] = os_default_font["family"]
 
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
 
