@@ -8,6 +8,8 @@ DMM Game Player のゲームを高速かつセキュアに起動できるラン�
 
 [詳しい使い方](/docs/README-advance.md)
 
+[チュートリアル動画](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/135)
+
 ## 特徴
 
 - **ワンクリックでゲームを起動**

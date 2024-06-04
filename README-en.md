@@ -8,6 +8,8 @@ DMM Game Player Fast Launcher for secure and fast start-up
 
 [Detailed instructions(Japanese)](/docs/README-advance.md)
 
+[Tutorial Video](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/135)
+
 ## Features
 
 - **One click to launch the game**
