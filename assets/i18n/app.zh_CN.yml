@@ -3,7 +3,7 @@ zh_CN:
   language: 简体中文
 
   font:
-    home: "Microsoft YaHei UI"
+    main: "Microsoft YaHei UI"
 
   tab:
     home: 主页

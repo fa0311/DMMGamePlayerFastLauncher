@@ -3,7 +3,7 @@ en_US:
   language: English
 
   font:
-    home: "Segoe UI"
+    main: "Segoe UI"
 
   tab:
     home: Home

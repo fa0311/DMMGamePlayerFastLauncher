@@ -3,7 +3,7 @@ ja_JP:
   language: 日本語
 
   font:
-    home: "Yu Gothic UI"
+    main: "Yu Gothic UI"
 
   tab:
     home: ホーム

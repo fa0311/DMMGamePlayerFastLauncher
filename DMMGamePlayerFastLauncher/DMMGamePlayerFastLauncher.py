@@ -76,7 +76,7 @@ def loder(master: LanchLauncher):
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
 
     if AppConfig.DATA.theme_font.get() == "i18n":
-        i18n_font = i18n.t("app.font.home")
+        i18n_font = i18n.t("app.font.main")
         if i18n_font not in font.families():
             logging.warning(f"Font {i18n_font} not found")
         ThemeManager.theme["CTkFont"]["family"] = i18n_font
