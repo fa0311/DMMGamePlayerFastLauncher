@@ -10,5 +10,6 @@ class VariableBase:
 
     @classmethod
     def from_dict(cls, obj: dict[str, str]):
-        item = [(k, v(value=obj.get(k))) for k, v in cls.__annotations__.items()]
+        default = cls().__dict__
+        item = [(k, v(value=obj.get(k, default[k].get()))) for k, v in cls.__annotations__.items()]
         return cls(**dict(item))
