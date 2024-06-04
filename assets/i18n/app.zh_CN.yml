@@ -142,6 +142,7 @@ zh_CN:
     lang: 语言
     theme: 主题
     appearance: 外观
+    force_use_os_font: 强制使用 OS 字体
 
     proxy_all: 代理
     proxy_all_tooltip: |-

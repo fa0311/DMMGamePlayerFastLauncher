@@ -143,6 +143,7 @@ en_US:
     lang: Language
     theme: Theme
     appearance: Appearance
+    force_use_os_font: Force use of OS fonts
 
     proxy_all: Proxy
     proxy_all_tooltip: |-

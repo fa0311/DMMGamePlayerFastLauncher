@@ -140,6 +140,7 @@ ja_JP:
     lang: 言語
     theme: テーマ
     appearance: 外観
+    force_use_os_font: OS フォントの利用を強制する
 
     proxy_all: プロキシ
     proxy_all_tooltip: |-

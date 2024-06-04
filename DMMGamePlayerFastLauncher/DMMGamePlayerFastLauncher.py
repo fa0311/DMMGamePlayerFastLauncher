@@ -3,12 +3,14 @@ import logging
 import os
 import sys
 import time
+from tkinter import font
 
 import customtkinter as ctk
 import i18n
 from app import App
 from coloredlogs import ColoredFormatter
 from component.logger import LoggingHandlerMask, StyleScheme, TkinkerLogger
+from customtkinter import ThemeManager
 from launch import GameLauncher, GameLauncherUac, LanchLauncher
 from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
@@ -72,6 +74,10 @@ def loder(master: LanchLauncher):
         DgpSessionV2.PROXY["https"] = AppConfig.DATA.dmm_proxy_all.get()
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
+    if AppConfig.DATA.force_use_os_font.get():
+        os_default_font = font.nametofont("TkDefaultFont").actual()
+        ThemeManager.theme["CTkFont"]["family"] = os_default_font["family"]
+
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
 
     try:

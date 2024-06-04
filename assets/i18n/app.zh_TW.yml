@@ -141,6 +141,7 @@ zh_TW:
     lang: 語言
     theme: 主題
     appearance: 外貌
+    force_use_os_font: 強制使用 OS 字體
 
     proxy_all: 代理
     proxy_all_tooltip: |-
