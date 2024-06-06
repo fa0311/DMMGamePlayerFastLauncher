@@ -75,6 +75,14 @@ def loder(master: LanchLauncher):
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
 
+    additional_theme = {
+        "MenuComponent": {"text_color": ["#000000", "#ffffff"]},
+        "LabelComponent": {"fg_color": ["#F9F9FA", "#343638"], "required_color": ["red", "red"]},
+        "CheckBoxComponent": {"checkbox_width": 16, "checkbox_height": 16, "border_width": 2},
+    }
+    for key, value in additional_theme.items():
+        ThemeManager.theme[key] = value
+
     if AppConfig.DATA.theme_font.get() == "i18n":
         i18n_font = i18n.t("app.font.main")
         if i18n_font not in font.families():
