@@ -58,6 +58,9 @@ class SettingEditTab(CTkScrollableFrame):
         OptionMenuComponent(self, text=i18n.t("app.setting.theme"), values=self.theme, variable=self.data.theme).create()
         OptionMenuComponent(self, text=i18n.t("app.setting.appearance"), values=["light", "dark", "system"], variable=self.data.appearance_mode).create()
 
+        text = i18n.t("app.setting.font_preset")
+        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.setting.font_preset_tooltip"), values=["i18n", "os", "theme"], variable=self.data.theme_font).create()
+
         text = i18n.t("app.setting.proxy_all")
         EntryComponent(self, text=text, tooltip=i18n.t("app.setting.proxy_all_tooltip"), variable=self.data.proxy_all).create()
         text = i18n.t("app.setting.dmm_proxy_all")

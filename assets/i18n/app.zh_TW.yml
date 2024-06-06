@@ -2,6 +2,9 @@ zh_TW:
   title: DMMGamePlayer Fast Launcher
   language: 繁體中文
 
+  font:
+    main: "Microsoft JhengHei UI"
+
   tab:
     home: 首頁
     shortcut: 快捷方式
@@ -141,6 +144,13 @@ zh_TW:
     lang: 語言
     theme: 主題
     appearance: 外貌
+
+    font_preset: 字型預設
+    font_preset_tooltip: |-
+      選擇字型預設。
+      i18n: 將選擇針對每種語言優化的字型。
+      os: 將選擇操作系統的預設字型。
+      theme: 將選擇與主題匹配的字型。
 
     proxy_all: 代理
     proxy_all_tooltip: |-

@@ -8,6 +8,8 @@ DMM Game Player Fast Launcher for secure and fast start-up
 
 [Detailed instructions(Japanese)](/docs/README-advance.md)
 
+[Tutorial Video](https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/135)
+
 ## Features
 
 - **One click to launch the game**
@@ -46,8 +48,9 @@ If you find a bug, please report it in [Issues](https://github.com/fa0311/DMMGam
 
 ## Source
 
-[Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)  
-[kira-96/Inno-Setup-Chinese-Simplified-Translation](https://github.com/kira-96/Inno-Setup-Chinese-Simplified-Translation)
+- [Lutwidse/priconner_launch.py](https://gist.github.com/Lutwidse/82d8e7a20c96296bc0318f1cb6bf26ee)  
+- [kira-96/Inno-Setup-Chinese-Simplified-Translation](https://github.com/kira-96/Inno-Setup-Chinese-Simplified-Translation)
+- [@takafi CustomTkinter 簡易カスタムテーマ作成ツール](https://qiita.com/takafi/items/90c17b7888263100cbbc)
 
 ## License
 

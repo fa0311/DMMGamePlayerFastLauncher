@@ -83,8 +83,8 @@ class ProcessIdManager:
 
 
 def get_sid() -> str:
-    desc = win32security.GetFileSecurity(".", win32security.OWNER_SECURITY_INFORMATION)
-    sid = desc.GetSecurityDescriptorOwner()
+    username = os.getlogin()
+    sid, domain, type = win32security.LookupAccountName("", username)
     sidstr = win32security.ConvertSidToStringSid(sid)
     return sidstr
 

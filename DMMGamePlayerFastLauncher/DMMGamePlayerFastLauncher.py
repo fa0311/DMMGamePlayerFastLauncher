@@ -3,12 +3,14 @@ import logging
 import os
 import sys
 import time
+from tkinter import font
 
 import customtkinter as ctk
 import i18n
 from app import App
 from coloredlogs import ColoredFormatter
 from component.logger import LoggingHandlerMask, StyleScheme, TkinkerLogger
+from customtkinter import ThemeManager
 from launch import GameLauncher, GameLauncherUac, LanchLauncher
 from lib.DGPSessionV2 import DgpSessionV2
 from models.setting_data import AppConfig
@@ -72,6 +74,27 @@ def loder(master: LanchLauncher):
         DgpSessionV2.PROXY["https"] = AppConfig.DATA.dmm_proxy_all.get()
 
     ctk.set_default_color_theme(str(AssetsPathConfig.THEMES.joinpath(AppConfig.DATA.theme.get()).with_suffix(".json")))
+
+    additional_theme = {
+        "MenuComponent": {"text_color": ["#000000", "#ffffff"]},
+        "LabelComponent": {"fg_color": ["#F9F9FA", "#343638"], "required_color": ["red", "red"]},
+        "CheckBoxComponent": {"checkbox_width": 16, "checkbox_height": 16, "border_width": 2},
+    }
+    for key, value in additional_theme.items():
+        ThemeManager.theme[key] = value
+
+    if AppConfig.DATA.theme_font.get() == "i18n":
+        i18n_font = i18n.t("app.font.main")
+        if i18n_font not in font.families():
+            logging.warning(f"Font {i18n_font} not found")
+        ThemeManager.theme["CTkFont"]["family"] = i18n_font
+    elif AppConfig.DATA.theme_font.get() == "os":
+        os_default_font = font.nametofont("TkDefaultFont").config()
+        if os_default_font is None:
+            logging.warning(f"Font {os_default_font} not found")
+        else:
+            ThemeManager.theme["CTkFont"]["family"] = os_default_font["family"]
+
     ctk.set_appearance_mode(AppConfig.DATA.appearance_mode.get())
 
     try:

@@ -37,7 +37,7 @@ def config_loder():
 
 def config_migrate():
     if AppConfig.DATA.last_version.get() != Env.VERSION:
-        version = Version(AppConfig.DATA.last_version.get() or "v0.0.0")
+        version = Version(AppConfig.DATA.last_version.get())
         logging.info(f"Migration from {version} to {Env.VERSION}")
 
         if version < Version("v5.5.2"):
