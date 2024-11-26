@@ -19,6 +19,13 @@ from win32 import win32crypt
 urllib3.disable_warnings()
 
 
+def text_factory(x: bytes):
+    try:
+        return x.decode("utf-8")
+    except Exception:
+        return x
+
+
 class DgpSessionUtils:
     @staticmethod
     def gen_rand_hex():
@@ -99,6 +106,7 @@ class DgpSessionV2:
 
     def __enter__(self):
         self.db = sqlite3.connect(self.DGP5_DATA_PATH.joinpath("Network", "Cookies"))
+        self.db.text_factory = text_factory
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
