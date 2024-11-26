@@ -108,10 +108,14 @@ class DgpSessionV2:
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
             try:
-                value = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6]) or ""
-                v10, nonce, _, _ = self.split_encrypted_data(cookie_row[5])
+                cookie = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6]) or ""
+                v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                decrypt_data, mac = cipher.encrypt_and_digest(value.encode())
+                value = cipher.decrypt_and_verify(data, mac)
+                head, body = value[:32], value[32:]
+
+                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+                decrypt_data, mac = cipher.encrypt_and_digest(head + cookie.encode())
                 data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
                 self.db.execute(
                     "update cookies set encrypted_value = ? where name = ?",
@@ -125,12 +129,14 @@ class DgpSessionV2:
         aes_key = self.get_aes_key()
         for cookie_row in self.db.cursor().execute("select * from cookies"):
             try:
-                _, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
+                v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                value = cipher.decrypt_and_verify(data, mac).decode()
+                value = cipher.decrypt_and_verify(data, mac)
+                head, body = value[:32], value[32:]
+
                 cookie_data = {
                     "name": cookie_row[3],
-                    "value": value,
+                    "value": body.decode(),
                     "domain": cookie_row[1],
                     "path": cookie_row[6],
                     "secure": cookie_row[8],
