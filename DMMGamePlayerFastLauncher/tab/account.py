@@ -97,13 +97,14 @@ class AccountEdit(CTkScrollableFrame):
         self.toast = ToastController(self)
         self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.filename = StringVar()
-        self.body = CTkFrame(self, fg_color="transparent", height=0)
         self.body_var = {}
         self.body_filename = StringVar()
 
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.edit_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
+        self._parent_canvas.yview_moveto(0)
+        self.body = CTkFrame(self, fg_color="transparent", height=0)
         self.body.pack(expand=True, fill=ctk.BOTH)
         return self
 
