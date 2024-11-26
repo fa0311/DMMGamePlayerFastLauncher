@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 from tkinter import StringVar
 from typing import TypeVar
@@ -9,6 +10,7 @@ from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
 from lib.toast import ToastController, error_toast
+from selenium import webdriver
 from static.config import DataPathConfig
 from utils.utils import children_destroy, file_create
 
@@ -28,6 +30,7 @@ class AccountTab(CTkFrame):
     def create(self):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
+        self.tab.add(text=i18n.t("app.tab.import_browser"), callback=self.import_browser_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
         self.tab.add(text=i18n.t("app.tab.device"), callback=self.device_callback)
         self.tab.add(text=i18n.t("app.tab.device_list"), callback=self.device_list_callback)
@@ -35,6 +38,9 @@ class AccountTab(CTkFrame):
 
     def import_callback(self, master: CTkBaseClass):
         AccountImport(master).create().pack(expand=True, fill=ctk.BOTH)
+
+    def import_browser_callback(self, master: CTkBaseClass):
+        AccountBrowserImport(master).create().pack(expand=True, fill=ctk.BOTH)
 
     def edit_callback(self, master: CTkBaseClass):
         AccountEdit(master).create().pack(expand=True, fill=ctk.BOTH)
@@ -82,6 +88,65 @@ class AccountImport(CTkScrollableFrame):
             session.cookies.clear()
             session.write()
             self.toast.info(i18n.t("app.account.import_success"))
+
+
+class AccountBrowserImport(CTkScrollableFrame):
+    toast: ToastController
+    name: StringVar
+    browser: StringVar
+
+    def __init__(self, master: CTkBaseClass):
+        super().__init__(master, fg_color="transparent")
+        self.toast = ToastController(self)
+        self.name = StringVar()
+        self.browser = StringVar()
+
+    def create(self):
+        CTkLabel(self, text=i18n.t("app.account.import_browser_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
+        text = i18n.t("app.account.filename")
+        tooltip = i18n.t("app.account.filename_tooltip")
+        EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.name, alnum_only=True).create()
+        OptionMenuComponent(self, text=i18n.t("app.import_browser_select"), values=["Chrome", "Edge", "Firefox"], variable=self.browser).create()
+        CTkButton(self, text=i18n.t("app.account.import_browser"), command=self.callback).pack(fill=ctk.X, pady=10)
+        return self
+
+    def get_driver(self):
+        if self.browser.get() == "Chrome":
+            return webdriver.Chrome()
+        elif self.browser.get() == "Edge":
+            return webdriver.Edge()
+        elif self.browser.get() == "Firefox":
+            return webdriver.Firefox()
+        else:
+            raise Exception(i18n.t("app.account.browser_not_selected"))
+
+    @error_toast
+    def callback(self):
+        path = DataPathConfig.ACCOUNT.joinpath(self.name.get()).with_suffix(".bytes")
+        if self.name.get() == "":
+            raise Exception(i18n.t("app.account.filename_not_entered"))
+        if path.exists():
+            raise Exception(i18n.t("app.account.filename_already_exists"))
+
+        driver = self.get_driver()
+        driver.get("https://accounts.dmm.com/service/login/password")
+        while driver.current_url != "https://www.dmm.com/":
+            time.sleep(0.2)
+        with DgpSessionWrap() as session:
+            cookies = driver.get_cookies()
+            for cookie in cookies:
+                cookie_data = {
+                    "name": cookie["name"],
+                    "value": cookie["value"],
+                    "domain": cookie["domain"],
+                    "path": cookie["path"],
+                    "secure": cookie["secure"],
+                }
+                session.cookies.set(**cookie_data)
+            session.write_bytes(str(path))
+            self.toast.info(i18n.t("app.account.import_browser_success"))
+
+        driver.quit()
 
 
 class AccountEdit(CTkScrollableFrame):

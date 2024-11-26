@@ -120,10 +120,10 @@ class DgpSessionV2:
                 v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
                 value = cipher.decrypt_and_verify(data, mac)
-                head, body = value[:32], value[32:]
+                prefix, body = value[:32], value[32:]
 
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                decrypt_data, mac = cipher.encrypt_and_digest(head + cookie.encode())
+                decrypt_data, mac = cipher.encrypt_and_digest(prefix + cookie.encode())
                 data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
                 self.db.execute(
                     "update cookies set encrypted_value = ? where name = ?",
@@ -140,7 +140,7 @@ class DgpSessionV2:
                 v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
                 cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
                 value = cipher.decrypt_and_verify(data, mac)
-                head, body = value[:32], value[32:]
+                prefix, body = value[:32], value[32:]
 
                 cookie_data = {
                     "name": cookie_row[3],
