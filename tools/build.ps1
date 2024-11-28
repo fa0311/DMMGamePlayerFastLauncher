@@ -10,4 +10,6 @@ Copy-Item -Path "dist\DMMGamePlayerFastLauncher.exe" -Destination "windows" -For
 Copy-Item -Path "assets" -Destination "windows" -Force -Recurse
 
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kira-96/Inno-Setup-Chinese-Simplified-Translation/refs/heads/main/ChineseSimplified.isl" -OutFile "C:\Users\yuki\AppData\Local\Programs\Inno Setup 6\Languages\ChineseSimplified.isl"
-Start-Process "C:\Users\yuki\AppData\Local\Programs\Inno Setup 6\ISCC.exe" "setup.iss"
+Start-Process "C:\Users\yuki\AppData\Local\Programs\Inno Setup 6\ISCC.exe" "setup.iss" -Wait -NoNewWindow
+
+Compress-Archive -Path "windows\*" -DestinationPath "dist\DMMGamePlayerFastLauncher.zip" -Force
