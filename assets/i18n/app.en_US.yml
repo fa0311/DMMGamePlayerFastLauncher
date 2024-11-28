@@ -121,6 +121,7 @@ en_US:
       Choose your preferred browser.
       The specified browser will launch and open the login screen.
     import_browser: Import
+    import_browser_success: Imported successfully.
 
     edit_detail: |-
       Edit your account information.

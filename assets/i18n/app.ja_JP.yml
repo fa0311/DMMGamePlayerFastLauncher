@@ -119,6 +119,7 @@ ja_JP:
       お好みのブラウザを選択してください。
       指定されたブラウザを起動してログイン画面を開きます。
     import_browser: インポート
+    import_browser_success: インポートに成功しました。
 
     edit_detail: |-
       アカウント情報を編集します。
