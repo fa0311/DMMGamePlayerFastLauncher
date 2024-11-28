@@ -16,7 +16,9 @@ zh_TW:
     edit: 編輯快捷方式
     launch_create: 快速啟動 GamePlayer
     launch_edit: 編輯快速啟動 GamePlayer
-    import: 匯入
+    account_import: 匯入
+    account_edit: 編輯帳號
+    import_browser: 從瀏覽器匯入
     device: 註冊設備
     device_list: 設備清單
 
@@ -108,6 +110,16 @@ zh_TW:
     import_success: 匯入成功。
 
     file_select: 選擇檔案
+
+    import_browser_detail: |-
+      啟動瀏覽器以從DMMGamePlayer匯入帳號資訊。
+      請勿將使用此功能匯入的帳號用於 `GamePlayer加速` 設定。
+    browser_select: 選擇瀏覽器
+    browser_select_tooltip: |-
+      選擇您偏好的瀏覽器。
+      系統將啟動指定的瀏覽器並開啟登入畫面。
+    import_browser: 匯入
+    import_browser_success: 匯入成功。
 
     edit_detail: |-
       編輯您的帳戶資訊。

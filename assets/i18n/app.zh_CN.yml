@@ -16,7 +16,9 @@ zh_CN:
     edit: 编辑快捷方式
     launch_create: 快速启动 GamePlayer
     launch_edit: 编辑快速启动 GamePlayer
-    import: 导入
+    account_import: 导入
+    account_edit: 编辑账户
+    import_browser: 从浏览器导入
     device: 注册设备
     device_list: 设备列表
 
@@ -109,6 +111,16 @@ zh_CN:
     import_success: 导入成功。
 
     file_select: 选择文件
+
+    import_browser_detail: |-
+      启动浏览器以从DMMGamePlayer导入帐户信息。
+      请不要将使用此功能导入的帐户用于 `GamePlayer加速` 设置。
+    browser_select: 选择浏览器
+    browser_select_tooltip: |-
+      选择您喜欢的浏览器。
+      系统将启动指定的浏览器并打开登录页面。
+    import_browser: 导入
+    import_browser_success: 导入成功。
 
     edit_detail: |-
       编辑您的帐户信息。
