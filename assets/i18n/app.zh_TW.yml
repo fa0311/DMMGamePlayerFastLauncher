@@ -16,7 +16,8 @@ zh_TW:
     edit: 編輯快捷方式
     launch_create: 快速啟動 GamePlayer
     launch_edit: 編輯快速啟動 GamePlayer
-    import: 匯入
+    account_import: 匯入
+    account_edit: 編輯帳號
     import_browser: 從瀏覽器匯入
     device: 註冊設備
     device_list: 設備清單

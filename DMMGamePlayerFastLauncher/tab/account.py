@@ -29,9 +29,9 @@ class AccountTab(CTkFrame):
 
     def create(self):
         self.tab.create()
-        self.tab.add(text=i18n.t("app.tab.import"), callback=self.import_callback)
+        self.tab.add(text=i18n.t("app.tab.account_import"), callback=self.import_callback)
         self.tab.add(text=i18n.t("app.tab.import_browser"), callback=self.import_browser_callback)
-        self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
+        self.tab.add(text=i18n.t("app.tab.account_edit"), callback=self.edit_callback)
         self.tab.add(text=i18n.t("app.tab.device"), callback=self.device_callback)
         self.tab.add(text=i18n.t("app.tab.device_list"), callback=self.device_list_callback)
         return self
@@ -304,11 +304,11 @@ class DeviceListTab(CTkScrollableFrame):
     def create(self):
         OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
         if self.data:
-            count = len(self.data["hardwares"])
+            count = len(self.data["hardwares"] or [])
             limit = self.data["device_auth_limit_num"]
             CTkLabel(self, text=i18n.t("app.account.device_registrations", count=count, limit=limit), justify=ctk.LEFT).pack(anchor=ctk.W)
 
-            for hardware in self.data["hardwares"]:
+            for hardware in self.data["hardwares"] or []:
                 for key, value in hardware.items():
                     EntryComponent(self, text=key, variable=StringVar(value=value), state=ctk.DISABLED).create()
 
