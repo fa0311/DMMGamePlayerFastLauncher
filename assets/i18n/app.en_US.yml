@@ -17,6 +17,7 @@ en_US:
     launch_create: Fast Launch GamePlayer
     launch_edit: Edit Fast Launch GamePlayer
     import: Import
+    import_browser: Import from Browser
     device: Register Device
     device_list: Device List
 
@@ -110,6 +111,15 @@ en_US:
     import_success: Import succeeded.
 
     file_select: Select File
+
+    import_browser_detail: |-
+      Launch the browser to import account information from DMMGamePlayer.
+      Do not use accounts imported with this feature for the `GamePlayer Acceleration` settings.
+    browser_select: Select Browser
+    browser_select_tooltip: |-
+      Choose your preferred browser.
+      The specified browser will launch and open the login screen.
+    import_browser: Import
 
     edit_detail: |-
       Edit your account information.

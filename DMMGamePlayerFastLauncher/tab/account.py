@@ -106,7 +106,9 @@ class AccountBrowserImport(CTkScrollableFrame):
         text = i18n.t("app.account.filename")
         tooltip = i18n.t("app.account.filename_tooltip")
         EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.name, alnum_only=True).create()
-        OptionMenuComponent(self, text=i18n.t("app.import_browser_select"), values=["Chrome", "Edge", "Firefox"], variable=self.browser).create()
+        text = i18n.t("app.account.browser_select")
+        tooltip = i18n.t("app.account.browser_select_tooltip")
+        OptionMenuComponent(self, text=text, tooltip=tooltip, values=["Chrome", "Edge", "Firefox"], variable=self.browser).create()
         CTkButton(self, text=i18n.t("app.account.import_browser"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
 

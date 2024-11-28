@@ -17,6 +17,7 @@ ja_JP:
     launch_create: GamePlayerの高速化
     launch_edit: GamePlayer高速化の編集
     import: インポート
+    import_browser: ブラウザからインポート
     device: デバイスの登録
     device_list: デバイスの一覧
 
@@ -108,6 +109,15 @@ ja_JP:
     import_success: インポートに成功しました。
 
     file_select: ファイルの選択
+
+    import_browser_detail: |-
+      ブラウザを起動してDMMGamePlayerのアカウント情報をインポートします。
+      この機能を使用してインポートしたアカウントは `GamePlayerの高速化` 設定に使用しないでください。
+    browser_select: ブラウザの選択
+    browser_select_tooltip: |-
+      お好みのブラウザを選択してください。
+      指定されたブラウザを起動してログイン画面を開きます。
+    import_browser: インポート
 
     edit_detail: |-
       アカウント情報を編集します。
