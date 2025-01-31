@@ -7,7 +7,7 @@ import os
 import random
 import sqlite3
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlparse
 
 import psutil
 import requests
@@ -64,16 +64,16 @@ class DgpSessionV2:
     DGP5_DATA_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
 
     HEADERS = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
     }
     DGP5_HEADERS = {
         "Host": "apidgp-gameplayer.games.dmm.com",
         "Connection": "keep-alive",
-        "User-Agent": "DMMGamePlayer5-Win/5.2.22 Electron/22.0.0",
+        "User-Agent": "DMMGamePlayer5-Win/5.3.19 Electron/33.3.1",
         "Client-App": "DMMGamePlayer5",
-        "Client-version": "5.2.22",
+        "Client-version": "5.3.19",
     }
     DGP5_DEVICE_PARAMS = {
         "mac_address": DgpSessionUtils.gen_rand_address(),
