@@ -7,7 +7,7 @@ import os
 import random
 import sqlite3
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlparse
 
 import psutil
 import requests
@@ -64,16 +64,16 @@ class DgpSessionV2:
     DGP5_DATA_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
 
     HEADERS = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
     }
     DGP5_HEADERS = {
         "Host": "apidgp-gameplayer.games.dmm.com",
         "Connection": "keep-alive",
-        "User-Agent": "DMMGamePlayer5-Win/5.2.22 Electron/22.0.0",
+        "User-Agent": "DMMGamePlayer5-Win/5.3.19 Electron/33.3.1",
         "Client-App": "DMMGamePlayer5",
-        "Client-version": "5.2.22",
+        "Client-version": "5.3.19",
     }
     DGP5_DEVICE_PARAMS = {
         "mac_address": DgpSessionUtils.gen_rand_address(),
@@ -85,13 +85,12 @@ class DgpSessionV2:
     LOGGER = logging.getLogger("DgpSessionV2")
 
     API_DGP = "https://apidgp-gameplayer.games.dmm.com{0}"
-    LAUNCH_CL = API_DGP.format("/v5/launch/cl")
+    LAUNCH_CL = API_DGP.format("/v5/r2/launch/cl")
     LAUNCH_PKG = API_DGP.format("/v5/launch/pkg")
     HARDWARE_CODE = API_DGP.format("/v5/hardwarecode")
     HARDWARE_CONF = API_DGP.format("/v5/hardwareconf")
     HARDWARE_LIST = API_DGP.format("/v5/hardwarelist")
     HARDWARE_REJECT = API_DGP.format("/v5/hardwarereject")
-    GET_COOKIE = API_DGP.format("/getCookie")
     LOGIN_URL = API_DGP.format("/v5/loginurl")
 
     LOGIN = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
@@ -242,12 +241,12 @@ class DgpSessionV2:
         except Exception:
             pass
 
-    def download(self, filelist_url: str, output: Path):
-        token = self.post_dgp(self.GET_COOKIE, json={"url": self.SIGNED_URL}).json()
+    def download(self, sign: str, filelist_url: str, output: Path):
+        sign_dict = dict(parse_qsl(sign.replace(";", "&")))
         signed = {
-            "Policy": token["policy"],
-            "Signature": token["signature"],
-            "Key-Pair-Id": token["key"],
+            "Policy": sign_dict["CloudFront-Policy"],
+            "Signature": sign_dict["CloudFront-Signature"],
+            "Key-Pair-Id": sign_dict["CloudFront-Key-Pair-Id"],
         }
         url = self.API_DGP.format(filelist_url)
         data = self.get_dgp(url).json()
