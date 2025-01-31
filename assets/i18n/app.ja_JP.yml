@@ -14,16 +14,16 @@ ja_JP:
     help: ヘルプ
     create: ショートカットの作成
     edit: ショートカットの編集
-    launch_create: GamePlayerの高速化
-    launch_edit: GamePlayer高速化の編集
+    launch_create: GamePlayer の高速化
+    launch_edit: GamePlayer 高速化の編集
     account_import: インポート
     account_edit: アカウントの編集
-    import_browser: ブラウザからインポート
+    import_browser: ブラウザーからインポート
     device: デバイスの登録
     device_list: デバイスの一覧
 
   home:
-    new_version: DMMGamePlayerFastLauncherの新しいバージョンがあります。
+    new_version: DMMGamePlayer FastLauncher の新しいバージョンがあります。
 
   shortcut:
     filename: ファイル名
@@ -31,36 +31,36 @@ ja_JP:
       このショートカットに任意の名前を付けてください。
       半角英数字以外の文字列を使用すると問題が発生する可能性があります。
 
-    product_id: product_idの選択
+    product_id: product_id の選択
     product_id_tooltip: |-
-      product_idとはDMMがゲームを識別する際に使用するIDです。
+      product_id とは DMM がゲームを識別する際に使用する ID です。
 
     account_create_detail: |-
-      DMMGamePlayerを高速で起動するためのショートカットを作成します。
-      `アカウント` タブで作成したアカウントを選択してください。
+      DMMGamePlayer を高速で起動するためのショートカットを作成します。
+      「アカウント」タブで作成したアカウントを選択してください。
 
     account_path: アカウントの選択
     account_path_tooltip: |-
-      `アカウント` タブで作成したアカウントを選択してください。
+      「アカウント」タブで作成したアカウントを選択してください。
 
     game_args: ゲームの引数
     game_args_tooltip: |-
       ゲームに渡す引数を指定します。
-      Unity製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
-      ゲームが起動した際にウィンドウモードで1280x720の解像度で起動します。
+      Unity 製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
+      ゲームが起動した際にウィンドウモードで 1280x720 の解像度で起動します。
 
     auto_update: 起動時にゲームの自動更新をする
-    rich_presence: Discordのリッチプレゼンスを有効にする
+    rich_presence: Discord のリッチプレゼンスを有効にする
 
-    create_bypass_shortcut_and_save: UAC自動昇格のショートカットを作成して設定を保存する
+    create_bypass_shortcut_and_save: UAC 自動昇格のショートカットを作成して設定を保存する
     create_bypass_shortcut_and_save_tooltip: |-
       UAC自動昇格のショートカットを作成して設定を保存します。
       起動する際に管理者権限が必要なゲームの場合はこちらを選択します。
-    create_uac_shortcut_and_save: UAC手動昇格のショートカットを作成して設定を保存する
+    create_uac_shortcut_and_save: UAC 手動昇格のショートカットを作成して設定を保存する
     create_uac_shortcut_and_save_tooltip: |-
-      UAC手動昇格のショートカットを作成して設定を保存します。
+      UAC 手動昇格のショートカットを作成して設定を保存します。
       起動する際に管理者権限が必要なゲームの場合はこちらを選択します。
-      ゲームを起動するたびにUACのダイアログが表示されるため、手動で昇格する必要があります。
+      ゲームを起動するたびに UAC のダイアログが表示されるため、手動で昇格する必要があります。
       同一プロセスで実行されるため他のソフトウェアとの連携が強化されます。
     create_shortcut_and_save: ショートカットを作成して設定を保存する
     create_shortcut_and_save_tooltip: |-
@@ -77,26 +77,26 @@ ja_JP:
 
     file_select: ファイルの選択
 
-    product_id_not_entered: product_idが入力されていません。
+    product_id_not_entered: product_id が入力されていません。
     filename_not_entered: ファイル名が入力されていません。
     game_info_error: ゲーム情報の取得に失敗しました。
-    administrator_error: 管理者権限が必要です。`UAC自動昇格ショートカット` を作成してください。
+    administrator_error: 管理者権限が必要です。「UAC の自動昇格ショートカット」を作成してください。
     file_not_selected: ファイルが選択されていません。
     save_success: 保存しました。
     delete: 削除をする
 
-    account_edit_detail: DMMGamePlayerを高速起動するショートカットの設定を編集します。
-    dgp_args: DMMGamePlayerの引数
+    account_edit_detail: DMMGamePlayer を高速起動するショートカットの設定を編集します。
+    dgp_args: DMMGamePlayer の引数
     dgp_args_tooltip: |-
       DMMGamePlayerに渡す引数を指定します。
       例えば `dmmgameplayer://play/GCL/priconner/cl/win` と入力すると
-      DMMGamePlayerが起動した際に「プリコネR」が起動します。
-      空欄の場合は「DMMGamePlayerのみ」が起動します。
+      DMMGamePlayer が起動した際に「プリコネR」が起動します。
+      空欄の場合は「DMMGamePlayer のみ」が起動します。
 
   account:
     import_detail: |-
-      DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
-      インポートをするとDMMGamePlayer5からログアウトされます。
+      DMMGamePlayer のアカウント情報を DMMGamePlayer Fast Launcher にインポートします。
+      インポートをすると DMMGamePlayer5 からログアウトされます。
       インポート済みのアカウントで直接起動した DMMGamePlayer5 でログインをしないでください。
 
     filename_tooltip: |-
@@ -112,12 +112,12 @@ ja_JP:
     file_select: ファイルの選択
 
     import_browser_detail: |-
-      ブラウザを起動してDMMGamePlayerのアカウント情報をインポートします。
-      この機能を使用してインポートしたアカウントは `GamePlayerの高速化` 設定に使用しないでください。
-    browser_select: ブラウザの選択
+      ブラウザーを起動して DMMGamePlayer のアカウント情報をインポートします。
+      この機能を使用してインポートしたアカウントは「GamePlayer の高速化」の設定に使用しないでください。
+    browser_select: ブラウザーの選択
     browser_select_tooltip: |-
-      お好みのブラウザを選択してください。
-      指定されたブラウザを起動してログイン画面を開きます。
+      お好みのブラウザーを選択してください。
+      指定されたブラウザーを起動してログイン画面を開きます。
     import_browser: インポート
     import_browser_success: インポートに成功しました。
 
@@ -129,7 +129,7 @@ ja_JP:
     save_success: 保存しました。
 
     device_detail: |-
-      メールアドレスに送信された `デバイス認証コード` を入力してください。
+      メールアドレスに送信された「デバイス認証コード」を入力してください。
 
     send_auth_code: 認証コードを送信する
     auth: 認証する
@@ -143,15 +143,15 @@ ja_JP:
     device_list_success: デバイスの一覧を取得しました。
     delete_success: 削除しました。
 
-    device_registrations: "登録されたデバイス数 : %{count} / %{limit}"
+    device_registrations: "登録されたデバイス数: %{count} / %{limit}"
 
   setting:
     save: 保存
     reset_all_settings: すべての設定をリセット
     confirm_reset: 本当にすべての設定をリセットしますか？
     save_success: 設定を保存しました。
-    dmm_game_player_program_folder: DMMGamePlayerのプログラムフォルダー
-    dmm_game_player_data_folder: DMMGamePlayerのデータフォルダー
+    dmm_game_player_program_folder: DMMGamePlayer のプログラムフォルダー
+    dmm_game_player_data_folder: DMMGamePlayer のデータフォルダー
     lang: 言語
     theme: テーマ
     appearance: 外観
@@ -160,7 +160,7 @@ ja_JP:
     font_preset_tooltip: |-
       フォントプリセットを選択します。
       i18n: 言語ごとに最適化されたフォントが選択されます。
-      os: OSのデフォルトフォントが選択されます。
+      os: OS の既定のフォントが選択されます。
       theme: テーマに合わせたフォントが選択されます。
 
     proxy_all: プロキシ
@@ -173,7 +173,7 @@ ja_JP:
 
     dmm_proxy_all: DMM プロキシ
     dmm_proxy_all_tooltip: |-
-      DMMのプロキシを設定します。
+      DMM のプロキシを設定します。
       例: http://127.0.0.1:80
           https://127.0.0.1:443
           socks5://127.0.0.1:1080
@@ -188,9 +188,9 @@ ja_JP:
       デバイス認証に使用するデバイス情報を設定します。
       これらは適当で構いません。
 
-    mac_address: MACアドレス
-    hdd_serial: HDDシリアル
-    motherboard: マザーボードID
+    mac_address: MAC アドレス
+    hdd_serial: HDD シリアル
+    motherboard: マザーボード ID
     user_os: OS
 
     other_detail: このツールの設定をテキストエディターで編集します。
@@ -223,7 +223,7 @@ ja_JP:
     details: 詳細
 
   lib:
-    dmm_already_running: DMMGamePlayerが起動しているため、起動できませんでした。
+    dmm_already_running: DMMGamePlayer が起動中のため、起動できませんでした。
 
   utils:
     file_exists: そのファイルは既に存在します。
