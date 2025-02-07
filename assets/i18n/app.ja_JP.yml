@@ -1,5 +1,5 @@
 ja_JP:
-  title: DMMGamePlayer Fast Launcher
+  title: DMMGamePlayerFastLauncher
   language: 日本語
 
   font:
@@ -23,7 +23,7 @@ ja_JP:
     device_list: デバイスの一覧
 
   home:
-    new_version: DMMGamePlayer FastLauncher の新しいバージョンがあります。
+    new_version: DMMGamePlayerFastLauncher の新しいバージョンがあります。
 
   shortcut:
     filename: ファイル名
@@ -46,7 +46,7 @@ ja_JP:
     game_args: ゲームの引数
     game_args_tooltip: |-
       ゲームに渡す引数を指定します。
-      Unity 製のゲームであれば `-screen-fullscreen 0 -screen-width 1280 -screen-height 720` と入力すると
+      Unity 製のゲームであれば「-screen-fullscreen 0 -screen-width 1280 -screen-height 720」と入力すると
       ゲームが起動した際にウィンドウモードで 1280x720 の解像度で起動します。
 
     auto_update: 起動時にゲームの自動更新をする
@@ -71,7 +71,7 @@ ja_JP:
     save_only_tooltip: |-
       ショートカットを作成せずに設定のみ保存します。
       保存した設定からショートカットを起動する場合は
-      `DMMGamePlayerFastLauncher.exe [ファイル名] --type game` とコマンドラインで実行します。
+      「DMMGamePlayerFastLauncher.exe [ファイル名] --type game」とコマンドラインで実行します。
     add_detail: 高速起動を行なうショートカットと設定を作成します。
     edit_detail: 高速起動のショートカットの設定を編集します。
 
@@ -88,14 +88,14 @@ ja_JP:
     account_edit_detail: DMMGamePlayer を高速起動するショートカットの設定を編集します。
     dgp_args: DMMGamePlayer の引数
     dgp_args_tooltip: |-
-      DMMGamePlayerに渡す引数を指定します。
-      例えば `dmmgameplayer://play/GCL/priconner/cl/win` と入力すると
-      DMMGamePlayer が起動した際に「プリコネR」が起動します。
+      DMMGamePlayer に渡す引数を指定します。
+      例えば「dmmgameplayer://play/GCL/priconner/cl/win」と入力すると
+      DMMGamePlayer が起動した際に「プリコネ Re:Dive」が起動します。
       空欄の場合は「DMMGamePlayer のみ」が起動します。
 
   account:
     import_detail: |-
-      DMMGamePlayer のアカウント情報を DMMGamePlayer Fast Launcher にインポートします。
+      DMMGamePlayer のアカウント情報を DMMGamePlayerFastLauncher にインポートします。
       インポートをすると DMMGamePlayer5 からログアウトされます。
       インポート済みのアカウントで直接起動した DMMGamePlayer5 でログインをしないでください。
 
@@ -116,7 +116,7 @@ ja_JP:
       この機能を使用してインポートしたアカウントは「GamePlayer の高速化」の設定に使用しないでください。
     browser_select: ブラウザーの選択
     browser_select_tooltip: |-
-      お好みのブラウザーを選択してください。
+      使用するブラウザーを選択してください。
       指定されたブラウザーを起動してログイン画面を開きます。
     import_browser: インポート
     import_browser_success: インポートに成功しました。
@@ -223,7 +223,7 @@ ja_JP:
     details: 詳細
 
   lib:
-    dmm_already_running: DMMGamePlayer が起動中のため、起動できませんでした。
+    dmm_already_running: DMMGamePlayer が実行中のため、起動できませんでした。
 
   utils:
     file_exists: そのファイルは既に存在します。
