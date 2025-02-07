@@ -50,7 +50,7 @@ ja_JP:
       ゲームが起動した際にウィンドウモードで 1280x720 の解像度で起動します。
 
     auto_update: 起動時にゲームの自動更新をする
-    rich_presence: Discord のリッチプレゼンスを有効にする
+    rich_presence: Discord のリッチプレゼンスを有効化する
 
     create_bypass_shortcut_and_save: UAC 自動昇格のショートカットを作成して設定を保存する
     create_bypass_shortcut_and_save_tooltip: |-
