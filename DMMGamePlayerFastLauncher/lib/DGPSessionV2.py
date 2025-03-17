@@ -5,7 +5,6 @@ import json
 import logging
 import os
 import random
-import sqlite3
 from pathlib import Path
 from urllib.parse import parse_qsl, urlparse
 
@@ -47,41 +46,33 @@ class DMMAlreadyRunningException(Exception):
 
 
 class DgpSessionV2:
-    DGP5_PATH: Path
-    DGP5_DATA_PATH: Path
-    HEADERS: dict[str, str]
-    DGP5_HEADERS: dict[str, str]
-    DGP5_DEVICE_PARAMS: dict[str, str]
-    DATA_DESCR: str
-    db: sqlite3.Connection
-    session: requests.Session
-    cookies: requests.cookies.RequestsCookieJar
-    cookies_kwargs = {
-        "domain": ".dmm.com",
-        "path": "/",
-    }
     DGP5_PATH = Path(os.environ["PROGRAMFILES"]).joinpath("DMMGamePlayer")
     DGP5_DATA_PATH = Path(os.environ["APPDATA"]).joinpath("dmmgameplayer5")
 
-    HEADERS = {
+    HEADERS: dict[str, str] = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Upgrade-Insecure-Requests": "1",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
     }
-    DGP5_HEADERS = {
-        "Host": "apidgp-gameplayer.games.dmm.com",
+    DGP5_HEADERS: dict[str, str] = {
         "Connection": "keep-alive",
-        "User-Agent": "DMMGamePlayer5-Win/5.3.19 Electron/33.3.1",
+        "User-Agent": "DMMGamePlayer5-Win/5.3.25 Electron/34.3.0",
         "Client-App": "DMMGamePlayer5",
-        "Client-version": "5.3.19",
+        "Client-Version": "5.3.25",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "no-cors",
+        "Sec-Fetch-Dest": "empty",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "ja",
+        "Priority": "u=1, i",
     }
-    DGP5_DEVICE_PARAMS = {
+    DGP5_DEVICE_PARAMS: dict[str, str] = {
         "mac_address": DgpSessionUtils.gen_rand_address(),
         "hdd_serial": DgpSessionUtils.gen_rand_hex(),
         "motherboard": DgpSessionUtils.gen_rand_hex(),
         "user_os": "win",
     }
-    DATA_DESCR = "DMMGamePlayerFastLauncher"
+    DATA_DESCR: str = "DMMGamePlayerFastLauncher"
     LOGGER = logging.getLogger("DgpSessionV2")
 
     API_DGP = "https://apidgp-gameplayer.games.dmm.com{0}"
@@ -99,80 +90,43 @@ class DgpSessionV2:
     PROXY = {}
 
     def __init__(self):
-        self.session = requests.session()
-        self.session.proxies = self.PROXY
-        self.cookies = self.session.cookies
+        self.actauth = {}
+        self.session = requests.Session()
+        self.session.cookies = requests.cookies.RequestsCookieJar()
+        self.session.cookies.set("age_check_done", "0", domain=".dmm.com", path="/")
 
     def __enter__(self):
-        self.db = sqlite3.connect(self.DGP5_DATA_PATH.joinpath("Network", "Cookies"))
-        self.db.text_factory = text_factory
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.db.close()
+        self.session.close()
 
     def write(self):
+        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
-        for cookie_row in self.db.cursor().execute("select * from cookies"):
-            try:
-                cookie = self.cookies.get(cookie_row[3], domain=cookie_row[1], path=cookie_row[6]) or ""
-                v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
-                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                value = cipher.decrypt_and_verify(data, mac)
-                prefix, body = value[:32], value[32:]
-
-                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                decrypt_data, mac = cipher.encrypt_and_digest(prefix + cookie.encode())
-                data = self.join_encrypted_data(v10, nonce, decrypt_data, mac)
-                self.db.execute(
-                    "update cookies set encrypted_value = ? where name = ?",
-                    (memoryview(data), cookie_row[3]),
-                )
-            except Exception as e:
-                self.LOGGER.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
-        self.db.commit()
+        with open(file, "rb") as f:
+            enc = f.read()
+        v10, nonce, data, mac = self.split_encrypted_data(enc)
+        value = json.dumps(self.actauth).encode()
+        cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+        data, mac = cipher.encrypt_and_digest(value)
+        enc = self.join_encrypted_data(v10, nonce, data, mac)
+        with open(file, "wb") as f:
+            f.write(enc)
 
     def read(self):
+        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
-        for cookie_row in self.db.cursor().execute("select * from cookies"):
-            try:
-                v10, nonce, data, mac = self.split_encrypted_data(cookie_row[5])
-                cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-                value = cipher.decrypt_and_verify(data, mac)
-                prefix, body = value[:32], value[32:]
-
-                cookie_data = {
-                    "name": cookie_row[3],
-                    "value": body.decode(),
-                    "domain": cookie_row[1],
-                    "path": cookie_row[6],
-                    "secure": cookie_row[8],
-                }
-                self.cookies.set_cookie(requests.cookies.create_cookie(**cookie_data))
-            except Exception as e:
-                self.LOGGER.warn("Failed to decrypt cookie: %s", cookie_row[3], exc_info=e)
+        with open(file, "rb") as f:
+            enc = f.read()
+        v10, nonce, data, mac = self.split_encrypted_data(enc)
+        cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+        value = cipher.decrypt_and_verify(data, mac)
+        self.actauth = json.loads(value.decode())
 
     def write_bytes(self, file: str):
-        contents = []
-        for cookie in self.cookies:
-            cookie_dict = dict(
-                version=cookie.version,
-                name=cookie.name,
-                value=cookie.value,
-                port=cookie.port,
-                domain=cookie.domain,
-                path=cookie.path,
-                secure=cookie.secure,
-                expires=cookie.expires,
-                discard=cookie.discard,
-                comment=cookie.comment,
-                comment_url=cookie.comment_url,
-                rfc2109=cookie.rfc2109,
-                rest=cookie._rest,  # type: ignore
-            )
-            contents.append(cookie_dict)
         data = win32crypt.CryptProtectData(
-            json.dumps(contents).encode(),
+            json.dumps(self.actauth).encode(),
             self.DATA_DESCR,
         )
         with open(file, "wb") as f:
@@ -181,9 +135,14 @@ class DgpSessionV2:
     def read_bytes(self, file: str):
         with open(file, "rb") as f:
             data = f.read()
-            _, contents = win32crypt.CryptUnprotectData(data)
-            for cookie in json.loads(contents):
-                self.cookies.set_cookie(requests.cookies.create_cookie(**cookie))
+        _, contents = win32crypt.CryptUnprotectData(data)
+        self.actauth = json.loads(contents.decode())
+
+    def get_access_token(self):
+        return self.actauth.get("accessToken")
+
+    def get_headers(self):
+        return self.DGP5_HEADERS | {"actauth": self.get_access_token()}
 
     def get(self, url: str, params=None, **kwargs) -> requests.Response:
         self.LOGGER.info("params %s", params)
@@ -197,12 +156,12 @@ class DgpSessionV2:
 
     def get_dgp(self, url: str, params=None, **kwargs) -> requests.Response:
         self.LOGGER.info("params %s", params)
-        res = self.session.get(url, headers=self.DGP5_HEADERS, params=params, **kwargs)
+        res = self.session.get(url, headers=self.get_headers(), params=params, **kwargs)
         return self.logger(res)
 
     def post_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
         self.LOGGER.info("json %s", json)
-        res = self.session.post(url, headers=self.DGP5_HEADERS, json=json, **kwargs)
+        res = self.session.post(url, headers=self.get_headers(), json=json, **kwargs)
         return self.logger(res)
 
     def post_device_dgp(self, url: str, json=None, **kwargs) -> requests.Response:

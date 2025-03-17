@@ -151,7 +151,7 @@ class LanchLauncher(CTk):
 
         with DgpSessionWrap() as session:
             session.read_bytes(str(account_path))
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
+            if session.get_access_token() is None:
                 raise Exception(i18n.t("app.launch.export_error"))
             session.write()
 
@@ -166,11 +166,9 @@ class LanchLauncher(CTk):
 
         with DgpSessionWrap() as session:
             session.read()
-            if session.cookies.get("login_secure_id", **session.cookies_kwargs) is None:
+            if session.get_access_token() is None:
                 raise Exception(i18n.t("app.launch.import_error"))
             session.write_bytes(str(account_path))
-
-            session.cookies.clear()
             session.write()
 
 
