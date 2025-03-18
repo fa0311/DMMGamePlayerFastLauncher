@@ -41,7 +41,7 @@ zh_TW:
     account_path: 選擇帳戶
     account_path_tooltip: |-
       請在「帳戶」選項卡中選擇您創建的帳戶。
-
+    always_extract_from_dmm: 總是從DMM提取
     game_args: 遊戲引數
     game_args_tooltip: |-
       指定要傳遞給遊戲的引數。
@@ -92,12 +92,11 @@ zh_TW:
     dgp_args_tooltip: |-
       指定要傳遞給 DMMGamePlayer 的引數。
       例如，輸入 'dmmgameplayer://play/GCL/priconner/cl/win' 將啟動 '公主連結！Re:Dive' 在 DMMGamePlayer 中。留空以僅啟動 DMMGamePlayer。
+    unity_command_line_args: 了解更多關於Unity命令列參數
+    unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/EditorCommandLineArguments.html
 
   account:
-    import_detail: |-
-      將您的 DMMGamePlayer 帳戶資訊匯入快速啟動器。
-      匯入操作將登出 DMMGamePlayer 5。
-      請勿直接在 DMMGamePlayer 5 中使用已匯入的帳戶登錄。
+    import_detail: 將您的 DMMGamePlayer 帳戶資訊匯入快速啟動器。
 
     filename_tooltip: |-
       請為此帳戶提供任何名稱。
@@ -111,9 +110,7 @@ zh_TW:
 
     file_select: 選擇檔案
 
-    import_browser_detail: |-
-      啟動瀏覽器以從DMMGamePlayer匯入帳號資訊。
-      請勿將使用此功能匯入的帳號用於 `GamePlayer加速` 設定。
+    import_browser_detail: 啟動瀏覽器以從DMMGamePlayer匯入帳號資訊。
     browser_select: 選擇瀏覽器
     browser_select_tooltip: |-
       選擇您偏好的瀏覽器。

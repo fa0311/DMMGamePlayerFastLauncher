@@ -6,13 +6,14 @@ import logging
 import os
 import random
 from pathlib import Path
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl
 
 import psutil
 import requests
 import requests.cookies
 import urllib3
 from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 from win32 import win32crypt
 
 urllib3.disable_warnings()
@@ -82,12 +83,14 @@ class DgpSessionV2:
     HARDWARE_CONF = API_DGP.format("/v5/hardwareconf")
     HARDWARE_LIST = API_DGP.format("/v5/hardwarelist")
     HARDWARE_REJECT = API_DGP.format("/v5/hardwarereject")
-    LOGIN_URL = API_DGP.format("/v5/loginurl")
-
-    LOGIN = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+    ACCESS_TOKEN = API_DGP.format("/v5/auth/accesstoken/issue")
+    LOGIN_URL = API_DGP.format("/v5/auth/login/url")
     SIGNED_URL = "https://cdn-gameplayer.games.dmm.com/product/*"
-
+    WEB_LOGIN_URL = "https://accounts.dmm.com/service/oauth/=/path="
     PROXY = {}
+
+    actauth: dict[str, str]
+    session: requests.Session
 
     def __init__(self):
         self.actauth = {}
@@ -95,34 +98,38 @@ class DgpSessionV2:
         self.session.cookies = requests.cookies.RequestsCookieJar()
         self.session.cookies.set("age_check_done", "0", domain=".dmm.com", path="/")
 
-    def __enter__(self):
-        return self
+    def write_safe(self, data: bytes):
+        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
+        with open(file, "wb") as f:
+            f.write(data)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.session.close()
+    def read_safe(self):
+        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
+        if file.exists():
+            with open(file, "rb") as f:
+                return f.read()
+        return None
 
     def write(self):
-        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
-        with open(file, "rb") as f:
-            enc = f.read()
-        v10, nonce, data, mac = self.split_encrypted_data(enc)
+        v10 = "v10".encode()
+        nonce = get_random_bytes(12)
         value = json.dumps(self.actauth).encode()
         cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
         data, mac = cipher.encrypt_and_digest(value)
         enc = self.join_encrypted_data(v10, nonce, data, mac)
-        with open(file, "wb") as f:
-            f.write(enc)
+        self.write_safe(enc)
 
     def read(self):
-        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
-        with open(file, "rb") as f:
-            enc = f.read()
-        v10, nonce, data, mac = self.split_encrypted_data(enc)
-        cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-        value = cipher.decrypt_and_verify(data, mac)
-        self.actauth = json.loads(value.decode())
+        enc = self.read_safe()
+        if enc:
+            v10, nonce, data, mac = self.split_encrypted_data(enc)
+            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+            value = cipher.decrypt_and_verify(data, mac)
+            self.actauth = json.loads(value.decode())
+        else:
+            self.actauth = {}
 
     def write_bytes(self, file: str):
         data = win32crypt.CryptProtectData(
@@ -190,16 +197,6 @@ class DgpSessionV2:
         }
         return self.post_device_dgp(url, json=json, verify=False)
 
-    def login(self):
-        response = self.get(self.LOGIN_URL)
-        url = response.json()["data"]["url"]
-        token = urlparse(url).path.split("path=")[-1]
-        try:
-            self.get(url)
-            self.get(self.LOGIN.format(token=token))
-        except Exception:
-            pass
-
     def download(self, sign: str, filelist_url: str, output: Path):
         sign_dict = dict(parse_qsl(sign.replace(";", "&")))
         signed = {
@@ -262,13 +259,8 @@ class DgpSessionV2:
 
     @staticmethod
     def read_cookies(path: Path) -> "DgpSessionV2":
-        if DgpSessionV2.is_running_dmm():
-            raise DMMAlreadyRunningException("DMMGamePlayer is already running")
-
         session = DgpSessionV2()
         session.read_bytes(str(path))
-        session.login()
-        session.write_bytes(str(path))
         return session
 
     @staticmethod

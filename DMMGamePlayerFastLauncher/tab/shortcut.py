@@ -5,7 +5,8 @@ from typing import Callable
 
 import customtkinter as ctk
 import i18n
-from component.component import ButtonComponent, CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, PaddingComponent
+from static.constant import Constant
+from component.component import ButtonComponent, CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -17,8 +18,11 @@ from static.config import DataPathConfig
 from static.env import Env
 from utils.utils import children_destroy, file_create, get_default_locale
 
-# ===== Shortcut Sub Menu =====
+import webbrowser
 
+
+
+# ===== Shortcut Sub Menu =====
 
 class ShortcutTab(CTkFrame):
     tab: TabMenuComponent
@@ -57,7 +61,7 @@ class ShortcutBase(CTkScrollableFrame):
     filename: StringVar
     product_ids: list[str]
     dgp_config: dict
-    account_name_list: list[str]
+    account_name_list: list[tuple[str,str]]
 
     def __init__(self, master: Frame):
         super().__init__(master, fg_color="transparent")
@@ -66,7 +70,9 @@ class ShortcutBase(CTkScrollableFrame):
         self.filename = StringVar()
         self.dgp_config = DgpSessionWrap().get_config()
         self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
-        self.account_name_list = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list = [(x.stem, x.stem) for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list.insert(0, (Constant.ALWAYS_EXTRACT_FROM_DMM, i18n.t("app.shortcut.always_extract_from_dmm")))
+
 
     def create(self):
         text = i18n.t("app.shortcut.filename")
@@ -75,7 +81,7 @@ class ShortcutBase(CTkScrollableFrame):
         text = i18n.t("app.shortcut.product_id")
         OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.product_id_tooltip"), values=self.product_ids, variable=self.data.product_id).create()
         text = i18n.t("app.shortcut.account_path")
-        OptionMenuComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.data.account_path).create()
+        OptionMenuTupleComponent(self, text=text, tooltip=i18n.t("app.shortcut.account_path_tooltip"), values=self.account_name_list, variable=self.data.account_path).create()
 
         text = i18n.t("app.shortcut.game_args")
         EntryComponent(self, text=text, tooltip=i18n.t("app.shortcut.game_args_tooltip"), variable=self.data.game_args).create()
@@ -171,14 +177,24 @@ class ShortcutBase(CTkScrollableFrame):
 
     @error_toast
     def save_only_callback(self):
-        self.save()
-        self.toast.info(i18n.t("app.shortcut.save_success"))
+        def fn():
+            self.toast.info(i18n.t("app.shortcut.save_success"))
+        self.save_handler(fn)
+    
+    def unity_command_line_args_callback(self):
+        webbrowser.open(i18n.t("app.shortcut.unity_command_line_args_link"))
+        
 
     def get_game_info(self) -> tuple[str, Path, bool]:
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
         game_path = Path(game["detail"]["path"])
-        path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionWrap().read_cookies(path)
+        
+        if self.data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap()
+            session.read()
+        else:
+            path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(path)
         response = session.lunch(self.data.product_id.get(), game["gameType"]).json()
 
         if response["result_code"] != 100:
@@ -205,6 +221,11 @@ class ShortcutCreate(ShortcutBase):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         super().create()
+        
+        PaddingComponent(self, height=15).create()
+        text = i18n.t("app.shortcut.unity_command_line_args")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.unity_command_line_args_tooltip"), command=self.unity_command_line_args_callback).create()
+
         return self
 
     def save_handler(self, fn: Callable[[], None]):
@@ -233,6 +254,10 @@ class ShortcutEdit(ShortcutBase):
             self.filename.set(self.selected.get())
             CTkButton(self, text=i18n.t("app.shortcut.delete"), command=self.delete_callback).pack(fill=ctk.X, pady=5)
 
+        PaddingComponent(self, height=15).create()
+        text = i18n.t("app.shortcut.unity_command_line_args")
+        ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.unity_command_line_args_tooltip"), command=self.unity_command_line_args_callback).create()
+
         return self
 
     def save_handler(self, fn: Callable[[], None]):
@@ -242,8 +267,12 @@ class ShortcutEdit(ShortcutBase):
             self.save()
             try:
                 fn()
-            except Exception:
-                DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            except Exception as e:
+                try:
+                    DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+                except Exception:
+                    pass
+                raise e
         except Exception:
             selected.with_suffix(".json.bak").rename(selected.with_suffix(".json"))
             raise

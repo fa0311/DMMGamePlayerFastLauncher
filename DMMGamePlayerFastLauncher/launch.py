@@ -11,6 +11,7 @@ from typing import Callable
 import customtkinter as ctk
 import i18n
 import psutil
+from static.constant import Constant
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -57,8 +58,12 @@ class GameLauncher(CTk):
         with open(path, "r", encoding="utf-8") as f:
             data = ShortcutData.from_dict(json.load(f))
 
-        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(account_path)
+        if data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap()
+            session.read()
+        else:
+            account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(account_path)
 
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
@@ -95,6 +100,7 @@ class GameLauncher(CTk):
         if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
             pid_manager = ProcessIdManager()
             process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
+            time.sleep(5)
             game_pid = pid_manager.new_process().search(game_full_path)
             if data.rich_presence.get():
                 start_rich_presence(game_pid, id, response["data"]["title"])
@@ -143,17 +149,22 @@ class LanchLauncher(CTk):
             raise
 
     def launch(self, id: str):
+        if DgpSessionWrap.is_running_dmm():
+            raise Exception(i18n.t("app.lib.dmm_already_running"))
+
         path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(id).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             data = LauncherShortcutData.from_dict(json.load(f))
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
 
-        with DgpSessionWrap() as session:
-            session.read_bytes(str(account_path))
-            if session.get_access_token() is None:
-                raise Exception(i18n.t("app.launch.export_error"))
-            session.write()
+        before_session = DgpSessionWrap()
+        before_session.read()
+
+        session = DgpSessionWrap.read_cookies(Path(account_path))
+        if session.get_access_token() is None:
+            raise Exception(i18n.t("app.launch.export_error"))
+        session.write()
 
         dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path()
 
@@ -164,12 +175,12 @@ class LanchLauncher(CTk):
         for line in process.stdout:
             logging.debug(decode(line))
 
-        with DgpSessionWrap() as session:
-            session.read()
-            if session.get_access_token() is None:
-                raise Exception(i18n.t("app.launch.import_error"))
-            session.write_bytes(str(account_path))
-            session.write()
+        session = DgpSessionWrap()
+        session.read()
+        if session.get_access_token() is None:
+            raise Exception(i18n.t("app.launch.import_error"))
+        session.write_bytes(str(account_path))
+        before_session.write()
 
 
 class GameLauncherUac(CTk):
