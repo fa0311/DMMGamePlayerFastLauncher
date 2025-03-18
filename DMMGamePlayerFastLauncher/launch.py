@@ -95,6 +95,7 @@ class GameLauncher(CTk):
         if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
             pid_manager = ProcessIdManager()
             process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
+            time.sleep(5)
             game_pid = pid_manager.new_process().search(game_full_path)
             if data.rich_presence.get():
                 start_rich_presence(game_pid, id, response["data"]["title"])
