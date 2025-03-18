@@ -171,8 +171,9 @@ class ShortcutBase(CTkScrollableFrame):
 
     @error_toast
     def save_only_callback(self):
-        self.save()
-        self.toast.info(i18n.t("app.shortcut.save_success"))
+        def fn():
+            self.toast.info(i18n.t("app.shortcut.save_success"))
+        self.save_handler(fn)
 
     def get_game_info(self) -> tuple[str, Path, bool]:
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
@@ -242,8 +243,12 @@ class ShortcutEdit(ShortcutBase):
             self.save()
             try:
                 fn()
-            except Exception:
-                DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+            except Exception as e:
+                try:
+                    DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
+                except Exception:
+                    pass
+                raise e
         except Exception:
             selected.with_suffix(".json.bak").rename(selected.with_suffix(".json"))
             raise
