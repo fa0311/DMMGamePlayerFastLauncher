@@ -42,7 +42,7 @@ zh_CN:
     account_path: 选择帐户
     account_path_tooltip: |-
       请在“帐户”选项卡中选择您创建的帐户。
-
+    always_extract_from_dmm: 始终从DMM提取
     game_args: 游戏参数
     game_args_tooltip: |-
       指定传递给游戏的参数。
@@ -93,6 +93,8 @@ zh_CN:
     dgp_args_tooltip: |-
       指定传递给 DMMGamePlayer 的参数。
       例如，输入 'dmmgameplayer://play/GCL/priconner/cl/win' 将启动 '公主连结！Re:Dive' 在 DMMGamePlayer 中。留空以仅启动 DMMGamePlayer。
+    unity_command_line_args: 了解更多关于Unity命令行参数
+    unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/EditorCommandLineArguments.html
 
   account:
     import_detail: 将您的 DMMGamePlayer 帐户信息导入快速启动器。

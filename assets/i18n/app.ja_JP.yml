@@ -42,7 +42,7 @@ ja_JP:
     account_path: アカウントの選択
     account_path_tooltip: |-
       `アカウント` タブで作成したアカウントを選択してください。
-
+    always_extract_from_dmm: 常にDMMから抽出する
     game_args: ゲームの引数
     game_args_tooltip: |-
       ゲームに渡す引数を指定します。
@@ -92,6 +92,8 @@ ja_JP:
       例えば `dmmgameplayer://play/GCL/priconner/cl/win` と入力すると
       DMMGamePlayerが起動した際に「プリコネR」が起動します。
       空欄の場合は「DMMGamePlayerのみ」が起動します。
+    unity_command_line_args: Unityのコマンドライン引数についての詳しい説明を見る
+    unity_command_line_args_link: https://docs.unity3d.com/ja/current/Manual/EditorCommandLineArguments.html
 
   account:
     import_detail: DMMGamePlayerのアカウント情報をFastLauncherにインポートします。

@@ -11,6 +11,7 @@ from typing import Callable
 import customtkinter as ctk
 import i18n
 import psutil
+from static.constant import Constant
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -57,8 +58,12 @@ class GameLauncher(CTk):
         with open(path, "r", encoding="utf-8") as f:
             data = ShortcutData.from_dict(json.load(f))
 
-        account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(account_path)
+        if data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap()
+            session.read()
+        else:
+            account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(account_path)
 
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]

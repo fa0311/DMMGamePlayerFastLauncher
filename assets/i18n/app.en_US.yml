@@ -42,7 +42,7 @@ en_US:
     account_path: Select Account
     account_path_tooltip: |-
       Please select the account you created in the 'Account' tab.
-
+    always_extract_from_dmm: Always extract from DMM
     game_args: Game Arguments
     game_args_tooltip: |-
       Specify the arguments to pass to the game.
@@ -94,6 +94,8 @@ en_US:
       Specify the arguments to pass to DMMGamePlayer.
       For example, entering 'dmmgameplayer://play/GCL/priconner/cl/win' will launch 'Princess Connect! Re:Dive' in DMMGamePlayer.
       Leave it blank to launch only DMMGamePlayer.
+    unity_command_line_args: Learn more about Unity command line arguments
+    unity_command_line_args_link: https://docs.unity3d.com/Manual/EditorCommandLineArguments.html
 
   account:
     import_detail: Import your DMMGamePlayer account information into Fast Launcher.
