@@ -11,7 +11,6 @@ from typing import Callable
 import customtkinter as ctk
 import i18n
 import psutil
-from static.constant import Constant
 from component.component import CTkProgressWindow
 from customtkinter import CTk
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -22,6 +21,7 @@ from lib.toast import ErrorWindow
 from models.setting_data import AppConfig
 from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
+from static.constant import Constant
 from static.env import Env
 from tab.home import HomeTab
 
@@ -100,13 +100,11 @@ class GameLauncher(CTk):
         if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
             pid_manager = ProcessIdManager()
             process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
-            time.sleep(5)
             game_pid = pid_manager.new_process().search(game_full_path)
             if data.rich_presence.get():
-                start_rich_presence(game_pid, id, response["data"]["title"])
-            while psutil.pid_exists(game_pid):
-                time.sleep(1)
+                start_rich_presence(game_pid, game["productId"], response["data"]["title"])
         else:
+            pid_manager = ProcessIdManager()
             process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
             if kill:
                 try:
@@ -116,10 +114,21 @@ class GameLauncher(CTk):
                         child.kill()
             else:
                 if data.rich_presence.get():
-                    start_rich_presence(process.pid, id, response["data"]["title"])
+                    start_rich_presence(process.pid, game["productId"], response["data"]["title"])
                 assert process.stdout is not None
+                timer = time.time()
                 for line in process.stdout:
                     logging.debug(decode(line))
+                if time.time() - timer < 10:
+                    logging.warning("Unexpected process termination")
+                    time.sleep(10 - (time.time() - timer))
+                    logging.warning("Restarting the process")
+                    try:
+                        game_pid = pid_manager.new_process().search(game_full_path)
+                        if data.rich_presence.get():
+                            start_rich_presence(game_pid, game["productId"], response["data"]["title"])
+                    except Exception:
+                        pass
 
 
 class LanchLauncher(CTk):
