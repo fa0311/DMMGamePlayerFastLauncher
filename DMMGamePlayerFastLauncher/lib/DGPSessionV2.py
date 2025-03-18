@@ -13,6 +13,7 @@ import requests
 import requests.cookies
 import urllib3
 from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 from win32 import win32crypt
 
 urllib3.disable_warnings()
@@ -97,28 +98,38 @@ class DgpSessionV2:
         self.session.cookies = requests.cookies.RequestsCookieJar()
         self.session.cookies.set("age_check_done", "0", domain=".dmm.com", path="/")
 
-    def write(self):
+    def write_safe(self, data: bytes):
         file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
+        with open(file, "wb") as f:
+            f.write(data)
+
+    def read_safe(self):
+        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
+        if file.exists():
+            with open(file, "rb") as f:
+                return f.read()
+        return None
+
+    def write(self):
         aes_key = self.get_aes_key()
-        with open(file, "rb") as f:
-            enc = f.read()
-        v10, nonce, data, mac = self.split_encrypted_data(enc)
+        v10 = "v10".encode()
+        nonce = get_random_bytes(12)
         value = json.dumps(self.actauth).encode()
         cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
         data, mac = cipher.encrypt_and_digest(value)
         enc = self.join_encrypted_data(v10, nonce, data, mac)
-        with open(file, "wb") as f:
-            f.write(enc)
+        self.write_safe(enc)
 
     def read(self):
-        file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
-        with open(file, "rb") as f:
-            enc = f.read()
-        v10, nonce, data, mac = self.split_encrypted_data(enc)
-        cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
-        value = cipher.decrypt_and_verify(data, mac)
-        self.actauth = json.loads(value.decode())
+        enc = self.read_safe()
+        if enc:
+            v10, nonce, data, mac = self.split_encrypted_data(enc)
+            cipher = AES.new(aes_key, AES.MODE_GCM, nonce)
+            value = cipher.decrypt_and_verify(data, mac)
+            self.actauth = json.loads(value.decode())
+        else:
+            self.actauth = {}
 
     def write_bytes(self, file: str):
         data = win32crypt.CryptProtectData(

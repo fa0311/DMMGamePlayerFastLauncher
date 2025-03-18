@@ -139,6 +139,7 @@ class AccountBrowserImport(CTkScrollableFrame):
         while not (parsed_url.netloc == "webdgp-gameplayer.games.dmm.com" and parsed_url.path == "/login/success"):
             time.sleep(0.2)
             parsed_url = urllib.parse.urlparse(driver.current_url)
+        driver.quit()
         code = urllib.parse.parse_qs(parsed_url.query)["code"][0]
         res = session.post_dgp(DgpSessionWrap.ACCESS_TOKEN, json={"code": code}).json()
         if res["result_code"] != 100:
@@ -180,8 +181,7 @@ class AccountEdit(CTkScrollableFrame):
         tooltip = i18n.t("app.account.filename_tooltip")
         EntryComponent(self.body, text=text, tooltip=tooltip, required=True, variable=self.body_filename, alnum_only=True).create()
 
-        session = DgpSessionWrap()
-        session.read_bytes(str(Path(path)))
+        session = DgpSessionWrap.read_cookies(Path(path))
         for key in session.actauth.keys():
             self.body_var[key] = StringVar(value=session.actauth[key] or "")
             EntryComponent(self.body, text=key, variable=self.body_var[key]).create()
@@ -197,8 +197,7 @@ class AccountEdit(CTkScrollableFrame):
         body_path = DataPathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
 
         def write():
-            session = DgpSessionWrap()
-            session.read_bytes(str(Path(path)))
+            session = DgpSessionWrap.read_cookies((Path(path)))
             for key in session.actauth.keys():
                 session.actauth[key] = self.body_var[key].get()
             session.write_bytes(str(Path(body_path)))

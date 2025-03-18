@@ -153,8 +153,10 @@ class LanchLauncher(CTk):
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
 
-        session = DgpSessionWrap()
-        session.read_bytes(str(account_path))
+        before_session = DgpSessionWrap()
+        before_session.read()
+
+        session = DgpSessionWrap.read_cookies(Path(account_path))
         if session.get_access_token() is None:
             raise Exception(i18n.t("app.launch.export_error"))
         session.write()
@@ -169,9 +171,11 @@ class LanchLauncher(CTk):
             logging.debug(decode(line))
 
         session = DgpSessionWrap()
+        session.read()
         if session.get_access_token() is None:
             raise Exception(i18n.t("app.launch.import_error"))
         session.write_bytes(str(account_path))
+        before_session.write()
 
 
 class GameLauncherUac(CTk):
