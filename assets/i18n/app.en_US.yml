@@ -96,10 +96,7 @@ en_US:
       Leave it blank to launch only DMMGamePlayer.
 
   account:
-    import_detail: |-
-      Import your DMMGamePlayer account information into Fast Launcher.
-      Importing will log you out of DMMGamePlayer 5.
-      Do not log in directly with an imported account in DMMGamePlayer 5.
+    import_detail: Import your DMMGamePlayer account information into Fast Launcher.
 
     filename_tooltip: |-
       Please provide any name for this account.
@@ -113,9 +110,7 @@ en_US:
 
     file_select: Select File
 
-    import_browser_detail: |-
-      Launch the browser to import account information from DMMGamePlayer.
-      Do not use accounts imported with this feature for the `GamePlayer Acceleration` settings.
+    import_browser_detail: Launch the browser to import account information from DMMGamePlayer.
     browser_select: Select Browser
     browser_select_tooltip: |-
       Choose your preferred browser.

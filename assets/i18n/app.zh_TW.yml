@@ -94,10 +94,7 @@ zh_TW:
       例如，輸入 'dmmgameplayer://play/GCL/priconner/cl/win' 將啟動 '公主連結！Re:Dive' 在 DMMGamePlayer 中。留空以僅啟動 DMMGamePlayer。
 
   account:
-    import_detail: |-
-      將您的 DMMGamePlayer 帳戶資訊匯入快速啟動器。
-      匯入操作將登出 DMMGamePlayer 5。
-      請勿直接在 DMMGamePlayer 5 中使用已匯入的帳戶登錄。
+    import_detail: 將您的 DMMGamePlayer 帳戶資訊匯入快速啟動器。
 
     filename_tooltip: |-
       請為此帳戶提供任何名稱。
@@ -111,9 +108,7 @@ zh_TW:
 
     file_select: 選擇檔案
 
-    import_browser_detail: |-
-      啟動瀏覽器以從DMMGamePlayer匯入帳號資訊。
-      請勿將使用此功能匯入的帳號用於 `GamePlayer加速` 設定。
+    import_browser_detail: 啟動瀏覽器以從DMMGamePlayer匯入帳號資訊。
     browser_select: 選擇瀏覽器
     browser_select_tooltip: |-
       選擇您偏好的瀏覽器。

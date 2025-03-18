@@ -94,10 +94,7 @@ ja_JP:
       空欄の場合は「DMMGamePlayerのみ」が起動します。
 
   account:
-    import_detail: |-
-      DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
-      インポートをするとDMMGamePlayer5からログアウトされます。
-      インポート済みのアカウントで直接起動した DMMGamePlayer5 でログインをしないでください。
+    import_detail: DMMGamePlayerのアカウント情報をFastLauncherにインポートします。
 
     filename_tooltip: |-
       このアカウントに任意の名前を付けてください。
@@ -111,9 +108,7 @@ ja_JP:
 
     file_select: ファイルの選択
 
-    import_browser_detail: |-
-      ブラウザを起動してDMMGamePlayerのアカウント情報をインポートします。
-      この機能を使用してインポートしたアカウントは `GamePlayerの高速化` 設定に使用しないでください。
+    import_browser_detail: ブラウザを起動してDMMGamePlayerのアカウント情報をインポートします。
     browser_select: ブラウザの選択
     browser_select_tooltip: |-
       お好みのブラウザを選択してください。

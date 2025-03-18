@@ -95,10 +95,7 @@ zh_CN:
       例如，输入 'dmmgameplayer://play/GCL/priconner/cl/win' 将启动 '公主连结！Re:Dive' 在 DMMGamePlayer 中。留空以仅启动 DMMGamePlayer。
 
   account:
-    import_detail: |-
-      将您的 DMMGamePlayer 帐户信息导入快速启动器。
-      导入操作将注销 DMMGamePlayer 5。
-      请勿直接在 DMMGamePlayer 5 中使用已导入的帐户登录。
+    import_detail: 将您的 DMMGamePlayer 帐户信息导入快速启动器。
 
     filename_tooltip: |-
       请为此帐户提供任何名称。
@@ -112,9 +109,7 @@ zh_CN:
 
     file_select: 选择文件
 
-    import_browser_detail: |-
-      启动浏览器以从DMMGamePlayer导入帐户信息。
-      请不要将使用此功能导入的帐户用于 `GamePlayer加速` 设置。
+    import_browser_detail: 启动浏览器以从DMMGamePlayer导入帐户信息。
     browser_select: 选择浏览器
     browser_select_tooltip: |-
       选择您喜欢的浏览器。
