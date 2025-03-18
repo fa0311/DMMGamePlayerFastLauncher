@@ -6,7 +6,7 @@ import logging
 import os
 import random
 from pathlib import Path
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl
 
 import psutil
 import requests
@@ -82,12 +82,14 @@ class DgpSessionV2:
     HARDWARE_CONF = API_DGP.format("/v5/hardwareconf")
     HARDWARE_LIST = API_DGP.format("/v5/hardwarelist")
     HARDWARE_REJECT = API_DGP.format("/v5/hardwarereject")
-    LOGIN_URL = API_DGP.format("/v5/loginurl")
-
-    LOGIN = "https://accounts.dmm.com/service/login/token/=/path={token}/is_app=false"
+    ACCESS_TOKEN = API_DGP.format("/v5/auth/accesstoken/issue")
+    LOGIN_URL = API_DGP.format("/v5/auth/login/url")
     SIGNED_URL = "https://cdn-gameplayer.games.dmm.com/product/*"
-
+    WEB_LOGIN_URL = "https://accounts.dmm.com/service/oauth/=/path="
     PROXY = {}
+
+    actauth: dict[str, str]
+    session: requests.Session
 
     def __init__(self):
         self.actauth = {}
@@ -190,16 +192,6 @@ class DgpSessionV2:
         }
         return self.post_device_dgp(url, json=json, verify=False)
 
-    def login(self):
-        response = self.get(self.LOGIN_URL)
-        url = response.json()["data"]["url"]
-        token = urlparse(url).path.split("path=")[-1]
-        try:
-            self.get(url)
-            self.get(self.LOGIN.format(token=token))
-        except Exception:
-            pass
-
     def download(self, sign: str, filelist_url: str, output: Path):
         sign_dict = dict(parse_qsl(sign.replace(";", "&")))
         signed = {
@@ -267,7 +259,6 @@ class DgpSessionV2:
 
         session = DgpSessionV2()
         session.read_bytes(str(path))
-        session.login()
         session.write_bytes(str(path))
         return session
 
