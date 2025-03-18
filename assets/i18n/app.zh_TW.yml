@@ -93,7 +93,7 @@ zh_TW:
       指定要傳遞給 DMMGamePlayer 的引數。
       例如，輸入 'dmmgameplayer://play/GCL/priconner/cl/win' 將啟動 '公主連結！Re:Dive' 在 DMMGamePlayer 中。留空以僅啟動 DMMGamePlayer。
     unity_command_line_args: 了解更多關於Unity命令列參數
-    unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/EditorCommandLineArguments.html
+    unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/PlayerCommandLineArguments.html
 
   account:
     import_detail: 將您的 DMMGamePlayer 帳戶資訊匯入快速啟動器。

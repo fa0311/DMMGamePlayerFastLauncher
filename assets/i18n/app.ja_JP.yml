@@ -92,7 +92,7 @@ ja_JP:
       DMMGamePlayer が起動した際に「プリコネ Re:Dive」が起動します。
       空欄の場合は「DMMGamePlayer のみ」が起動します。
     unity_command_line_args: Unityのコマンドライン引数についての詳しい説明を見る
-    unity_command_line_args_link: https://docs.unity3d.com/ja/current/Manual/EditorCommandLineArguments.html
+    unity_command_line_args_link: https://docs.unity3d.com/ja/current/Manual/PlayerCommandLineArguments.html
 
   account:
     import_detail: DMMGamePlayer のアカウント情報を DMMGamePlayerFastLauncher にインポートします。

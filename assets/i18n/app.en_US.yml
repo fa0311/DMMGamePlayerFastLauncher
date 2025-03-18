@@ -95,7 +95,7 @@ en_US:
       For example, entering 'dmmgameplayer://play/GCL/priconner/cl/win' will launch 'Princess Connect! Re:Dive' in DMMGamePlayer.
       Leave it blank to launch only DMMGamePlayer.
     unity_command_line_args: Learn more about Unity command line arguments
-    unity_command_line_args_link: https://docs.unity3d.com/Manual/EditorCommandLineArguments.html
+    unity_command_line_args_link: https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html
 
   account:
     import_detail: Import your DMMGamePlayer account information into Fast Launcher.
