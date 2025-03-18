@@ -144,17 +144,20 @@ class LanchLauncher(CTk):
             raise
 
     def launch(self, id: str):
+        if DgpSessionWrap.is_running_dmm():
+            raise Exception(i18n.t("app.lib.dmm_already_running"))
+
         path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(id).with_suffix(".json")
         with open(path, "r", encoding="utf-8") as f:
             data = LauncherShortcutData.from_dict(json.load(f))
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
 
-        with DgpSessionWrap() as session:
-            session.read_bytes(str(account_path))
-            if session.get_access_token() is None:
-                raise Exception(i18n.t("app.launch.export_error"))
-            session.write()
+        session = DgpSessionWrap()
+        session.read_bytes(str(account_path))
+        if session.get_access_token() is None:
+            raise Exception(i18n.t("app.launch.export_error"))
+        session.write()
 
         dgp = AppConfig.DATA.dmm_game_player_program_folder.get_path()
 
@@ -165,12 +168,10 @@ class LanchLauncher(CTk):
         for line in process.stdout:
             logging.debug(decode(line))
 
-        with DgpSessionWrap() as session:
-            session.read()
-            if session.get_access_token() is None:
-                raise Exception(i18n.t("app.launch.import_error"))
-            session.write_bytes(str(account_path))
-            session.write()
+        session = DgpSessionWrap()
+        if session.get_access_token() is None:
+            raise Exception(i18n.t("app.launch.import_error"))
+        session.write_bytes(str(account_path))
 
 
 class GameLauncherUac(CTk):

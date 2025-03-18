@@ -97,12 +97,6 @@ class DgpSessionV2:
         self.session.cookies = requests.cookies.RequestsCookieJar()
         self.session.cookies.set("age_check_done", "0", domain=".dmm.com", path="/")
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.session.close()
-
     def write(self):
         file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
         aes_key = self.get_aes_key()
@@ -254,12 +248,8 @@ class DgpSessionV2:
 
     @staticmethod
     def read_cookies(path: Path) -> "DgpSessionV2":
-        if DgpSessionV2.is_running_dmm():
-            raise DMMAlreadyRunningException("DMMGamePlayer is already running")
-
         session = DgpSessionV2()
         session.read_bytes(str(path))
-        session.write_bytes(str(path))
         return session
 
     @staticmethod

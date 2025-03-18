@@ -178,7 +178,8 @@ class ShortcutBase(CTkScrollableFrame):
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
         game_path = Path(game["detail"]["path"])
         path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
-        session = DgpSessionWrap().read_cookies(path)
+        session = DgpSessionWrap()
+        session.read_cookies(path)
         response = session.lunch(self.data.product_id.get(), game["gameType"]).json()
 
         if response["result_code"] != 100:

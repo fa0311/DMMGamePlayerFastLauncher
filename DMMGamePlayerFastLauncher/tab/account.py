@@ -81,13 +81,12 @@ class AccountImport(CTkScrollableFrame):
         if path.exists():
             raise Exception(i18n.t("app.account.filename_already_exists"))
 
-        with DgpSessionWrap() as session:
-            session.read()
-            if session.get_access_token() is None:
-                raise Exception(i18n.t("app.account.import_error"))
-            session.write_bytes(str(path))
-            session.write()
-            self.toast.info(i18n.t("app.account.import_success"))
+        session = DgpSessionWrap()
+        session.read()
+        if session.get_access_token() is None:
+            raise Exception(i18n.t("app.account.import_error"))
+        session.write_bytes(str(path))
+        self.toast.info(i18n.t("app.account.import_success"))
 
 
 class AccountBrowserImport(CTkScrollableFrame):
