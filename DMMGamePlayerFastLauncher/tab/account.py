@@ -6,13 +6,14 @@ from typing import TypeVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, OptionMenuComponent, PaddingComponent
+from component.component import EntryComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
 from lib.toast import ToastController, error_toast
 from selenium import webdriver
 from static.config import DataPathConfig
+from static.constant import Constant
 from utils.utils import children_destroy, file_create
 
 T = TypeVar("T")
@@ -80,9 +81,10 @@ class AccountImport(CTkScrollableFrame):
             raise Exception(i18n.t("app.account.filename_not_entered"))
         if path.exists():
             raise Exception(i18n.t("app.account.filename_already_exists"))
+        if self.name.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            raise Exception(i18n.t("app.account.filename_reserved"))
 
-        session = DgpSessionWrap()
-        session.read()
+        session = DgpSessionWrap.read_dgp()
         if session.get_access_token() is None:
             raise Exception(i18n.t("app.account.import_error"))
         session.write_bytes(str(path))
@@ -128,6 +130,8 @@ class AccountBrowserImport(CTkScrollableFrame):
             raise Exception(i18n.t("app.account.filename_not_entered"))
         if path.exists():
             raise Exception(i18n.t("app.account.filename_already_exists"))
+        if self.name.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            raise Exception(i18n.t("app.account.filename_reserved"))
 
         session = DgpSessionWrap()
         res = session.post_dgp(DgpSessionWrap.LOGIN_URL, json={"prompt": ""}).json()
@@ -146,6 +150,7 @@ class AccountBrowserImport(CTkScrollableFrame):
             raise Exception(res["error"])
         session.actauth = {"accessToken": res["data"]["access_token"]}
         session.write_bytes(str(path))
+        self.toast.info(i18n.t("app.account.import_browser_success"))
 
 
 class AccountEdit(CTkScrollableFrame):
@@ -192,6 +197,8 @@ class AccountEdit(CTkScrollableFrame):
     def save_callback(self):
         if self.body_filename.get() == "":
             raise Exception(i18n.t("app.account.filename_not_entered"))
+        if self.body_filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            raise Exception(i18n.t("app.account.filename_reserved"))
 
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         body_path = DataPathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
@@ -239,8 +246,8 @@ class SettingDeviceTab(CTkScrollableFrame):
         self.mode = False
         self.hardware_name = StringVar(value="DMMGamePlayerFastLauncher")
         self.auth_code = StringVar()
-
-        self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list = [(x.stem, x.stem) for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list.insert(0, (Constant.ALWAYS_EXTRACT_FROM_DMM, i18n.t("app.shortcut.always_extract_from_dmm")))
         self.filename = StringVar()
 
     def create(self):
@@ -251,15 +258,21 @@ class SettingDeviceTab(CTkScrollableFrame):
             CTkButton(self, text=i18n.t("app.account.auth"), command=self.auth_callback).pack(fill=ctk.X, pady=10)
 
         else:
-            OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename).create()
+            OptionMenuTupleComponent(self, text=i18n.t("app.account.file_select"), values=self.account_name_list, variable=self.filename).create()
             CTkButton(self, text=i18n.t("app.account.send_auth_code"), command=self.send_auth_code_callback).pack(fill=ctk.X, pady=10)
 
         return self
 
     @error_toast
     def send_auth_code_callback(self):
-        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(path)
+        if self.filename.get() == "":
+            raise Exception(i18n.t("app.account.filename_not_entered"))
+
+        if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap.read_dgp()
+        else:
+            path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(path)
         res = session.post_device_dgp(DgpSessionWrap.HARDWARE_CODE, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
@@ -271,8 +284,14 @@ class SettingDeviceTab(CTkScrollableFrame):
 
     @error_toast
     def auth_callback(self):
-        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(path)
+        if self.filename.get() == "":
+            raise Exception(i18n.t("app.account.filename_not_entered"))
+
+        if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap.read_dgp()
+        else:
+            path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(path)
         json = {
             "hardware_name": self.hardware_name.get(),
             "auth_code": self.auth_code.get(),
@@ -280,6 +299,11 @@ class SettingDeviceTab(CTkScrollableFrame):
         res = session.post_device_dgp(DgpSessionWrap.HARDWARE_CONF, json=json, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
+
+        self.mode = False
+        self.filename.set("")
+        children_destroy(self)
+        self.create()
         self.toast.info(i18n.t("app.account.auth_success"))
 
 
@@ -289,12 +313,13 @@ class DeviceListTab(CTkScrollableFrame):
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
-        self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list = [(x.stem, x.stem) for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
+        self.account_name_list.insert(0, (Constant.ALWAYS_EXTRACT_FROM_DMM, i18n.t("app.shortcut.always_extract_from_dmm")))
         self.filename = StringVar()
         self.data = None
 
     def create(self):
-        OptionMenuComponent(self, text=i18n.t("app.account.file_select"), values=self.values, variable=self.filename, command=self.select_callback).create()
+        OptionMenuTupleComponent(self, text=i18n.t("app.account.file_select"), values=self.account_name_list, variable=self.filename, command=self.select_callback).create()
         if self.data:
             count = len(self.data["hardwares"] or [])
             limit = self.data["device_auth_limit_num"]
@@ -314,8 +339,11 @@ class DeviceListTab(CTkScrollableFrame):
 
     @error_toast
     def select_callback(self, value: str):
-        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(path)
+        if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap.read_dgp()
+        else:
+            path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(path)
         res = session.post_device_dgp(DgpSessionWrap.HARDWARE_LIST, json={}, verify=False).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
@@ -327,8 +355,11 @@ class DeviceListTab(CTkScrollableFrame):
 
     @error_toast
     def delete_callback(self, id: str):
-        path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
-        session = DgpSessionWrap.read_cookies(path)
+        if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
+            session = DgpSessionWrap.read_dgp()
+        else:
+            path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
+            session = DgpSessionWrap.read_cookies(path)
         json = {"hardware_manage_id": [id]}
         res = session.post_device_dgp(DgpSessionWrap.HARDWARE_REJECT, json=json, verify=False).json()
         if res["result_code"] != 100:

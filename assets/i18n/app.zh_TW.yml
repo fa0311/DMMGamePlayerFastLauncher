@@ -81,6 +81,7 @@ zh_TW:
 
     product_id_not_entered: 未輸入 product_id。
     filename_not_entered: 未輸入檔案名稱。
+    account_path_not_entered: 未選擇帳戶。
     game_info_error: 無法檢索遊戲資訊。
     administrator_error: 需要管理員權限。請創建「UAC 自動提升的快捷方式」。
     file_not_selected: 未選擇檔案。
@@ -93,6 +94,9 @@ zh_TW:
       指定要傳遞給 DMMGamePlayer 的引數。
       例如，輸入 'dmmgameplayer://play/GCL/priconner/cl/win' 將啟動 '公主連結！Re:Dive' 在 DMMGamePlayer 中。留空以僅啟動 DMMGamePlayer。
     unity_command_line_args: 了解更多關於Unity命令列參數
+    unity_command_line_args_tooltip: |-
+      開啟有關 Unity 命令列參數的網站。
+      如果您啟動的遊戲是使用 Unity 製作的，這可能會有所幫助。
     unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/PlayerCommandLineArguments.html
 
   account:
@@ -105,6 +109,7 @@ zh_TW:
     filename: 檔案名稱
     filename_not_entered: 未輸入檔案名稱。
     filename_already_exists: 該檔案名稱已存在。
+    filename_reserved: 檔案名稱已被保留。
     import_error: 匯入失敗。
     import_success: 匯入成功。
 
@@ -115,6 +120,7 @@ zh_TW:
     browser_select_tooltip: |-
       選擇您偏好的瀏覽器。
       系統將啟動指定的瀏覽器並開啟登入畫面。
+    browser_not_selected: 未選擇瀏覽器。
     import_browser: 匯入
     import_browser_success: 匯入成功。
 

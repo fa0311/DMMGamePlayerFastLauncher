@@ -1,10 +1,4 @@
-import os
-from pathlib import Path
-
-import requests
-from static.config import UrlConfig
 from static.dump import Dump
-from windows_pathlib import WindowsPathlib
 
 
 class Constant(Dump):

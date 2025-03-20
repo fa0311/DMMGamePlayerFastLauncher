@@ -82,6 +82,7 @@ en_US:
 
     product_id_not_entered: product_id is not entered.
     filename_not_entered: File name is not entered.
+    account_path_not_entered: Account not selected.
     game_info_error: Failed to retrieve game information.
     administrator_error: Administrator privileges are required. Please create a 'UAC auto-elevated shortcut'.
     file_not_selected: No file selected.
@@ -95,6 +96,9 @@ en_US:
       For example, entering 'dmmgameplayer://play/GCL/priconner/cl/win' will launch 'Princess Connect! Re:Dive' in DMMGamePlayer.
       Leave it blank to launch only DMMGamePlayer.
     unity_command_line_args: Learn more about Unity command line arguments
+    unity_command_line_args_tooltip: |-
+      Opens a site about Unity command-line arguments.
+      This may be helpful if the game you are launching is made with Unity.
     unity_command_line_args_link: https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html
 
   account:
@@ -107,6 +111,7 @@ en_US:
     filename: File Name
     filename_not_entered: File name is not entered.
     filename_already_exists: That file name already exists.
+    filename_reserved: The filename is reserved.
     import_error: Import failed.
     import_success: Import succeeded.
 
@@ -117,6 +122,7 @@ en_US:
     browser_select_tooltip: |-
       Choose your preferred browser.
       The specified browser will launch and open the login screen.
+    browser_not_selected: Browser not selected.
     import_browser: Import
     import_browser_success: Imported successfully.
 
@@ -212,8 +218,8 @@ en_US:
     required_symbol: "*"
     reference: Reference
 
-    "yes": Yes
-    "no": No
+    "yes": "Yes"
+    "no": "No"
 
     download: Downloading...
 
