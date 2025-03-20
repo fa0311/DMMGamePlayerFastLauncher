@@ -47,7 +47,8 @@ en_US:
     game_args_tooltip: |-
       Specify the arguments to pass to the game.
       For Unity-based games, you can input something like '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' to launch the game in windowed mode with a resolution of 1280x720.
-
+    external_tool_path: External tool path
+    external_tool_path_tooltip: Specify the path here if you want to use an external tool when launching the game.
     auto_update: Automatically update the game on launch
     rich_presence: Enable Discord Rich Presence
 

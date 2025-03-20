@@ -46,7 +46,8 @@ zh_TW:
     game_args_tooltip: |-
       指定要傳遞給遊戲的引數。
       對於基於 Unity 的遊戲，您可以輸入像 '-screen-fullscreen 0 -screen-width 1280 -screen-height 720' 這樣的引數，以以 1280x720 的解析度以視窗模式啟動遊戲。
-
+    external_tool_path: 外部工具路徑
+    external_tool_path_tooltip: 如果在啟動遊戲時需要使用外部工具，請在此指定路徑。
     auto_update: 啟動時自動更新遊戲
     rich_presence: 啟用 Discord 的豐富存在
 

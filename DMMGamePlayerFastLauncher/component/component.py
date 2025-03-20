@@ -184,19 +184,19 @@ class PathComponentBase(EntryComponent):
         super().__init__(*args, **kwargs)
         self.command.append((i18n.t("app.component.reference"), self.reference_callback))
 
-    def reference_callback(self, variable):
+    def reference_callback(self, variable: PathVar):
         raise NotImplementedError
 
 
 class FilePathComponent(PathComponentBase):
-    def reference_callback(self, variable):
+    def reference_callback(self, variable: PathVar):
         path = filedialog.askopenfilename(title=self.text, initialdir=variable.get())
         if path != "":
             variable.set_path(Path(path))
 
 
 class DirectoryPathComponent(PathComponentBase):
-    def reference_callback(self, variable):
+    def reference_callback(self, variable: PathVar):
         path = filedialog.askdirectory(title=self.text, initialdir=variable.get())
         if path != "":
             variable.set_path(Path(path))

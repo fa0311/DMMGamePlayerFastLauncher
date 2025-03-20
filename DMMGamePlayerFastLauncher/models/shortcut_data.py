@@ -13,6 +13,7 @@ class ShortcutData(VariableBase):
     auto_update: BooleanVar = field(default_factory=lambda: BooleanVar(value=True))
     game_type: StringVar = field(default_factory=lambda: StringVar(value="GCL"))
     rich_presence: BooleanVar = field(default_factory=lambda: BooleanVar(value=True))
+    external_tool_path: PathVar = field(default_factory=lambda: PathVar())
 
 
 @dataclass

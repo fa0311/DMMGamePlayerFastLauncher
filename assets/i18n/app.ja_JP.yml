@@ -47,7 +47,8 @@ ja_JP:
       ゲームに渡す引数を指定します。
       Unity 製のゲームであれば「-screen-fullscreen 0 -screen-width 1280 -screen-height 720」と入力すると
       ゲームが起動した際にウィンドウモードで 1280x720 の解像度で起動します。
-
+    external_tool_path: 外部ツールのパス
+    external_tool_path_tooltip: ゲームを起動する際に外部ツールを使用する場合はこちらにパスを指定してください。
     auto_update: 起動時にゲームの自動更新をする
     rich_presence: Discord のリッチプレゼンスを有効化する
 

@@ -6,7 +6,16 @@ from typing import Callable
 
 import customtkinter as ctk
 import i18n
-from component.component import ButtonComponent, CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
+from component.component import (
+    ButtonComponent,
+    CheckBoxComponent,
+    EntryComponent,
+    FilePathComponent,
+    LabelComponent,
+    OptionMenuComponent,
+    OptionMenuTupleComponent,
+    PaddingComponent,
+)
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
@@ -82,6 +91,10 @@ class ShortcutBase(CTkScrollableFrame):
 
         text = i18n.t("app.shortcut.game_args")
         EntryComponent(self, text=text, tooltip=i18n.t("app.shortcut.game_args_tooltip"), variable=self.data.game_args).create()
+
+        # 外部ツールの起動パス
+        text = i18n.t("app.shortcut.external_tool_path")
+        FilePathComponent(self, text=text, tooltip=i18n.t("app.shortcut.external_tool_path_tooltip"), variable=self.data.external_tool_path).create()
 
         CheckBoxComponent(self, text=i18n.t("app.shortcut.auto_update"), variable=self.data.auto_update).create()
         CheckBoxComponent(self, text=i18n.t("app.shortcut.rich_presence"), variable=self.data.rich_presence).create()
