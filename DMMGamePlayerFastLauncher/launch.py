@@ -97,38 +97,40 @@ class GameLauncher(CTk):
         game_path = str(game_path.relative_to(game_file))
         game_full_path = str(game_file.joinpath(game_path))
         is_admin = ProcessManager.admin_check()
-        if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
-            pid_manager = ProcessIdManager()
-            process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
-            game_pid = pid_manager.new_process().search(game_full_path)
-            if data.rich_presence.get():
-                start_rich_presence(game_pid, game["productId"], response["data"]["title"])
+        if kill:
+            process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
+            try:
+                process.wait(2)
+            except subprocess.TimeoutExpired:
+                for child in psutil.Process(process.pid).children(recursive=True):
+                    child.kill()
         else:
             pid_manager = ProcessIdManager()
-            process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
-            if kill:
-                try:
-                    process.wait(2)
-                except subprocess.TimeoutExpired:
-                    for child in psutil.Process(process.pid).children(recursive=True):
-                        child.kill()
-            else:
+            timer = time.time()
+            if response["data"]["is_administrator"] and (not is_admin) and (not force_non_uac):
+                process = ProcessManager.admin_run([game_path] + dmm_args, cwd=str(game_file))
+                game_pid = pid_manager.new_process().search(game_full_path)
                 if data.rich_presence.get():
-                    start_rich_presence(process.pid, game["productId"], response["data"]["title"])
+                    start_rich_presence(game_pid, data.product_id.get(), response["data"]["title"])
+                while psutil.pid_exists(game_pid):
+                    time.sleep(1)
+            else:
+                process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
+                if data.rich_presence.get():
+                    start_rich_presence(process.pid, data.product_id.get(), response["data"]["title"])
                 assert process.stdout is not None
-                timer = time.time()
                 for line in process.stdout:
                     logging.debug(decode(line))
-                if time.time() - timer < 10:
-                    logging.warning("Unexpected process termination")
-                    time.sleep(10 - (time.time() - timer))
-                    logging.warning("Restarting the process")
-                    try:
-                        game_pid = pid_manager.new_process().search(game_full_path)
-                        if data.rich_presence.get():
-                            start_rich_presence(game_pid, game["productId"], response["data"]["title"])
-                    except Exception:
-                        pass
+            if time.time() - timer < 10:
+                logging.warning("Unexpected process termination")
+                time.sleep(10 - (time.time() - timer))
+                logging.warning("Restarting the process")
+                game_pid = pid_manager.new_process().search_or_none(game_full_path)
+                if game_pid is not None:
+                    if data.rich_presence.get():
+                        start_rich_presence(game_pid, data.product_id.get(), response["data"]["title"])
+                    while psutil.pid_exists(game_pid):
+                        time.sleep(1)
 
 
 class LanchLauncher(CTk):

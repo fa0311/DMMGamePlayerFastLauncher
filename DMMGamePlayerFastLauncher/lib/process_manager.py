@@ -81,6 +81,12 @@ class ProcessIdManager:
             raise Exception(f"Process not found: {name}")
         return process[0]
 
+    def search_or_none(self, name: str) -> Optional[int]:
+        process = [x[0] for x in self.process if x[1] == name]
+        if len(process) != 1:
+            return None
+        return process[0]
+
 
 def get_sid() -> str:
     username = os.getlogin()
