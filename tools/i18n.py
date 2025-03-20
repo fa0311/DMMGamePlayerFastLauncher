@@ -4,8 +4,10 @@ from typing import Any
 
 import yaml
 
-with open("assets/i18n/app.ja.yml", "r", encoding="utf-8") as f:
-    yaml_load = yaml.safe_load(f)
+yaml_load = {}
+for lang in glob.glob("assets/i18n/*.yml"):
+    with open(lang, "r", encoding="utf-8") as f:
+        yaml_load.update(yaml.safe_load(f.read()))
 
 
 def in_py(key):
@@ -35,7 +37,16 @@ def get_py():
     return res
 
 
-i18n = i18n_flatten(yaml_load["ja"], "app")
+i18n = i18n_flatten(yaml_load["ja_JP"], "app")
+
+for lang in yaml_load.keys():
+    target = i18n_flatten(yaml_load[lang], "app")
+    for key in i18n:
+        if key not in target:
+            print(f"not found in {lang}: {key}")
+
+
+print("===")
 for key in i18n:
     if in_py(key):
         print(f"not found: {key}")
