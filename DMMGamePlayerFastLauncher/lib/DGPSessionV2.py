@@ -207,26 +207,51 @@ class DgpSessionV2:
         url = self.API_DGP.format(filelist_url)
         data = self.get_dgp(url).json()
 
-        def download_save(file: dict):
-            content = self.get(data["data"]["domain"] + "/" + file["path"], params=signed).content
+        def download_save(file: dict) -> tuple[int, dict]:
             path = output.joinpath(file["local_path"][1:])
+            content = self.get(data["data"]["domain"] + "/" + file["path"], params=signed).content
             path.parent.mkdir(parents=True, exist_ok=True)
             with open(path, "wb") as f:
                 f.write(content)
             return file["size"], file
 
-        if data["data"]["page"] > 1:
-            raise Exception("Not supported multiple pages")
+        def check_sum(file: dict) -> tuple[bool, dict]:
+            path = output.joinpath(file["local_path"][1:])
+            if not file["check_hash_flg"]:
+                return True, file
+            if file["force_delete_flg"]:
+                path.unlink()
+                return True, file
+            if not path.exists():
+                return False, file
+            try:
+                with open(path, "rb") as f:
+                    content = f.read()
+                return file["hash"] == hashlib.md5(content).hexdigest(), file
+            except Exception:
+                return False, file
 
-        size = sum([x["size"] for x in data["data"]["file_list"]])
-        download_size = 0
+        check_count = 0
+        check_failed_list: list[dict] = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+            tasks = [pool.submit(lambda x: check_sum(x), x) for x in data["data"]["file_list"]]
+            for task in concurrent.futures.as_completed(tasks):
+                res, file = task.result()
+                check_count += 1
+                if not res:
+                    check_failed_list.append(file)
+                yield check_count / len(data["data"]["file_list"]), file
+
+        check_failed_list = sorted(check_failed_list, key=lambda x: x["size"], reverse=True)
+        download_max_size = sum([x["size"] for x in check_failed_list])
+        download_size: int = 0
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
-            tasks = [pool.submit(lambda x: download_save(x), x) for x in data["data"]["file_list"]]
+            tasks = [pool.submit(lambda x: download_save(x), x) for x in check_failed_list]
             for task in concurrent.futures.as_completed(tasks):
-                res = task.result()
-                download_size += res[0]
-                yield download_size / size, res[1]
+                size, file = task.result()
+                download_size += size
+                yield download_size / download_max_size, file
 
     def get_config(self):
         with open(self.DGP5_DATA_PATH.joinpath("dmmgame.cnf"), "r", encoding="utf-8") as f:
