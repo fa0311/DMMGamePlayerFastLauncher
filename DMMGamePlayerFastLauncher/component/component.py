@@ -305,10 +305,10 @@ class ConfirmWindow(CTkToplevel):
 class CTkProgressWindow(CTkToplevel):
     label: CTkLabel
     progress: CTkProgressBar
-    now: int
-    max: int
+    now: float
+    max: float
 
-    def __init__(self, master: Misc, now: int = 0, max: int = 1):
+    def __init__(self, master: Misc, now: float = 0, max: float = 1):
         super().__init__(master)
         self.geometry("300x100")
         self.label = CTkLabel(self, text="0.00%", justify=ctk.LEFT, anchor=ctk.W)
@@ -329,12 +329,12 @@ class CTkProgressWindow(CTkToplevel):
         self.progress.set(self.now / self.max)
         return self
 
-    def add(self, value: int):
+    def add(self, value: float):
         self.now += value
         self.progress.set(self.now / self.max)
         self.label.configure(text=f"{(self.now / self.max * 100):.2f}%")
 
-    def set(self, value: int):
+    def set(self, value: float):
         self.now = value
         self.progress.set(self.now / self.max)
         self.label.configure(text=f"{(self.now / self.max * 100):.2f}%")
