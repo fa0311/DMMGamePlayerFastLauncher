@@ -84,8 +84,7 @@ class AccountImport(CTkScrollableFrame):
         if self.name.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
             raise Exception(i18n.t("app.account.filename_reserved"))
 
-        session = DgpSessionWrap()
-        session.read()
+        session = DgpSessionWrap.read_dgp()
         if session.get_access_token() is None:
             raise Exception(i18n.t("app.account.import_error"))
         session.write_bytes(str(path))
@@ -270,8 +269,7 @@ class SettingDeviceTab(CTkScrollableFrame):
             raise Exception(i18n.t("app.account.filename_not_entered"))
 
         if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(path)
@@ -290,8 +288,7 @@ class SettingDeviceTab(CTkScrollableFrame):
             raise Exception(i18n.t("app.account.filename_not_entered"))
 
         if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(path)
@@ -343,8 +340,7 @@ class DeviceListTab(CTkScrollableFrame):
     @error_toast
     def select_callback(self, value: str):
         if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(path)
@@ -360,8 +356,7 @@ class DeviceListTab(CTkScrollableFrame):
     @error_toast
     def delete_callback(self, id: str):
         if self.filename.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(path)

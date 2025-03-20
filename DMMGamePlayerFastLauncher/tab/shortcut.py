@@ -1,11 +1,11 @@
 import json
+import webbrowser
 from pathlib import Path
 from tkinter import Frame, StringVar
 from typing import Callable
 
 import customtkinter as ctk
 import i18n
-from static.constant import Constant
 from component.component import ButtonComponent, CheckBoxComponent, EntryComponent, LabelComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkOptionMenu, CTkScrollableFrame
@@ -15,14 +15,12 @@ from lib.toast import ToastController, error_toast
 from models.setting_data import AppConfig
 from models.shortcut_data import LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
+from static.constant import Constant
 from static.env import Env
 from utils.utils import children_destroy, file_create, get_default_locale
 
-import webbrowser
-
-
-
 # ===== Shortcut Sub Menu =====
+
 
 class ShortcutTab(CTkFrame):
     tab: TabMenuComponent
@@ -61,7 +59,7 @@ class ShortcutBase(CTkScrollableFrame):
     filename: StringVar
     product_ids: list[str]
     dgp_config: dict
-    account_name_list: list[tuple[str,str]]
+    account_name_list: list[tuple[str, str]]
 
     def __init__(self, master: Frame):
         super().__init__(master, fg_color="transparent")
@@ -72,7 +70,6 @@ class ShortcutBase(CTkScrollableFrame):
         self.product_ids = [x["productId"] for x in self.dgp_config["contents"]]
         self.account_name_list = [(x.stem, x.stem) for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.account_name_list.insert(0, (Constant.ALWAYS_EXTRACT_FROM_DMM, i18n.t("app.shortcut.always_extract_from_dmm")))
-
 
     def create(self):
         text = i18n.t("app.shortcut.filename")
@@ -179,19 +176,18 @@ class ShortcutBase(CTkScrollableFrame):
     def save_only_callback(self):
         def fn():
             self.toast.info(i18n.t("app.shortcut.save_success"))
+
         self.save_handler(fn)
-    
+
     def unity_command_line_args_callback(self):
         webbrowser.open(i18n.t("app.shortcut.unity_command_line_args_link"))
-        
 
     def get_game_info(self) -> tuple[str, Path, bool]:
         game = [x for x in self.dgp_config["contents"] if x["productId"] == self.data.product_id.get()][0]
         game_path = Path(game["detail"]["path"])
-        
+
         if self.data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             path = DataPathConfig.ACCOUNT.joinpath(self.data.account_path.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(path)
@@ -221,7 +217,7 @@ class ShortcutCreate(ShortcutBase):
         if not self.winfo_children():
             CTkLabel(self, text=i18n.t("app.shortcut.add_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         super().create()
-        
+
         PaddingComponent(self, height=15).create()
         text = i18n.t("app.shortcut.unity_command_line_args")
         ButtonComponent(self, text=text, tooltip=i18n.t("app.shortcut.unity_command_line_args_tooltip"), command=self.unity_command_line_args_callback).create()

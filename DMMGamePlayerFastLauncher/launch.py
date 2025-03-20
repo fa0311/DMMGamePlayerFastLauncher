@@ -59,8 +59,7 @@ class GameLauncher(CTk):
             data = ShortcutData.from_dict(json.load(f))
 
         if data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
-            session = DgpSessionWrap()
-            session.read()
+            session = DgpSessionWrap.read_dgp()
         else:
             account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
             session = DgpSessionWrap.read_cookies(account_path)
@@ -169,8 +168,7 @@ class LanchLauncher(CTk):
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
 
-        before_session = DgpSessionWrap()
-        before_session.read()
+        before_session = DgpSessionWrap.read_dgp()
 
         session = DgpSessionWrap.read_cookies(Path(account_path))
         if session.get_access_token() is None:
@@ -186,8 +184,7 @@ class LanchLauncher(CTk):
         for line in process.stdout:
             logging.debug(decode(line))
 
-        session = DgpSessionWrap()
-        session.read()
+        session = DgpSessionWrap.read_dgp()
         if session.get_access_token() is None:
             raise Exception(i18n.t("app.launch.import_error"))
         session.write_bytes(str(account_path))
