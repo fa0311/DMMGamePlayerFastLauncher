@@ -242,6 +242,8 @@ class DgpSessionV2:
                     check_failed_list.append(file)
                 yield check_count / len(data["data"]["file_list"]), file
 
+        yield 0, None
+
         check_failed_list = sorted(check_failed_list, key=lambda x: x["size"], reverse=True)
         download_max_size = sum([x["size"] for x in check_failed_list])
         download_size: int = 0
