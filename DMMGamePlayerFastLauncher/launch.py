@@ -111,12 +111,20 @@ class GameLauncher(CTk):
                 game_pid = pid_manager.new_process().search(game_full_path)
                 if data.rich_presence.get():
                     start_rich_presence(game_pid, data.product_id.get(), response["data"]["title"])
+                if data.external_tool_path.get() != "":
+                    external_tool_pid_manager = ProcessIdManager()
+                    ProcessManager.admin_run([data.external_tool_path.get()], cwd=str(game_file))
+                    external_tool_pid = external_tool_pid_manager.new_process().search_or_none(data.external_tool_path.get())
                 while psutil.pid_exists(game_pid):
                     time.sleep(1)
             else:
                 process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
                 if data.rich_presence.get():
                     start_rich_presence(process.pid, data.product_id.get(), response["data"]["title"])
+                if data.external_tool_path.get() != "":
+                    external_tool_pid_manager = ProcessIdManager()
+                    ProcessManager.run([data.external_tool_path.get()], cwd=str(game_file))
+                    external_tool_pid = external_tool_pid_manager.new_process().search_or_none(data.external_tool_path.get())
                 assert process.stdout is not None
                 for line in process.stdout:
                     logging.debug(decode(line))
@@ -130,6 +138,9 @@ class GameLauncher(CTk):
                         start_rich_presence(game_pid, data.product_id.get(), response["data"]["title"])
                     while psutil.pid_exists(game_pid):
                         time.sleep(1)
+            if data.external_tool_path.get() != "":
+                for child in psutil.Process(external_tool_pid).children(recursive=True):
+                    child.kill()
 
 
 class LanchLauncher(CTk):
