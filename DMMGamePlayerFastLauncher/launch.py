@@ -121,9 +121,8 @@ class GameLauncher(CTk):
             else:
                 process = ProcessManager.run([game_path] + dmm_args, cwd=str(game_file))
                 if data.external_tool_path.get() != "":
-                    external_tool_pid_manager = ProcessIdManager()
-                    ProcessManager.run([data.external_tool_path.get()], cwd=str(game_file))
-                    external_tool_pid = external_tool_pid_manager.new_process().search_or_none(data.external_tool_path.get())
+                    external_tool_process = ProcessManager.run([data.external_tool_path.get()], cwd=str(game_file))
+                    external_tool_pid = external_tool_process.pid
                 if data.rich_presence.get():
                     start_rich_presence(process.pid, data.product_id.get(), response["data"]["title"])
                 assert process.stdout is not None
