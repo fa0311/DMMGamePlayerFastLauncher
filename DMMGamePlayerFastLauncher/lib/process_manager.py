@@ -77,7 +77,7 @@ class ProcessIdManager:
 
     def search(self, name: str) -> int:
         process = [x[0] for x in self.process if x[1] == name]
-        if len(process) != 1:
+        if len(process) == 0:
             raise Exception(f"Process not found: {name}")
         return process[0]
 
