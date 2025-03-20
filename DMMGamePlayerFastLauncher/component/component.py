@@ -126,11 +126,9 @@ class EntryComponent(CTkFrame):
 
     def alnum_only_callback(self, event):
         char = event.char.encode("utf-8")
-        if event.keysym in ["BackSpace", "Delete", "Left", "Right"]:
-            return
-        if char.isalnum():
-            return
-        if event.char in ["_", "-"]:
+        if event.keysym in ["backslash", "colon", "slash", "asterisk", "question", "quote", "less", "greater", "pipe"]:
+            return "break"
+        if char.isascii():
             return
         return "break"
 
