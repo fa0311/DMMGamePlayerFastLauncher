@@ -82,6 +82,7 @@ zh_CN:
 
     product_id_not_entered: 未输入 product_id。
     filename_not_entered: 未输入文件名。
+    account_path_not_entered: 未选择账户。
     game_info_error: 无法检索游戏信息。
     administrator_error: 需要管理员权限。请创建“UAC 自动提升的快捷方式”。
     file_not_selected: 未选择文件。
@@ -94,6 +95,9 @@ zh_CN:
       指定传递给 DMMGamePlayer 的参数。
       例如，输入 'dmmgameplayer://play/GCL/priconner/cl/win' 将启动 '公主连结！Re:Dive' 在 DMMGamePlayer 中。留空以仅启动 DMMGamePlayer。
     unity_command_line_args: 了解更多关于Unity命令行参数
+    unity_command_line_args_tooltip: |-
+      打开关于 Unity 命令行参数的站点。
+      如果您启动的游戏是使用 Unity 制作的，这可能会有所帮助。
     unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/PlayerCommandLineArguments.html
 
   account:
@@ -106,6 +110,7 @@ zh_CN:
     filename: 文件名
     filename_not_entered: 未输入文件名。
     filename_already_exists: 该文件名已存在。
+    filename_reserved: 文件名已被保留。
     import_error: 导入失败。
     import_success: 导入成功。
 
@@ -116,6 +121,7 @@ zh_CN:
     browser_select_tooltip: |-
       选择您喜欢的浏览器。
       系统将启动指定的浏览器并打开登录页面。
+    browser_not_selected: 未选择浏览器。
     import_browser: 导入
     import_browser_success: 导入成功。
 

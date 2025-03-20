@@ -78,6 +78,7 @@ ja_JP:
 
     product_id_not_entered: product_id が入力されていません。
     filename_not_entered: ファイル名が入力されていません。
+    account_path_not_entered: アカウントが選択されていません。
     game_info_error: ゲーム情報の取得に失敗しました。
     administrator_error: 管理者権限が必要です。「UAC の自動昇格ショートカット」を作成してください。
     file_not_selected: ファイルが選択されていません。
@@ -92,6 +93,9 @@ ja_JP:
       DMMGamePlayer が起動した際に「プリコネ Re:Dive」が起動します。
       空欄の場合は「DMMGamePlayer のみ」が起動します。
     unity_command_line_args: Unityのコマンドライン引数についての詳しい説明を見る
+    unity_command_line_args_tooltip: |-
+      Unity のコマンドライン引数についてのサイトを開きます。
+      起動するゲームが Unity で作成されている場合なら参考になると思います。
     unity_command_line_args_link: https://docs.unity3d.com/ja/current/Manual/PlayerCommandLineArguments.html
 
   account:
@@ -103,6 +107,7 @@ ja_JP:
     filename: ファイル名
     filename_not_entered: ファイル名が入力されていません。
     filename_already_exists: そのファイル名は既に存在します。
+    filename_reserved: そのファイル名は予約されています。
     import_error: インポートに失敗しました。
     import_success: インポートに成功しました。
 
@@ -113,6 +118,7 @@ ja_JP:
     browser_select_tooltip: |-
       使用するブラウザーを選択してください。
       指定されたブラウザーを起動してログイン画面を開きます。
+    browser_not_selected: ブラウザーが選択されていません。
     import_browser: インポート
     import_browser_success: インポートに成功しました。
 

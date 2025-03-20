@@ -285,6 +285,12 @@ class DgpSessionV2:
         return v10 + nonce + data + mac
 
     @staticmethod
+    def read_dgp() -> "DgpSessionV2":
+        session = DgpSessionV2()
+        session.read()
+        return session
+
+    @staticmethod
     def read_cookies(path: Path) -> "DgpSessionV2":
         session = DgpSessionV2()
         session.read_bytes(str(path))
