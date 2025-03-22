@@ -153,27 +153,27 @@ class DgpSessionV2:
 
     def get(self, url: str, params=None, **kwargs) -> requests.Response:
         self.LOGGER.info("params %s", params)
-        res = self.session.get(url, headers=self.HEADERS, params=params, **kwargs)
+        res = self.session.get(url, headers=self.HEADERS, params=params, proxies=self.PROXY, **kwargs)
         return self.logger(res)
 
     def post(self, url: str, json=None, **kwargs) -> requests.Response:
         self.LOGGER.info("json %s", json)
-        res = self.session.post(url, headers=self.HEADERS, json=json, **kwargs)
+        res = self.session.post(url, headers=self.HEADERS, json=json, proxies=self.PROXY, **kwargs)
         return self.logger(res)
 
     def get_dgp(self, url: str, params=None, **kwargs) -> requests.Response:
         self.LOGGER.info("params %s", params)
-        res = self.session.get(url, headers=self.get_headers(), params=params, **kwargs)
+        res = self.session.get(url, headers=self.get_headers(), params=params, proxies=self.PROXY, **kwargs)
         return self.logger(res)
 
     def post_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
         self.LOGGER.info("json %s", json)
-        res = self.session.post(url, headers=self.get_headers(), json=json, **kwargs)
+        res = self.session.post(url, headers=self.get_headers(), json=json, proxies=self.PROXY, **kwargs)
         return self.logger(res)
 
     def post_device_dgp(self, url: str, json=None, **kwargs) -> requests.Response:
         json = (json or {}) | self.DGP5_DEVICE_PARAMS
-        return self.post_dgp(url, json=json, **kwargs)
+        return self.post_dgp(url, json=json, proxies=self.PROXY, **kwargs)
 
     def logger(self, res: requests.Response) -> requests.Response:
         if res.headers.get("Content-Type") == "application/json":
