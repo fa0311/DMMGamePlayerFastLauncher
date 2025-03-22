@@ -97,6 +97,7 @@ class DgpSessionV2:
         self.session = requests.Session()
         self.session.cookies = requests.cookies.RequestsCookieJar()
         self.session.cookies.set("age_check_done", "0", domain=".dmm.com", path="/")
+        self.session.proxies = self.PROXY
 
     def write_safe(self, data: bytes):
         file = self.DGP5_DATA_PATH.joinpath("authAccessTokenData.enc")
