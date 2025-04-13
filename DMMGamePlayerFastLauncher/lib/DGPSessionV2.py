@@ -188,6 +188,8 @@ class DgpSessionV2:
             url = self.LAUNCH_CL
         elif game_type == "AMAIN":
             url = self.LAUNCH_PKG
+        elif game_type == "GMAIN":
+            url = self.LAUNCH_PKG
         else:
             raise Exception("Unknown game_type: " + game_type + " " + product_id)
         json = {
