@@ -83,6 +83,8 @@ class DgpSessionV2:
     HARDWARE_CONF = API_DGP.format("/v5/hardwareconf")
     HARDWARE_LIST = API_DGP.format("/v5/hardwarelist")
     HARDWARE_REJECT = API_DGP.format("/v5/hardwarereject")
+    USER_INFO = API_DGP.format("/v5/userinfo")
+    CHECK_ACCESS_TOKEN = API_DGP.format("/v5/auth/accesstoken/check")
     ACCESS_TOKEN = API_DGP.format("/v5/auth/accesstoken/issue")
     LOGIN_URL = API_DGP.format("/v5/auth/login/url")
     SIGNED_URL = "https://cdn-gameplayer.games.dmm.com/product/*"
