@@ -182,9 +182,9 @@ class PathComponentBase(EntryComponent):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.command.append((i18n.t("app.component.reference"), self.reference_callback))
+        self.command.append((i18n.t("app.component.reference"), lambda v: self.reference_callback(v)))
 
-    def reference_callback(self, variable: PathVar):
+    def reference_callback(self, variable: Variable):
         raise NotImplementedError
 
 

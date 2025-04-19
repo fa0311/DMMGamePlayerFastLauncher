@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass, field
 from tkinter import BooleanVar, StringVar
 
@@ -20,3 +21,9 @@ class ShortcutData(VariableBase):
 class LauncherShortcutData(VariableBase):
     account_path: PathVar = field(default_factory=PathVar)
     dgp_args: StringVar = field(default_factory=StringVar)
+
+
+@dataclass
+class BrowserConfigData(VariableBase):
+    browser: StringVar = field(default_factory=StringVar)
+    profile_name: StringVar = field(default_factory=lambda: StringVar(value=uuid.uuid4().hex))

@@ -119,6 +119,7 @@ ja_JP:
     browser_select_tooltip: |-
       使用するブラウザーを選択してください。
       指定されたブラウザーを起動してログイン画面を開きます。
+    auto_refresh: 自動でログインセッションを更新する
     browser_not_selected: ブラウザーが選択されていません。
     import_browser: インポート
     import_browser_success: インポートに成功しました。
