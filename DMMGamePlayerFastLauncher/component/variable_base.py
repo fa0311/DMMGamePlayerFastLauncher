@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from tkinter import Variable
 
 
@@ -13,3 +15,13 @@ class VariableBase:
         default = cls().__dict__
         item = [(k, v(value=obj.get(k, default[k].get()))) for k, v in cls.__annotations__.items()]
         return cls(**dict(item))
+
+    @classmethod
+    def from_path(cls, path: Path):
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return cls.from_dict(data)
+
+    def write_path(self, path: Path):
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f, ensure_ascii=False, indent=4)

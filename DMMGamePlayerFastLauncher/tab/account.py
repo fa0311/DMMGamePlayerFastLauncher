@@ -1,20 +1,18 @@
-import time
-import urllib.parse
 from pathlib import Path
-from tkinter import StringVar
-from typing import TypeVar
+from tkinter import BooleanVar, StringVar
+from typing import Callable, Optional, TypeVar
 
 import customtkinter as ctk
 import i18n
-from component.component import EntryComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
+from component.component import CheckBoxComponent, EntryComponent, OptionMenuComponent, OptionMenuTupleComponent, PaddingComponent
 from component.tab_menu import TabMenuComponent
 from customtkinter import CTkBaseClass, CTkButton, CTkFrame, CTkLabel, CTkScrollableFrame
 from lib.DGPSessionWrap import DgpSessionWrap
 from lib.toast import ToastController, error_toast
-from selenium import webdriver
+from models.shortcut_data import BrowserConfigData
 from static.config import DataPathConfig
 from static.constant import Constant
-from utils.utils import children_destroy, file_create
+from utils.utils import children_destroy, file_create, get_driver, login_driver
 
 T = TypeVar("T")
 
@@ -94,34 +92,26 @@ class AccountImport(CTkScrollableFrame):
 class AccountBrowserImport(CTkScrollableFrame):
     toast: ToastController
     name: StringVar
-    browser: StringVar
+    data: BrowserConfigData
 
     def __init__(self, master: CTkBaseClass):
         super().__init__(master, fg_color="transparent")
         self.toast = ToastController(self)
         self.name = StringVar()
-        self.browser = StringVar()
+        self.auto_refresh = BooleanVar(value=True)
+        self.data = BrowserConfigData()
 
     def create(self):
         CTkLabel(self, text=i18n.t("app.account.import_browser_detail"), justify=ctk.LEFT).pack(anchor=ctk.W)
         text = i18n.t("app.account.filename")
         tooltip = i18n.t("app.account.filename_tooltip")
         EntryComponent(self, text=text, tooltip=tooltip, required=True, variable=self.name, alnum_only=True).create()
+        CheckBoxComponent(self, text=i18n.t("app.account.auto_refresh"), variable=self.auto_refresh).create()
         text = i18n.t("app.account.browser_select")
         tooltip = i18n.t("app.account.browser_select_tooltip")
-        OptionMenuComponent(self, text=text, tooltip=tooltip, values=["Chrome", "Edge", "Firefox"], variable=self.browser).create()
+        OptionMenuComponent(self, text=text, tooltip=tooltip, values=["Chrome", "Edge", "Firefox"], variable=self.data.browser).create()
         CTkButton(self, text=i18n.t("app.account.import_browser"), command=self.callback).pack(fill=ctk.X, pady=10)
         return self
-
-    def get_driver(self):
-        if self.browser.get() == "Chrome":
-            return webdriver.Chrome()
-        elif self.browser.get() == "Edge":
-            return webdriver.Edge()
-        elif self.browser.get() == "Firefox":
-            return webdriver.Firefox()
-        else:
-            raise Exception(i18n.t("app.account.browser_not_selected"))
 
     @error_toast
     def callback(self):
@@ -137,19 +127,20 @@ class AccountBrowserImport(CTkScrollableFrame):
         res = session.post_dgp(DgpSessionWrap.LOGIN_URL, json={"prompt": ""}).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
-        driver = self.get_driver()
-        driver.get(res["data"]["url"])
-        parsed_url = urllib.parse.urlparse(driver.current_url)
-        while not (parsed_url.netloc == "webdgp-gameplayer.games.dmm.com" and parsed_url.path == "/login/success"):
-            time.sleep(0.2)
-            parsed_url = urllib.parse.urlparse(driver.current_url)
+
+        profile_path = DataPathConfig.BROWSER_PROFILE.joinpath(self.data.profile_name.get()).absolute()
+        driver = get_driver(self.data.browser.get(), profile_path)
+        code = login_driver(res["data"]["url"], driver)
         driver.quit()
-        code = urllib.parse.parse_qs(parsed_url.query)["code"][0]
         res = session.post_dgp(DgpSessionWrap.ACCESS_TOKEN, json={"code": code}).json()
         if res["result_code"] != 100:
             raise Exception(res["error"])
         session.actauth = {"accessToken": res["data"]["access_token"]}
         session.write_bytes(str(path))
+        if self.auto_refresh.get():
+            config_path = DataPathConfig.BROWSER_CONFIG.joinpath(self.name.get()).with_suffix(".json")
+            file_create(config_path, name=i18n.t("app.account.filename"))
+            self.data.write_path(config_path)
         self.toast.info(i18n.t("app.account.import_browser_success"))
 
 
@@ -159,6 +150,7 @@ class AccountEdit(CTkScrollableFrame):
     filename: StringVar
     body: CTkFrame
     body_var: dict[str, StringVar]
+    browser_config: Optional[BrowserConfigData]
     body_filename: StringVar
 
     def __init__(self, master: CTkBaseClass):
@@ -167,6 +159,7 @@ class AccountEdit(CTkScrollableFrame):
         self.values = [x.stem for x in DataPathConfig.ACCOUNT.iterdir() if x.suffix == ".bytes"]
         self.filename = StringVar()
         self.body_var = {}
+        self.browser_config = None
         self.body_filename = StringVar()
 
     def create(self):
@@ -190,6 +183,13 @@ class AccountEdit(CTkScrollableFrame):
         for key in session.actauth.keys():
             self.body_var[key] = StringVar(value=session.actauth[key] or "")
             EntryComponent(self.body, text=key, variable=self.body_var[key]).create()
+        config_path = DataPathConfig.BROWSER_CONFIG.joinpath(self.filename.get()).with_suffix(".json")
+        if config_path.exists():
+            self.browser_config = BrowserConfigData.from_path(config_path)
+            PaddingComponent(self.body, height=20).create()
+            EntryComponent(self.body, text="browser", variable=self.browser_config.browser).create()
+            EntryComponent(self.body, text="profile_name", variable=self.browser_config.profile_name).create()
+
         CTkButton(self.body, text=i18n.t("app.account.save"), command=self.save_callback).pack(fill=ctk.X, pady=10)
         CTkButton(self.body, text=i18n.t("app.account.delete"), command=self.delete_callback).pack(fill=ctk.X)
 
@@ -202,19 +202,34 @@ class AccountEdit(CTkScrollableFrame):
 
         path = DataPathConfig.ACCOUNT.joinpath(self.filename.get()).with_suffix(".bytes")
         body_path = DataPathConfig.ACCOUNT.joinpath(self.body_filename.get()).with_suffix(".bytes")
+        config_path = DataPathConfig.BROWSER_CONFIG.joinpath(self.filename.get()).with_suffix(".json")
+        config_body_path = DataPathConfig.BROWSER_CONFIG.joinpath(self.body_filename.get()).with_suffix(".json")
+
+        def check_file(callback: Callable[[], None]):
+            if self.browser_config:
+                callback()
 
         def write():
             session = DgpSessionWrap.read_cookies((Path(path)))
             for key in session.actauth.keys():
                 session.actauth[key] = self.body_var[key].get()
-            session.write_bytes(str(Path(body_path)))
+            session.write_bytes(str(body_path))
+            if self.browser_config:
+                self.browser_config.write_path(config_body_path)
 
         if path == body_path:
             write()
         else:
-            file_create(body_path, name=i18n.t("app.account.filename"))
-            write()
+            try:
+                file_create(body_path, name=i18n.t("app.account.filename"))
+                check_file(lambda: file_create(config_body_path, name=i18n.t("app.account.filename")))
+                write()
+            except Exception as e:
+                body_path.unlink()
+                config_body_path.unlink()
+                raise e
             path.unlink()
+            check_file(lambda: config_path.unlink())
             self.values.remove(self.filename.get())
             self.values.append(self.body_filename.get())
             self.filename.set(self.body_filename.get())

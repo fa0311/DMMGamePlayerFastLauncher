@@ -1,4 +1,3 @@
-import json
 import logging
 import subprocess
 import sys
@@ -19,11 +18,12 @@ from lib.process_manager import ProcessIdManager, ProcessManager
 from lib.thread import threading_wrapper
 from lib.toast import ErrorWindow
 from models.setting_data import AppConfig
-from models.shortcut_data import LauncherShortcutData, ShortcutData
+from models.shortcut_data import BrowserConfigData, LauncherShortcutData, ShortcutData
 from static.config import DataPathConfig
 from static.constant import Constant
 from static.env import Env
 from tab.home import HomeTab
+from utils.utils import get_driver, login_driver
 
 
 class GameLauncher(CTk):
@@ -56,14 +56,30 @@ class GameLauncher(CTk):
 
     def launch(self, id: str, kill: bool = False, force_non_uac: bool = False):
         path = DataPathConfig.SHORTCUT.joinpath(id).with_suffix(".json")
-        with open(path, "r", encoding="utf-8") as f:
-            data = ShortcutData.from_dict(json.load(f))
+        data = ShortcutData.from_path(path)
 
         if data.account_path.get() == Constant.ALWAYS_EXTRACT_FROM_DMM:
             session = DgpSessionWrap.read_dgp()
         else:
             account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
+            browser_config_path = DataPathConfig.BROWSER_CONFIG.joinpath(data.account_path.get()).with_suffix(".json")
             session = DgpSessionWrap.read_cookies(account_path)
+            if browser_config_path.exists():
+                browser_config = BrowserConfigData.from_path(browser_config_path)
+                profile_path = DataPathConfig.BROWSER_PROFILE.joinpath(browser_config.profile_name.get()).absolute()
+                userdata = session.post_dgp(DgpSessionWrap.USER_INFO).json()
+                if userdata["result_code"] != 100 or True:
+                    res = session.post_dgp(DgpSessionWrap.LOGIN_URL, json={"prompt": ""}).json()
+                    if res["result_code"] != 100:
+                        raise Exception(res["error"])
+                    driver = get_driver(browser_config.browser.get(), profile_path)
+                    code = login_driver(res["data"]["url"], driver)
+                    driver.quit()
+                    res = session.post_dgp(DgpSessionWrap.ACCESS_TOKEN, json={"code": code}).json()
+                    if res["result_code"] != 100:
+                        raise Exception(res["error"])
+                    session.actauth = {"accessToken": res["data"]["access_token"]}
+                    session.write_bytes(str(account_path))
 
         dgp_config = session.get_config()
         game = [x for x in dgp_config["contents"] if x["productId"] == data.product_id.get()][0]
@@ -174,8 +190,7 @@ class LanchLauncher(CTk):
             raise Exception(i18n.t("app.lib.dmm_already_running"))
 
         path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(id).with_suffix(".json")
-        with open(path, "r", encoding="utf-8") as f:
-            data = LauncherShortcutData.from_dict(json.load(f))
+        data = LauncherShortcutData.from_path(path)
 
         account_path = DataPathConfig.ACCOUNT.joinpath(data.account_path.get()).with_suffix(".bytes")
 

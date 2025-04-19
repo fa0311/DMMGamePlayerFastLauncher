@@ -122,6 +122,7 @@ zh_CN:
     browser_select_tooltip: |-
       选择您喜欢的浏览器。
       系统将启动指定的浏览器并打开登录页面。
+    auto_refresh: 自动刷新登录会话
     browser_not_selected: 未选择浏览器。
     import_browser: 导入
     import_browser_success: 导入成功。

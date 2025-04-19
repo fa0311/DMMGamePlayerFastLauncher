@@ -1,4 +1,3 @@
-import json
 import webbrowser
 from pathlib import Path
 from tkinter import Frame, StringVar
@@ -121,8 +120,7 @@ class ShortcutBase(CTkScrollableFrame):
 
         path = DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         file_create(path, name=i18n.t("app.shortcut.filename"))
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(json.dumps(self.data.to_dict()))
+        self.data.write_path(path)
 
     def save_handler(self, fn: Callable[[], None]):
         pass
@@ -307,8 +305,7 @@ class ShortcutEdit(ShortcutBase):
 
     def read(self) -> ShortcutData:
         path = DataPathConfig.SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
-        with open(path, "r", encoding="utf-8") as f:
-            return ShortcutData.from_dict(json.load(f))
+        return ShortcutData.from_path(path)
 
 
 class LauncherShortcutBase(CTkScrollableFrame):
@@ -346,8 +343,7 @@ class LauncherShortcutBase(CTkScrollableFrame):
 
         path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(self.filename.get()).with_suffix(".json")
         file_create(path, name=i18n.t("app.shortcut.filename"))
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(json.dumps(self.data.to_dict()))
+        self.data.write_path(path)
 
     @error_toast
     def save_callback(self):
@@ -434,5 +430,4 @@ class LauncherShortcutEdit(LauncherShortcutBase):
 
     def read(self) -> LauncherShortcutData:
         path = DataPathConfig.ACCOUNT_SHORTCUT.joinpath(self.selected.get()).with_suffix(".json")
-        with open(path, "r", encoding="utf-8") as f:
-            return LauncherShortcutData.from_dict(json.load(f))
+        return LauncherShortcutData.from_path(path)

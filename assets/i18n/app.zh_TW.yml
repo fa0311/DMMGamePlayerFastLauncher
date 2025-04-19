@@ -121,6 +121,7 @@ zh_TW:
     browser_select_tooltip: |-
       選擇您偏好的瀏覽器。
       系統將啟動指定的瀏覽器並開啟登入畫面。
+    auto_refresh: 自動刷新登入會話
     browser_not_selected: 未選擇瀏覽器。
     import_browser: 匯入
     import_browser_success: 匯入成功。

@@ -120,6 +120,7 @@ en_US:
 
     import_browser_detail: Launch the browser to import account information from DMMGamePlayer.
     browser_select: Select Browser
+    auto_refresh: Automatically refresh login session
     browser_select_tooltip: |-
       Choose your preferred browser.
       The specified browser will launch and open the login screen.

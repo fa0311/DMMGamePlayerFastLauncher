@@ -25,6 +25,8 @@ def loder(master: LanchLauncher):
     DataPathConfig.ACCOUNT_SHORTCUT.mkdir(exist_ok=True, parents=True)
     DataPathConfig.SHORTCUT.mkdir(exist_ok=True, parents=True)
     DataPathConfig.SCHTASKS.mkdir(exist_ok=True, parents=True)
+    DataPathConfig.BROWSER_PROFILE.mkdir(exist_ok=True, parents=True)
+    DataPathConfig.BROWSER_CONFIG.mkdir(exist_ok=True, parents=True)
 
     config_loder()
     i18n.load_path.append(str(AssetsPathConfig.I18N))
