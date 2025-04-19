@@ -35,12 +35,14 @@ class TabMenuComponent:
         btn.pack(pady=2, padx=4)
 
         if self.selected == row:
-            self.callback_wrapper(callback, row=row)
-            self.first = False
+            self.render(callback, row=row)
         self.row += 1
 
     def callback_wrapper(self, callback, row):
-        children_destroy(self.body_master)
+        if self.selected != row:
+            self.render(callback, row)
+
+    def render(self, callback, row):
         for key, child in enumerate(self.tab_master.winfo_children()):
             if key == row:
                 self.selected = key
@@ -57,6 +59,7 @@ class TabMenuComponent:
                 )
             child.update()
 
+        children_destroy(self.body_master)
         callback(self.body_master)
 
     def is_dark(self):
