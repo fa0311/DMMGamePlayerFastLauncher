@@ -68,7 +68,7 @@ class GameLauncher(CTk):
                 browser_config = BrowserConfigData.from_path(browser_config_path)
                 profile_path = DataPathConfig.BROWSER_PROFILE.joinpath(browser_config.profile_name.get()).absolute()
                 userdata = session.post_dgp(DgpSessionWrap.USER_INFO).json()
-                if userdata["result_code"] != 100 or True:
+                if userdata["result_code"] != 100:
                     res = session.post_dgp(DgpSessionWrap.LOGIN_URL, json={"prompt": ""}).json()
                     if res["result_code"] != 100:
                         raise Exception(res["error"])
