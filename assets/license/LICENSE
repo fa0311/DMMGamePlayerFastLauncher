@@ -1,10 +1,10 @@
 
 
-================================================================================
+==============================================================
 
-                           DMMGamePlayerFastLauncher                            
+                DMMGamePlayer Fast Launcher
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -29,11 +29,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                                    adodbapi                                    
+                         adodbapi
 
-================================================================================
+==============================================================
 
 		  GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999
@@ -510,8 +510,8 @@ safest to attach them to the start of each source file to most effectively
 convey the exclusion of warranty; and each file should have at least the
 "copyright" line and a pointer to where the full notice is found.
 
-    <one line to give the library's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    DMMGamePlayer Fast Launcher
+    Copyright (C) 2022 yuki
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -542,11 +542,11 @@ necessary.  Here is a sample; alter the names:
 That's all there is to it!
 
 
-================================================================================
+==============================================================
 
-                           altgraph-0.17.4.dist-info                            
+                 altgraph-0.17.4.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2004 Istvan Albert unless otherwise noted.
 Copyright (c) 2006-2010 Bob Ippolito
@@ -568,11 +568,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                                    licenses                                    
+                         licenses
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -597,11 +597,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                          certifi-2025.1.31.dist-info                           
+                 certifi-2025.1.31.dist-info
 
-================================================================================
+==============================================================
 
 This package contains a modified version of ca-bundle.crt:
 
@@ -625,11 +625,11 @@ one at http://mozilla.org/MPL/2.0/.
 @(#) $RCSfile: certdata.txt,v $ $Revision: 1.80 $ $Date: 2011/11/03 15:11:58 $
 
 
-================================================================================
+==============================================================
 
-                             cffi-1.17.1.dist-info                              
+                    cffi-1.17.1.dist-info
 
-================================================================================
+==============================================================
 
 
 Except when otherwise stated (look for LICENSE files in directories or
@@ -659,11 +659,11 @@ documentation is licensed as follows:
 
 
 
-================================================================================
+==============================================================
 
-                       charset_normalizer-3.4.1.dist-info                       
+               charset_normalizer-3.4.1.dist-info
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -688,11 +688,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                          coloredlogs-15.0.1.dist-info                          
+                   coloredlogs-15.0.1.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2020 Peter Odding
 
@@ -716,11 +716,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                         customtkinter-5.2.2.dist-info                          
+                 customtkinter-5.2.2.dist-info
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -745,11 +745,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                           darkdetect-0.8.0.dist-info                           
+                   darkdetect-0.8.0.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2019, Alberto Sottile
 All rights reserved.
@@ -777,15 +777,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                         exceptiongroup-1.2.2.dist-info                         
+                exceptiongroup-1.2.2.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
-Copyright (c) 2022 Alex Grönholm
+Copyright (c) 2022 Alex Gr旦nholm
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -858,11 +858,11 @@ agrees to be bound by the terms and conditions of this License
 Agreement.
 
 
-================================================================================
+==============================================================
 
-                              h11-0.14.0.dist-info                              
+                      h11-0.14.0.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -888,11 +888,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                          humanfriendly-10.0.dist-info                          
+                  humanfriendly-10.0.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2021 Peter Odding
 
@@ -916,11 +916,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                            i18nice-0.15.5.dist-info                            
+                    i18nice-0.15.5.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2012 Daniel Perez
 
@@ -931,11 +931,11 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                              idna-3.10.dist-info                               
+                     idna-3.10.dist-info
 
-================================================================================
+==============================================================
 
 BSD 3-Clause License
 
@@ -970,22 +970,22 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                         outcome-1.3.0.post0.dist-info                          
+                 outcome-1.3.0.post0.dist-info
 
-================================================================================
+==============================================================
 
 This software is made available under the terms of *either* of the
 licenses found in LICENSE.APACHE2 or LICENSE.MIT. Contributions to are
 made under the terms of *both* these licenses.
 
 
-================================================================================
+==============================================================
 
-                         outcome-1.3.0.post0.dist-info                          
+                 outcome-1.3.0.post0.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -1191,11 +1191,11 @@ made under the terms of *both* these licenses.
    limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                         outcome-1.3.0.post0.dist-info                          
+                 outcome-1.3.0.post0.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -1219,22 +1219,22 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                            packaging-24.2.dist-info                            
+                   packaging-24.2.dist-info
 
-================================================================================
+==============================================================
 
 This software is made available under the terms of *either* of the licenses
 found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
 under the terms of *both* these licenses.
 
 
-================================================================================
+==============================================================
 
-                            packaging-24.2.dist-info                            
+                   packaging-24.2.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -1415,11 +1415,11 @@ under the terms of *both* these licenses.
    END OF TERMS AND CONDITIONS
 
 
-================================================================================
+==============================================================
 
-                            packaging-24.2.dist-info                            
+                   packaging-24.2.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) Donald Stufft and individual contributors.
 All rights reserved.
@@ -1446,11 +1446,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                           pefile-2023.2.7.dist-info                            
+                    pefile-2023.2.7.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -1475,20 +1475,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                            pillow-11.1.0.dist-info                             
+                    pillow-11.1.0.dist-info
 
-================================================================================
+==============================================================
 
 The Python Imaging Library (PIL) is
 
-    Copyright © 1997-2011 by Secret Labs AB
-    Copyright © 1995-2011 by Fredrik Lundh and contributors
+    Copyright 息 1997-2011 by Secret Labs AB
+    Copyright 息 1995-2011 by Fredrik Lundh and contributors
 
 Pillow is the friendly PIL fork. It is
 
-    Copyright © 2010 by Jeffrey A. Clark and contributors
+    Copyright 息 2010 by Jeffrey A. Clark and contributors
 
 Like PIL, Pillow is licensed under the open source MIT-CMU License:
 
@@ -1581,7 +1581,6 @@ The  MD5 checksum  support  (only used  for  debugging in  development
 builds) is in the public domain.
 
 
---- end of LICENSE.TXT ---
                     The FreeType Project LICENSE
                     ----------------------------
 
@@ -1632,11 +1631,11 @@ Introduction
   encourage you to use the following text:
 
    """
-    Portions of this software are copyright © <year> The FreeType
+    Portions of this software are copyright 息 2022 The FreeType
     Project (www.freetype.org).  All rights reserved.
    """
 
-  Please replace <year> with the value from the FreeType version you
+  Please replace 2022 with the value from the FreeType version you
   actually use.
 
 
@@ -1750,7 +1749,7 @@ Legal Terms
     https://www.freetype.org
 
 
---- end of FTL.TXT ---
+
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
@@ -2043,8 +2042,8 @@ to attach them to the start of each source file to most effectively
 convey the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    DMMGamePlayer Fast Launcher
+    Copyright (C) 2022 yuki
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -2066,7 +2065,7 @@ Also add information on how to contact you by electronic and paper mail.
 If the program is interactive, make it output a short notice like this
 when it starts in an interactive mode:
 
-    Gnomovision version 69, Copyright (C) year  name of author
+    Gnomovision version 69, Copyright (C) 2022 yuki
     Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; type `show c' for details.
@@ -2098,23 +2097,23 @@ HarfBuzz is licensed under the so-called "Old MIT" license.  Details follow.
 For parts of HarfBuzz that are licensed under different licenses see individual
 files names COPYING in subdirectories where applicable.
 
-Copyright © 2010-2022  Google, Inc.
-Copyright © 2015-2020  Ebrahim Byagowi
-Copyright © 2019,2020  Facebook, Inc.
-Copyright © 2012,2015  Mozilla Foundation
-Copyright © 2011  Codethink Limited
-Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies)
-Copyright © 2009  Keith Stribley
-Copyright © 2011  Martin Hosken and SIL International
-Copyright © 2007  Chris Wilson
-Copyright © 2005,2006,2020,2021,2022,2023  Behdad Esfahbod
-Copyright © 2004,2007,2008,2009,2010,2013,2021,2022,2023  Red Hat, Inc.
-Copyright © 1998-2005  David Turner and Werner Lemberg
-Copyright © 2016  Igalia S.L.
-Copyright © 2022  Matthias Clasen
-Copyright © 2018,2021  Khaled Hosny
-Copyright © 2018,2019,2020  Adobe, Inc
-Copyright © 2013-2015  Alexei Podtelezhnikov
+Copyright 息 2010-2022  Google, Inc.
+Copyright 息 2015-2020  Ebrahim Byagowi
+Copyright 息 2019,2020  Facebook, Inc.
+Copyright 息 2012,2015  Mozilla Foundation
+Copyright 息 2011  Codethink Limited
+Copyright 息 2008,2010  Nokia Corporation and/or its subsidiary(-ies)
+Copyright 息 2009  Keith Stribley
+Copyright 息 2011  Martin Hosken and SIL International
+Copyright 息 2007  Chris Wilson
+Copyright 息 2005,2006,2020,2021,2022,2023  Behdad Esfahbod
+Copyright 息 2004,2007,2008,2009,2010,2013,2021,2022,2023  Red Hat, Inc.
+Copyright 息 1998-2005  David Turner and Werner Lemberg
+Copyright 息 2016  Igalia S.L.
+Copyright 息 2022  Matthias Clasen
+Copyright 息 2018,2021  Khaled Hosny
+Copyright 息 2018,2019,2020  Adobe, Inc
+Copyright 息 2013-2015  Alexei Podtelezhnikov
 
 For full copyright notices consult the individual files in the package.
 
@@ -2310,7 +2309,7 @@ The Modified (3-clause) BSD License
 ===================================
 
 Copyright (C)2009-2024 D. R. Commander.  All Rights Reserved.<br>
-Copyright (C)2015 Viktor Szathmáry.  All Rights Reserved.
+Copyright (C)2015 Viktor Szathm叩ry.  All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -2565,8 +2564,8 @@ be appreciated.
  
 # LibTIFF license
 
-Copyright © 1988-1997 Sam Leffler\
-Copyright © 1991-1997 Silicon Graphics, Inc.
+Copyright 息 1988-1997 Sam Leffler\
+Copyright 息 1991-1997 Silicon Graphics, Inc.
 
 Permission to use, copy, modify, distribute, and sell this software and 
 its documentation for any purpose is hereby granted without fee, provided
@@ -2696,11 +2695,11 @@ freely, subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 
 
-================================================================================
+==============================================================
 
-                              pip-23.0.1.dist-info                              
+                       pip-23.0.1.dist-info
 
-================================================================================
+==============================================================
 
 Copyright (c) 2008-present The pip developers (see AUTHORS.txt file)
 
@@ -2724,11 +2723,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                             psutil-7.0.0.dist-info                             
+                     psutil-7.0.0.dist-info
 
-================================================================================
+==============================================================
 
 BSD 3-Clause License
 
@@ -2761,11 +2760,11 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                            pycparser-2.22.dist-info                            
+                     pycparser-2.22.dist-info
 
-================================================================================
+==============================================================
 
 pycparser -- A C parser in Python
 
@@ -2796,11 +2795,11 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                         pycryptodome-3.22.0.dist-info                          
+                  pycryptodome-3.22.0.dist-info
 
-================================================================================
+==============================================================
 
 The source code in PyCryptodome is partially in the public domain
 and partially released under the BSD 2-Clause license.
@@ -2865,11 +2864,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                  pyinstaller_hooks_contrib-2024.10.dist-info                   
+          pyinstaller_hooks_contrib-2024.10.dist-info
 
-================================================================================
+==============================================================
 
 ============================================
 PyInstaller Community Hooks: License details
@@ -3394,11 +3393,11 @@ Apache License 2.0
    limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                           pypresence-4.3.0.dist-info                           
+                  pypresence-4.3.0.dist-info
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -3423,11 +3422,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                          pyreadline3-3.5.4.dist-info                           
+                   pyreadline3-3.5.4.dist-info
 
-================================================================================
+==============================================================
 
 # LICENSE
 
@@ -3449,7 +3448,7 @@ pyreadline3 is released under a BSD-type license.
 
 Copyright (c) 2020 Bassem Girgis <brgirgis@gmail.com>.
 
-Copyright (c) 2006-2020 J�rgen Stenarson <jorgen.stenarson@bostream.nu>.
+Copyright (c) 2006-2020 J旦rgen Stenarson <jorgen.stenarson@bostream.nu>.
 
 Copyright (c) 2003-2006 Gary Bishop
 
@@ -3484,11 +3483,11 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                            PySocks-1.7.1.dist-info                             
+                    PySocks-1.7.1.dist-info
 
-================================================================================
+==============================================================
 
 Copyright 2006 Dan-Haim. All rights reserved.
 
@@ -3514,11 +3513,11 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMANGE.
 
 
-================================================================================
+==============================================================
 
-                                   pythonwin                                    
+                           pythonwin
 
-================================================================================
+==============================================================
 
 Unless stated in the specfic source file, this work is
 Copyright (c) 1994-2008, Mark Hammond
@@ -3552,11 +3551,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                         pywin32_ctypes-0.2.3.dist-info                         
+                  pywin32_ctypes-0.2.3.dist-info
 
-================================================================================
+==============================================================
 
 This software is OSI Certified Open Source Software.
 OSI Certified is a certification mark of the Open Source Initiative.
@@ -3588,13 +3587,13 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                             PyYAML-6.0.2.dist-info                             
+                     PyYAML-6.0.2.dist-info
 
-================================================================================
+==============================================================
 
-Copyright (c) 2017-2021 Ingy döt Net
+Copyright (c) 2017-2021 Ingy d旦t Net
 Copyright (c) 2006-2016 Kirill Simonov
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -3616,11 +3615,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                           requests-2.32.3.dist-info                            
+                   requests-2.32.3.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -3799,11 +3798,11 @@ SOFTWARE.
       of your accepting any such warranty or additional liability.
 
 
-================================================================================
+==============================================================
 
-                           selenium-4.29.0.dist-info                            
+                    selenium-4.29.0.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -4009,11 +4008,11 @@ SOFTWARE.
    limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                          setuptools-65.5.0.dist-info                           
+                  setuptools-65.5.0.dist-info
 
-================================================================================
+==============================================================
 
 Copyright Jason R. Coombs
 
@@ -4036,22 +4035,22 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                            sniffio-1.3.1.dist-info                             
+                    sniffio-1.3.1.dist-info
 
-================================================================================
+==============================================================
 
 This software is made available under the terms of *either* of the
 licenses found in LICENSE.APACHE2 or LICENSE.MIT. Contributions to are
 made under the terms of *both* these licenses.
 
 
-================================================================================
+==============================================================
 
-                            sniffio-1.3.1.dist-info                             
+                     sniffio-1.3.1.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -4242,7 +4241,7 @@ made under the terms of *both* these licenses.
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright [yyyy] [name of copyright owner]
+   Copyright 2022 yuki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -4257,11 +4256,11 @@ made under the terms of *both* these licenses.
    limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                            sniffio-1.3.1.dist-info                             
+                    sniffio-1.3.1.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -4285,11 +4284,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                        sortedcontainers-2.4.0.dist-info                        
+               sortedcontainers-2.4.0.dist-info
 
-================================================================================
+==============================================================
 
 Copyright 2014-2019 Grant Jenks
 
@@ -4306,11 +4305,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                tkinter_colored_logging_handlers-0.0.3.dist-info                
+        tkinter_colored_logging_handlers-0.0.3.dist-info
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -4337,22 +4336,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                             trio-0.29.0.dist-info                              
+                     trio-0.29.0.dist-info
 
-================================================================================
+==============================================================
 
 This software is made available under the terms of *either* of the
 licenses found in LICENSE.APACHE2 or LICENSE.MIT. Contributions to
 Trio are made under the terms of *both* these licenses.
 
 
-================================================================================
+==============================================================
 
-                             trio-0.29.0.dist-info                              
+                      trio-0.29.0.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -4543,7 +4542,7 @@ Trio are made under the terms of *both* these licenses.
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright [yyyy] [name of copyright owner]
+   Copyright 2022 yuki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -4558,11 +4557,11 @@ Trio are made under the terms of *both* these licenses.
    limitations under the License.
 
 
-================================================================================
+==============================================================
 
-                             trio-0.29.0.dist-info                              
+                        trio-0.29.0.dist-info
 
-================================================================================
+==============================================================
 
 Copyright Contributors to the Trio project.
 
@@ -4588,11 +4587,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                        trio_websocket-0.12.2.dist-info                         
+                 trio_websocket-0.12.2.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
@@ -4617,11 +4616,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                       typing_extensions-4.12.2.dist-info                       
+                typing_extensions-4.12.2.dist-info
 
-================================================================================
+==============================================================
 
 A. HISTORY OF THE SOFTWARE
 ==========================
@@ -4904,11 +4903,11 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                                    licenses                                    
+                            licenses
 
-================================================================================
+==============================================================
 
 MIT License
 
@@ -4933,11 +4932,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-================================================================================
+==============================================================
 
-                        websocket_client-1.8.0.dist-info                        
+                websocket_client-1.8.0.dist-info
 
-================================================================================
+==============================================================
 
 
                                  Apache License
@@ -5144,11 +5143,11 @@ SOFTWARE.
 
 
 
-================================================================================
+==============================================================
 
-                                     win32                                      
+                             win32
 
-================================================================================
+==============================================================
 
 Unless stated in the specfic source file, this work is
 Copyright (c) 1994-2008, Mark Hammond
@@ -5182,11 +5181,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                                    win32com                                    
+                            win32com
 
-================================================================================
+==============================================================
 
 Unless stated in the specfic source file, this work is
 Copyright (c) 1996-2008, Greg Stein and Mark Hammond.
@@ -5220,11 +5219,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-================================================================================
+==============================================================
 
-                            wsproto-1.2.0.dist-info                             
+                      wsproto-1.2.0.dist-info
 
-================================================================================
+==============================================================
 
 The MIT License (MIT)
 
