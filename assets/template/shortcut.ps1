@@ -1,5 +1,5 @@
 $WshShell = New-Object -ComObject WScript.Shell;
-$ShortCut = $WshShell.CreateShortcut("{{SORCE}}");
+$ShortCut = $WshShell.CreateShortcut("{{SOURCE}}");
 $ShortCut.TargetPath = "{{TARGET}}";
 $ShortCut.WorkingDirectory = "{{WORKING_DIRECTORY}}";
 $ShortCut.IconLocation = "{{ICON_LOCATION}}";
