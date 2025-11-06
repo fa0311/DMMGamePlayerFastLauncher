@@ -234,6 +234,3 @@ zh_CN:
 
   utils:
     file_exists: 该文件已经存在。
-
-  discord:
-    state: "正在玩 %{name}"
