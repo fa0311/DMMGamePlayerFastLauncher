@@ -35,7 +35,7 @@ class UrlConfig(Dump):
     RELEASE_API = "https://api.github.com/repos/fa0311/DMMGamePlayerFastLauncher/releases/latest"
     RELEASE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/releases/latest"
     DONATE = "https://github.com/sponsors/fa0311"
-    ISSUE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new"
+    ISSUE = "https://github.com/fa0311/DMMGamePlayerFastLauncher/issues/new/choose"
 
 
 class SchtasksConfig(Dump):
