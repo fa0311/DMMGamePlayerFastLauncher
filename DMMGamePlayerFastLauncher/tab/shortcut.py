@@ -41,8 +41,8 @@ class ShortcutTab(CTkFrame):
         self.tab.create()
         self.tab.add(text=i18n.t("app.tab.create"), callback=self.create_callback)
         self.tab.add(text=i18n.t("app.tab.edit"), callback=self.edit_callback)
-        self.tab.add(text=i18n.t("app.tab.launch_create"), callback=self.launch_create_callback)
-        self.tab.add(text=i18n.t("app.tab.launch_edit"), callback=self.launch_edit_callback)
+        # self.tab.add(text=i18n.t("app.tab.launch_create"), callback=self.launch_create_callback)
+        # self.tab.add(text=i18n.t("app.tab.launch_edit"), callback=self.launch_edit_callback)
         return self
 
     def create_callback(self, master: CTkBaseClass):
