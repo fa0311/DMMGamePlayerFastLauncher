@@ -7,6 +7,8 @@ width = 62
 
 delimiter = "\n\n" + ("=" * width) + "\n\n"
 
+Path("assets/license").mkdir(parents=True, exist_ok=True)
+
 for file in ("./../DMMGamePlayerFastLauncher/LICENSE", *glob.glob(".venv/**/*[Ll][Ii][Cc][Ee][Nn][SsCc][Ee]*", recursive=True)):
     path = Path(file)
     if path.is_file():

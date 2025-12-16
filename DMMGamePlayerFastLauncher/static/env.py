@@ -8,7 +8,7 @@ from windows_pathlib import WindowsPathlib
 
 
 class Env(Dump):
-    VERSION = "v6.3.2"
+    VERSION = "v6.3.3"
     RELEASE_VERSION = requests.get(UrlConfig.RELEASE_API).json().get("tag_name", VERSION)
 
     DEVELOP: bool = os.environ.get("ENV") == "DEVELOP"
