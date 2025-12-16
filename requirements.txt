@@ -12,4 +12,4 @@ pycryptodome
 pywin32
 pypresence
 pyinstaller
-pyinstaller-hooks-contrib==2024.10
+pyinstaller-hooks-contrib
