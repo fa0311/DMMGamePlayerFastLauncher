@@ -27,14 +27,13 @@ zh_CN:
 
   shortcut:
     filename: 文件名
-    filename_tooltip: |
+    filename_tooltip: |-
       请给这个快捷方式任意名称。
       使用半角英文数字以外的字符可能会导致问题。
 
     product_id: 选择 product_id
     product_id_tooltip: |-
       product_id 是 DMM 用于识别游戏的 ID。
-      非英数字字符的使用可能导致问题。
     account_create_detail: |-
       创建一个用于快速启动 DMMGamePlayer 的快捷方式。
       请在“帐户”选项卡中选择您创建的帐户。
@@ -188,7 +187,7 @@ zh_CN:
             socks5://127.0.0.1:1080
             socks5://user:pass@127.0.0.1:1080
 
-    window_scaling: 窐口缩放比例
+    window_scaling: 窗口缩放比例
     debug_window: 显示调试窗口
     output_logfile: 以文件形式记录日志
     mask_token: 隐藏日志上的令牌
@@ -232,7 +231,7 @@ zh_CN:
     details: 详情
 
   lib:
-    dmm_already_running: DMMGamePlayer 已經在運行，因此無法啟動。
+    dmm_already_running: DMMGamePlayer 已经在运行，因此无法启动。
 
   utils:
     file_exists: 该文件已经存在。

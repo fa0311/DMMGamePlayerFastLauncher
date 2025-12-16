@@ -27,12 +27,13 @@ zh_TW:
 
   shortcut:
     filename: 檔案名稱
-    filename_tooltip: 請為此快捷方式提供任何名稱。
+    filename_tooltip: |-
+      請為此快捷方式提供任何名稱。
+      使用半形英數字以外的字元可能會導致問題。
 
     product_id: 選擇 product_id
     product_id_tooltip: |-
       product_id 是 DMM 用來識別遊戲的 ID。
-      非英數字元的使用可能導致問題。
 
     account_create_detail: |-
       創建一個用於快速啟動 DMMGamePlayer 的快捷方式。
@@ -187,7 +188,7 @@ zh_TW:
             socks5://127.0.0.1:1080
             socks5://user:pass@127.0.0.1:1080
 
-    window_scaling: 窐口縮放比例
+    window_scaling: 視窗縮放比例
     debug_window: 顯示除錯窗口
     output_logfile: 以文件形式記錄日誌
     mask_token: 隱藏日誌上的令牌
