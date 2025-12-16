@@ -103,7 +103,9 @@ en_US:
     unity_command_line_args_link: https://docs.unity3d.com/Manual/PlayerCommandLineArguments.html
 
   account:
-    import_detail: Import your DMMGamePlayer account information into Fast Launcher.
+    import_detail: |-
+      Import your DMMGamePlayer account information into DMMGamePlayerFastLauncher.
+      This operation is deprecated. It is recommended to import from the browser.
 
     filename_tooltip: |-
       Please provide any name for this account.

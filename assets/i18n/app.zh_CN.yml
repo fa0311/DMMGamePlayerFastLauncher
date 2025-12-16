@@ -102,7 +102,9 @@ zh_CN:
     unity_command_line_args_link: https://docs.unity3d.com/cn/current/Manual/PlayerCommandLineArguments.html
 
   account:
-    import_detail: 将您的 DMMGamePlayer 帐户信息导入快速启动器。
+    import_detail: |-
+      将您的 DMMGamePlayer 帐户信息导入 DMMGamePlayerFastLauncher。
+      此操作已被弃用。建议从浏览器导入。
 
     filename_tooltip: |-
       请为此帐户提供任何名称。
