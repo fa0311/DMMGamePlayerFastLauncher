@@ -136,9 +136,9 @@ class ShortcutBase(CTkScrollableFrame):
             except Exception:
                 name, icon = self.filename.get(), None
                 self.toast.error(i18n.t("app.shortcut.game_info_error"))
-            sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+            source = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = ["/run", "/tn", task.name]
-            Shortcut().create(sorce=sorce, target=Env.SCHTASKS, args=args, icon=icon)
+            Shortcut().create(source=source, target=Env.SCHTASKS, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
 
         self.save_handler(fn)
@@ -152,9 +152,9 @@ class ShortcutBase(CTkScrollableFrame):
                 except Exception:
                     name, icon = self.filename.get(), None
                     self.toast.error(i18n.t("app.shortcut.game_info_error"))
-                sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+                source = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
                 args = [self.filename.get()]
-                Shortcut().create(sorce=sorce, args=args, icon=icon)
+                Shortcut().create(source=source, args=args, icon=icon)
                 self.toast.info(i18n.t("app.shortcut.save_success"))
             except Exception:
                 DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
@@ -176,9 +176,9 @@ class ShortcutBase(CTkScrollableFrame):
             except Exception:
                 DataPathConfig.SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()
                 raise
-            sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+            source = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = [self.filename.get()]
-            Shortcut().create(sorce=sorce, args=args, icon=icon)
+            Shortcut().create(source=source, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
 
         self.save_handler(fn)
@@ -350,10 +350,10 @@ class LauncherShortcutBase(CTkScrollableFrame):
         self.save()
         try:
             name = self.filename.get()
-            sorce = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
+            source = Env.DESKTOP.joinpath(name).with_suffix(".lnk")
             args = [name, "--type", "launcher"]
             icon = AppConfig.DATA.dmm_game_player_program_folder.get_path().joinpath("DMMGamePlayer.exe")
-            Shortcut().create(sorce=sorce, args=args, icon=icon)
+            Shortcut().create(source=source, args=args, icon=icon)
             self.toast.info(i18n.t("app.shortcut.save_success"))
         except Exception:
             DataPathConfig.ACCOUNT_SHORTCUT.joinpath(self.filename.get()).with_suffix(".json").unlink()

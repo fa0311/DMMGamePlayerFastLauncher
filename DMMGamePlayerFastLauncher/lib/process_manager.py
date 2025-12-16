@@ -138,7 +138,7 @@ class Schtasks:
 
 
 class Shortcut:
-    def create(self, sorce: Path, target: Optional[Path] = None, args: Optional[list[str]] = None, icon: Optional[Path] = None):
+    def create(self, source: Path, target: Optional[Path] = None, args: Optional[list[str]] = None, icon: Optional[Path] = None):
         with open(AssetsPathConfig.SHORTCUT, "r", encoding="utf-8") as f:
             template = f.read()
         if icon is None:
@@ -153,7 +153,7 @@ class Shortcut:
             else:
                 target = Path(sys.argv[0])
 
-        template = template.replace(r"{{SORCE}}", str(sorce.absolute()))
+        template = template.replace(r"{{SOURCE}}", str(source.absolute()))
         template = template.replace(r"{{TARGET}}", str(target))
         template = template.replace(r"{{WORKING_DIRECTORY}}", os.getcwd())
         template = template.replace(r"{{ICON_LOCATION}}", str(icon.absolute()))
