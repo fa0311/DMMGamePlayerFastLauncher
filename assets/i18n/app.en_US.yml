@@ -235,6 +235,3 @@ en_US:
 
   utils:
     file_exists: That file already exists.
-
-  discord:
-    state: "Playing %{name}"

@@ -233,6 +233,3 @@ zh_TW:
 
   utils:
     file_exists: 該文件已經存在。
-
-  discord:
-    state: "正在玩 %{name}"

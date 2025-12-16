@@ -230,6 +230,3 @@ ja_JP:
 
   utils:
     file_exists: そのファイルは既に存在します。
-
-  discord:
-    state: "%{name} をプレイ中"
