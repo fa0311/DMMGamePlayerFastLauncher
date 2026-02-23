@@ -1,4 +1,4 @@
-pip freeze > requirements-lock.txt
+pip freeze > requirements.lock.txt
 python .\tools\build.py
 
 
