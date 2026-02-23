@@ -1,8 +1,11 @@
-pip freeze > requirements-lock.txt
+pip freeze > requirements.lock.txt
 python .\tools\build.py
 
+Remove-Item -Path "build" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "dist" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "*.spec" -Force -ErrorAction SilentlyContinue
 
-pyinstaller DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.py --noconsole --onefile --add-data ".venv\Lib\site-packages\customtkinter\;customtkinter" --icon assets\icons\DMMGamePlayerFastLauncher.ico
+.\.venv\Scripts\pyinstaller.exe DMMGamePlayerFastLauncher\DMMGamePlayerFastLauncher.py --noconsole --onefile --collect-all customtkinter --collect-all selenium --icon assets\icons\DMMGamePlayerFastLauncher.ico
 
 Copy-Item -Path "dist\DMMGamePlayerFastLauncher.exe" -Destination "windows" -Force
 Copy-Item -Path "assets" -Destination "windows" -Force -Recurse
