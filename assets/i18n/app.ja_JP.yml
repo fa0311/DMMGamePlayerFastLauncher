@@ -16,7 +16,7 @@ ja_JP:
     edit: ショートカットの編集
     launch_create: GamePlayer の高速化
     launch_edit: GamePlayer 高速化の編集
-    account_import: インポート
+    account_import: インポート(非推奨)
     account_edit: アカウントの編集
     import_browser: ブラウザーからインポート
     device: デバイスの登録

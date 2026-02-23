@@ -17,7 +17,7 @@ from models.setting_data import AppConfig
 from static.config import AssetsPathConfig, DataPathConfig, SchtasksConfig, UrlConfig
 from static.env import Env
 from static.loder import config_loder, config_migrate
-from tkinter_colored_logging_handlers import LoggingHandler
+from tkinter_colored_logging_handlers.main import LoggingHandler
 
 
 def loder(master: LanchLauncher):
