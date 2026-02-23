@@ -16,7 +16,7 @@ zh_CN:
     edit: 编辑快捷方式
     launch_create: 快速启动 GamePlayer
     launch_edit: 编辑快速启动 GamePlayer
-    account_import: 导入
+    account_import: 导入（已弃用）
     account_edit: 编辑账户
     import_browser: 从浏览器导入
     device: 注册设备

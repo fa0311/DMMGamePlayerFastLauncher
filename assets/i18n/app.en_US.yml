@@ -16,7 +16,7 @@ en_US:
     edit: Edit Shortcut
     launch_create: Fast Launch GamePlayer
     launch_edit: Edit Fast Launch GamePlayer
-    account_import: Import
+    account_import: Import (Deprecated)
     account_edit: Edit Account
     import_browser: Import from Browser
     device: Register Device
