@@ -17,13 +17,13 @@ class Version:
         return not self.__eq__(other)
 
     def __lt__(self, other: "Version"):
-        return self.major < other.major or self.minor < other.minor or self.patch < other.patch
+        return (self.major, self.minor, self.patch) < (other.major, other.minor, other.patch)
 
     def __le__(self, other: "Version"):
         return self.__eq__(other) or self.__lt__(other)
 
     def __gt__(self, other: "Version"):
-        return self.major > other.major or self.minor > other.minor or self.patch > other.patch
+        return (self.major, self.minor, self.patch) > (other.major, other.minor, other.patch)
 
     def __ge__(self, other: "Version"):
         return self.__eq__(other) or self.__gt__(other)
