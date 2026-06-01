@@ -1,4 +1,5 @@
 import ctypes
+import functools
 import logging
 import os
 import subprocess
@@ -50,14 +51,11 @@ class ProcessIdManager:
     process: list[tuple[int, Optional[str]]]
 
     def __init__(self, _process: Optional[list[tuple[int, Optional[str]]]] = None) -> None:
-        def wrapper(x: psutil.Process) -> Optional[str]:
-            try:
-                return x.exe()
-            except Exception:
-                return None
-
         if _process is None:
-            self.process = [(x.pid, wrapper(x)) for x in psutil.process_iter()]
+            # Fetch pid + exe in a single process_iter pass. attrs= populates `.info`
+            # and yields None for exe when access is denied (same result as the old
+            # per-process .exe() try/except), but avoids one syscall per process.
+            self.process = [(p.info["pid"], p.info["exe"]) for p in psutil.process_iter(attrs=["pid", "exe"])]
         else:
             self.process = _process
 
@@ -88,7 +86,10 @@ class ProcessIdManager:
         return process[0]
 
 
+@functools.lru_cache(maxsize=1)
 def get_sid() -> str:
+    # The current user's SID is constant for the process lifetime; cache the
+    # win32 lookup so repeated Schtasks operations don't re-query it.
     username = os.getlogin()
     sid, domain, type = win32security.LookupAccountName("", username)
     sidstr = win32security.ConvertSidToStringSid(sid)
