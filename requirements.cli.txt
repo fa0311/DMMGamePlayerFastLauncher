@@ -1,0 +1,5 @@
+requests
+selenium
+tqdm
+typer
+urllib3
