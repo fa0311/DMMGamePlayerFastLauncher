@@ -42,7 +42,7 @@ zh_TW:
     account_path: 選擇帳戶
     account_path_tooltip: |-
       請在「帳戶」選項卡中選擇您創建的帳戶。
-    always_extract_from_dmm: 總是從DMM提取
+    always_extract_from_dmm: 總是從DMM提取（已棄用）
     game_args: 遊戲引數
     game_args_tooltip: |-
       指定要傳遞給遊戲的引數。
