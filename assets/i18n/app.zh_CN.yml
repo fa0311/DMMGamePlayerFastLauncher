@@ -41,7 +41,7 @@ zh_CN:
     account_path: 选择帐户
     account_path_tooltip: |-
       请在“帐户”选项卡中选择您创建的帐户。
-    always_extract_from_dmm: 始终从DMM提取
+    always_extract_from_dmm: 始终从DMM提取（已弃用）
     game_args: 游戏参数
     game_args_tooltip: |-
       指定传递给游戏的参数。
